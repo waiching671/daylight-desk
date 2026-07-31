@@ -233,11 +233,32 @@
     padding: 10px 12px;
     transition: border-color .15s, box-shadow .15s, background .3s;
   }
+  input[type=date], input[type=number]{
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-1);
+    border-radius:var(--r-md);
+    padding:10px 12px;
+    transition:border-color .15s, box-shadow .15s, background .3s;
+  }
   input[type=text]:focus, textarea:focus, select:focus{
     outline:none;
     border-color: var(--accent-2);
     box-shadow: 0 0 0 3px var(--accent-bg);
   }
+  input[type=date]:focus, input[type=number]:focus{
+    outline:none;
+    border-color:var(--accent-2);
+    box-shadow:0 0 0 3px var(--accent-bg);
+  }
+  body.dark input[type=date]{color-scheme:dark}
+  body.dark input[type=date]::-webkit-datetime-edit,
+  body.dark input[type=date]::-webkit-datetime-edit-text,
+  body.dark input[type=date]::-webkit-datetime-edit-month-field,
+  body.dark input[type=date]::-webkit-datetime-edit-day-field,
+  body.dark input[type=date]::-webkit-datetime-edit-year-field{color:var(--ink-1)}
+  body.dark input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.86);opacity:.9}
   .input-inline{
     display:flex;gap:8px;
   }
@@ -420,6 +441,7 @@
   .mood-btn.on{background:var(--accent-bg);border-color:var(--accent-2)}
   .mood-btn .emo{font-size:22px;display:block;margin-bottom:2px}
   .mood-btn .name{font-size:10px;color:var(--ink-2);letter-spacing:1px}
+  .mood-week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.mood-day{padding:8px 4px;text-align:center;background:var(--surface-2);border-radius:9px}.mood-day.today{background:var(--accent-bg);box-shadow:0 0 0 1px var(--accent-2)}.mood-day .wd{font-size:10px;color:var(--ink-3)}.mood-day .emo{font-size:22px;margin:4px 0}.mood-day .md{font-size:10px;color:var(--ink-2)}
 
   .highlights{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
   .hi-card{background:var(--surface);border-radius:var(--r-lg);padding:14px;border:1px solid var(--line-soft)}
@@ -552,6 +574,7 @@
   .subj-item:hover{background:var(--surface-2)}
   .subj-item.active{background:var(--surface-mint);color:var(--accent);font-weight:600}
   .subj-item .count{margin-left:auto;font-size:11px;color:var(--ink-3)}
+  .subj-edit{font-size:12px;color:var(--ink-3);padding:2px 4px;opacity:0}.subj-item:hover .subj-edit,.subj-item.active .subj-edit{opacity:1}.subj-edit:hover{color:var(--accent)}
 
   .subject-detail{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
   .tag{
@@ -630,7 +653,10 @@
   .asset-group-title{font-size:12px;color:var(--ink-2);font-weight:600;margin-bottom:7px}
   .asset-actions{display:flex;gap:8px;align-items:center;margin-top:12px}
   .finance-news{grid-column:1/-1}
+  .finance-chart{grid-column:1/-1}.finance-chart-controls{display:flex;gap:8px;margin-bottom:14px}.finance-chart-controls select,.finance-chart-controls input{max-width:150px}.finance-status{padding:3px 9px;border-radius:99px;font-size:11px}.finance-status.normal{background:var(--accent-bg);color:var(--accent)}.finance-status.over{background:#f8dede;color:#c44b4b}.finance-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.pie-wrap{min-width:0}.pie-title{font-size:12px;color:var(--ink-2);margin-bottom:8px}.pie{width:150px;height:150px;margin:0 auto 10px;border-radius:50%;background:conic-gradient(var(--line) 0 100%);position:relative}.pie::after{content:'';position:absolute;inset:35px;background:var(--surface);border-radius:50%}.pie-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;font-size:11px;color:var(--ink-2)}.pie-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--pie-color);margin-right:4px}@media (max-width:760px){.finance-chart-grid{grid-template-columns:1fr}}
   @media (max-width:960px){.finance-summary,.finance-grid{grid-template-columns:1fr}.finance-assets,.finance-news{grid-column:auto}}
+  .workout-form{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:8px}.exercise-records{display:flex;flex-direction:column;gap:6px;margin-top:12px}.exercise-row{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface-2);border-radius:9px;font-size:12px}.exercise-row .exercise-main{flex:1}.exercise-row .exercise-meta{font-size:11px;color:var(--ink-3);margin-top:2px}.exercise-row .del{color:var(--ink-3)}.exercise-row .del:hover{color:var(--warm)}
+  @media (max-width:760px){.workout-form{grid-template-columns:1fr 1fr}.workout-form .btn{grid-column:1/-1;justify-self:start}}
 
   /* ========== 書影音 ========== */
   .media-form{display:grid;grid-template-columns:150px 1fr 180px;gap:10px;align-items:center}
@@ -676,6 +702,10 @@
     margin: 8px 0 28px;
     font-style:italic;
   }
+  body.dark #sec-review .quote{color:var(--accent-2)}
+  body.dark #sec-review .card-title,
+  body.dark #sec-review label,
+  body.dark #sec-review .rev-grid > div > div{color:var(--ink-1)!important}
   .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .rev-grid textarea{min-height:120px}
   .rev-actions{display:flex;justify-content:flex-end;margin-top:12px}
@@ -1129,6 +1159,8 @@
         </div>
       </div>
 
+      <div class="card" style="margin-top:18px"><div class="card-title"><span class="badge">7 DAYS</span> 一周心情</div><div class="mood-week" id="moodWeek"></div></div>
+
       <div class="card" style="margin-top:18px">
         <div class="card-title"><span class="badge">HIGHLIGHTS</span> 生活亮點</div>
         <div class="highlights">
@@ -1359,6 +1391,7 @@
             <select id="finExpenseCategory"><option>衣</option><option>食</option><option>住</option><option>行</option><option>其他</option></select>
             <select id="finExpenseCurrency"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="OTHER">其他</option></select>
             <input type="text" id="finExpenseAmount" placeholder="金額" />
+            <input type="date" id="finExpenseDate" />
             <input class="wide" type="text" id="finExpenseNote" placeholder="備註（可選）" />
             <button class="btn" id="finAddExpense">＋ 新增支出</button>
           </div>
@@ -1371,6 +1404,7 @@
             <select id="finIncomeCategory"><option>工資</option><option>紅包</option><option>其他</option></select>
             <select id="finIncomeCurrency"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="OTHER">其他</option></select>
             <input type="text" id="finIncomeAmount" placeholder="金額" />
+            <input type="date" id="finIncomeDate" />
             <input class="wide" type="text" id="finIncomeNote" placeholder="備註（可選）" />
             <button class="btn" id="finAddIncome">＋ 新增收入</button>
           </div>
@@ -1383,6 +1417,7 @@
           <div class="asset-actions">
             <select id="finAssetGroup" style="max-width:130px"><option>銀行</option><option>支付寶</option><option>微信</option><option>其他</option></select>
             <input type="text" id="finAssetName" placeholder="帳戶名稱" />
+            <select id="finAssetCurrency" style="max-width:130px"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="JPY">日圓 JPY</option><option value="GBP">英鎊 GBP</option><option value="OTHER">其他</option></select>
             <input type="text" id="finAssetAmount" placeholder="金額" />
             <button class="btn btn-mini" id="finAddAsset">＋ 新增</button>
           </div>
@@ -1398,6 +1433,12 @@
           </div>
           <div class="finance-list" id="finNewsList"></div>
         </div>
+      </div>
+
+      <div class="card finance-chart">
+        <div class="card-title"><span><span class="badge">ANALYTICS</span> 收支分析</span><span class="finance-status normal" id="finStatus">收支正常</span></div>
+        <div class="finance-chart-controls"><select id="finChartPeriod"><option value="day">每天</option><option value="week" selected>每週</option></select><input type="date" id="finChartDate" /><select id="finChartCurrency"><option value="ALL">全部币种</option><option value="HKD">HKD</option><option value="CNY">CNY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="JPY">JPY</option><option value="GBP">GBP</option></select></div>
+        <div class="finance-chart-grid"><div class="pie-wrap"><div class="pie-title">支出分類</div><div class="pie" id="finExpensePie"></div><div class="pie-legend" id="finExpenseLegend"></div></div><div class="pie-wrap"><div class="pie-title">收入分類</div><div class="pie" id="finIncomePie"></div><div class="pie-legend" id="finIncomeLegend"></div></div></div>
       </div>
     </section>
 
@@ -1574,23 +1615,14 @@
         </div>
 
         <div class="card">
-          <div class="card-title">
-            <span><span class="badge">📅 WEEK</span> 一週訓練安排</span>
+          <div class="card-title"><span><span class="badge">🏃 TRAINING</span> 運動記錄</span></div>
+          <div class="workout-form">
+            <select id="wlExerciseType"><option>步行</option><option>跑步</option><option>瑜伽</option><option>力量訓練</option><option>游泳</option><option>騎單車</option><option>跳舞</option><option>伸展</option><option>其他</option></select>
+            <input type="date" id="wlExerciseDate" />
+            <input type="number" min="1" id="wlExerciseMinutes" placeholder="運動分鐘" />
+            <button class="btn btn-mini" id="wlAddExercise">＋ 記錄運動</button>
           </div>
-          <div class="wl-week-grid" id="wlWeekGrid"></div>
-          <div style="margin-top:14px;padding:10px 14px;background:var(--surface-2);border-radius:10px;font-size:12px;color:var(--ink-2);line-height:1.6">
-            <b style="color:var(--warm)">下班日（17:30 後）</b> 是主窗口。周末若加班 → 只做墊上 10 分鐘 + 管住嘴；不加班 → 加量。
-          </div>
-          <div class="card-title" style="margin-top:18px">
-            <span><span class="badge">🧘 YOGA</span> 瑜伽墊 10 分鐘循環</span>
-          </div>
-          <table class="wl-ex-table" id="wlExTable">
-            <thead><tr><th>動作</th><th>組數</th><th>要點</th></tr></thead>
-            <tbody id="wlExBody"></tbody>
-          </table>
-          <div class="wl-principle" style="margin-top:14px">
-            <b>建議：</b>每天早上起上完廁所、空腹稱一次，曲線才准。波動正常，看大趨勢。
-          </div>
+          <div class="exercise-records" id="wlExerciseRecords"></div>
         </div>
       </div>
 
@@ -1665,6 +1697,7 @@ const defaultState = () => ({
   tasks: [],
   todayLife: { weight: '', water: '', exercise: '' },
   todayMood: null,
+  dailyRecords: {},
   highlights: { work: '', learning: '', life: '', review: '' },
   time: {
     todayPlan: '',
@@ -1735,6 +1768,7 @@ const defaultState = () => ({
       { name: '貓牛式', sets: '1 分鐘', tip: '脊柱一節一節動' },
       { name: '嬰兒式 + 眼鏡蛇', sets: '1 分鐘', tip: '放鬆收尾' }
     ],
+    exerciseRecords: [],
     defaultChecks: [
       { key: 'water', txt: '喝夠 2L 水（約 8 杯）', tip: '飯前一杯，會少吃' },
       { key: 'walk',  txt: '步數 6000+',                tip: '午休散步 10 分鐘就能攢' },
@@ -1766,6 +1800,11 @@ function loadState(){
   return defaultState();
 }
 function saveState(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function saveDailySnapshot(){
+  if(!state.dailyRecords || typeof state.dailyRecords!=='object') state.dailyRecords={};
+  const d=today(), prev=state.dailyRecords[d]||{};
+  state.dailyRecords[d]=Object.assign(prev,{date:d,life:Object.assign({},state.todayLife),mood:state.todayMood,focus:state.focus.text,plan:state.time?.todayPlan||'',highlights:Object.assign({},state.highlights),tasks:{total:state.tasks.length,done:state.tasks.filter(t=>t.done).length}});
+}
 
 /* ========== 公用 ========== */
 const $ = (s, p=document) => p.querySelector(s);
@@ -1984,6 +2023,7 @@ function go(name){
 let currentPrio = 'low';
 
 function renderOverview(){
+  if(!state.dailyRecords || typeof state.dailyRecords !== 'object') state.dailyRecords = {};
   const d = new Date();
   const w = ['日','一','二','三','四','五','六'][d.getDay()];
   const md = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${w}`;
@@ -2020,11 +2060,11 @@ function renderOverview(){
     `).join('');
     $$('.task-item .check', tl).forEach(el => el.onclick = e => {
       const id = e.target.closest('.task-item').dataset.id;
-      const t = state.tasks.find(x=>x.id===id); t.done = !t.done; saveState(); renderOverview();
+      const t = state.tasks.find(x=>x.id===id); t.done = !t.done; saveDailySnapshot(); saveState(); renderOverview();
     });
     $$('.task-item .del', tl).forEach(el => el.onclick = e => {
       const id = e.target.closest('.task-item').dataset.id;
-      state.tasks = state.tasks.filter(x=>x.id!==id); saveState(); renderOverview();
+      state.tasks = state.tasks.filter(x=>x.id!==id); saveDailySnapshot(); saveState(); renderOverview();
     });
   }
 
@@ -2033,6 +2073,18 @@ function renderOverview(){
   $('#lifeExercise').value = state.todayLife.exercise || '';
 
   $$('.mood-btn').forEach(b => b.classList.toggle('on', b.dataset.mood === state.todayMood));
+
+  const moodEmos={great:'🥰',good:'😊',ok:'😐',meh:'😔',bad:'😩'};
+  const moodNames={great:'很好',good:'不錯',ok:'普通',meh:'低落',bad:'疲憊'};
+  const moodWeek=$('#moodWeek');
+  const now=new Date(), monday=new Date(now);
+  monday.setDate(now.getDate()-((now.getDay()+6)%7));
+  moodWeek.innerHTML=Array.from({length:7},(_,i)=>{
+    const dd=new Date(monday); dd.setDate(monday.getDate()+i);
+    const dk=fmtDate(dd);
+    const mood=state.dailyRecords?.[dk]?.mood || state.review.entries?.[dk]?.mood || '';
+    return `<div class="mood-day ${dk===today()?'today':''}"><div class="wd">周${['一','二','三','四','五','六','日'][i]}</div><div class="emo">${moodEmos[mood]||'—'}</div><div class="md">${moodNames[mood]||'未記錄'}</div></div>`;
+  }).join('');
 
   $('#hiWork').value = state.highlights.work || '';
   $('#hiLearning').value = state.highlights.learning || '';
@@ -2043,6 +2095,8 @@ function renderOverview(){
   const td2 = today();
   if(state.pomo.date !== td2){ state.pomo.date = td2; state.pomo.count = 0; saveState(); }
   $('#pomoCount').textContent = state.pomo.count;
+  saveDailySnapshot();
+  saveState();
 }
 
 /* ========== 時間管理 ========== */
@@ -2257,10 +2311,20 @@ function renderLearning(){
       <div class="subj-item ${state.learning.activeSubj===s.id?'active':''}" data-id="${s.id}">
         <span>${esc(s.name)}</span>
         <span class="count">${(s.tags||[]).length}</span>
+        <button class="subj-edit" data-id="${s.id}" title="編輯科目">✎</button>
       </div>
     `).join('');
     $$('.subj-item', el).forEach(it => it.onclick = () => {
       state.learning.activeSubj = it.dataset.id; saveState(); renderLearning();
+    });
+    $$('.subj-edit', el).forEach(btn => btn.onclick = async e => {
+      e.stopPropagation();
+      const subject = state.learning.subjects.find(s=>s.id===btn.dataset.id);
+      const data = await openModal({title:'編輯科目',fields:[
+        {key:'name',label:'科目名稱',value:subject.name,placeholder:'科目名稱'},
+        {key:'group',label:'類別',type:'select',value:subject.group,options:[{value:'專業',label:'專業'},{value:'語言',label:'語言'},{value:'技能',label:'技能'}]}
+      ],submitText:'保存修改'});
+      if(data && data.name){ subject.name=data.name; subject.group=data.group||subject.group; saveState(); renderLearning(); showToast('科目已更新 ✓'); }
     });
   });
 
@@ -2311,6 +2375,8 @@ function financeData(){
   state.finance.incomes = Array.isArray(state.finance.incomes) ? state.finance.incomes : [];
   state.finance.assets = Array.isArray(state.finance.assets) ? state.finance.assets : [];
   state.finance.investmentNews = Array.isArray(state.finance.investmentNews) ? state.finance.investmentNews : [];
+  state.finance.expenses = state.finance.expenses.map(x => Object.assign({date:today(),currency:'HKD',category:'其他'},x));
+  state.finance.incomes = state.finance.incomes.map(x => Object.assign({date:today(),currency:'HKD',category:'其他'},x));
   return state.finance;
 }
 const moneyValue = v => { const n = parseFloat(String(v||'').replace(/,/g,'')); return Number.isFinite(n) ? n : 0; };
@@ -2320,12 +2386,40 @@ const currencySummary = arr => {
   arr.forEach(x => { const c=x.currency||'HKD'; totals[c]=(totals[c]||0)+moneyValue(x.amount); });
   return Object.entries(totals).map(([c,n]) => `${c} ${moneyText(n)}`).join(' · ') || '0';
 };
+function financeDateMatch(date, period, anchor){
+  if(!date) return false;
+  if(period==='day') return date===anchor;
+  const d=new Date(anchor+'T00:00:00'), start=new Date(d); start.setDate(d.getDate()-((d.getDay()+6)%7));
+  const end=new Date(start); end.setDate(start.getDate()+6);
+  const x=new Date(date+'T00:00:00'); return x>=start && x<=end;
+}
+function renderFinanceChart(f){
+  const anchor=$('#finChartDate').value||today(), period=$('#finChartPeriod').value, currency=$('#finChartCurrency').value;
+  const filter=x=>financeDateMatch(x.date||'',period,anchor)&&(currency==='ALL'||(x.currency||'HKD')===currency);
+  const build=(arr,pie,legend,colors)=>{
+    const totals={}; arr.filter(filter).forEach(x=>{totals[x.category||'其他']=(totals[x.category||'其他']||0)+moneyValue(x.amount);});
+    const entries=Object.entries(totals).filter(([,v])=>v>0), total=entries.reduce((a,[,v])=>a+v,0);
+    if(!total){pie.style.background='conic-gradient(var(--line) 0 100%)';legend.innerHTML='<span>暫無資料</span>';return 0;}
+    let cursor=0; pie.style.background='conic-gradient('+entries.map(([k,v],i)=>{const end=cursor+v/total*100,part=colors[i%colors.length]+' '+cursor+'% '+end+'%';cursor=end;return part;}).join(',')+')';
+    legend.innerHTML=entries.map(([k,v],i)=>'<span style="--pie-color:'+colors[i%colors.length]+'">'+esc(k)+' '+moneyText(v)+'</span>').join(''); return total;
+  };
+  const expense=build(f.expenses,$('#finExpensePie'),$('#finExpenseLegend'),['#e57373','#ffb74d','#c4785c','#d95f8d','#9e9e9e']);
+  const income=build(f.incomes,$('#finIncomePie'),$('#finIncomeLegend'),['#4d8e6f','#7cb097','#66bb6a','#8ec5a8','#9ccc65']);
+  const status=$('#finStatus'); status.textContent=expense>income?'支出超过收入':'收支正常'; status.className='finance-status '+(expense>income?'over':'normal');
+}
 
 function renderFinance(){
   const f = financeData();
   $('#finTotalIncome').textContent = currencySummary(f.incomes);
   $('#finTotalExpense').textContent = currencySummary(f.expenses);
   $('#finTotalAssets').textContent = currencySummary(f.assets) + '（未換算）';
+  if(!$('#finExpenseDate').value) $('#finExpenseDate').value=today();
+  if(!$('#finIncomeDate').value) $('#finIncomeDate').value=today();
+  if(!$('#finChartDate').value) $('#finChartDate').value=today();
+  renderFinanceChart(f);
+  $('#finChartPeriod').onchange = () => renderFinanceChart(f);
+  $('#finChartDate').onchange = () => renderFinanceChart(f);
+  $('#finChartCurrency').onchange = () => renderFinanceChart(f);
 
   const renderRows = (el, arr, kind) => {
     if(!arr.length){ el.innerHTML = '<div class="empty">還沒有紀錄</div>'; return; }
@@ -2363,17 +2457,17 @@ function renderFinance(){
 
   $('#finAddExpense').onclick = () => {
     const amount=$('#finExpenseAmount').value.trim(); if(!moneyValue(amount)){showToast('請先填寫支出金額');return;}
-    f.expenses.push({id:uid(),category:$('#finExpenseCategory').value,currency:$('#finExpenseCurrency').value,amount,note:$('#finExpenseNote').value.trim(),date:today()});
-    $('#finExpenseAmount').value=''; $('#finExpenseNote').value=''; saveState(); renderFinance();
+    f.expenses.push({id:uid(),category:$('#finExpenseCategory').value,currency:$('#finExpenseCurrency').value,amount,note:$('#finExpenseNote').value.trim(),date:$('#finExpenseDate').value||today()});
+    $('#finExpenseAmount').value=''; $('#finExpenseNote').value=''; $('#finExpenseDate').value=today(); saveState(); renderFinance();
   };
   $('#finAddIncome').onclick = () => {
     const amount=$('#finIncomeAmount').value.trim(); if(!moneyValue(amount)){showToast('請先填寫收入金額');return;}
-    f.incomes.push({id:uid(),category:$('#finIncomeCategory').value,currency:$('#finIncomeCurrency').value,amount,note:$('#finIncomeNote').value.trim(),date:today()});
-    $('#finIncomeAmount').value=''; $('#finIncomeNote').value=''; saveState(); renderFinance();
+    f.incomes.push({id:uid(),category:$('#finIncomeCategory').value,currency:$('#finIncomeCurrency').value,amount,note:$('#finIncomeNote').value.trim(),date:$('#finIncomeDate').value||today()});
+    $('#finIncomeAmount').value=''; $('#finIncomeNote').value=''; $('#finIncomeDate').value=today(); saveState(); renderFinance();
   };
   $('#finAddAsset').onclick = () => {
     const name=$('#finAssetName').value.trim(); if(!name){showToast('請填寫帳戶名稱');return;}
-    f.assets.push({id:uid(),group:$('#finAssetGroup').value,name,amount:$('#finAssetAmount').value.trim(),currency:''});
+    f.assets.push({id:uid(),group:$('#finAssetGroup').value,name,amount:$('#finAssetAmount').value.trim(),currency:$('#finAssetCurrency').value});
     $('#finAssetName').value=''; $('#finAssetAmount').value=''; saveState(); renderFinance();
   };
   $('#finAddNews').onclick = () => {
@@ -2613,7 +2707,7 @@ function renderReview(){
   for(let i=13;i>=0;i--){
     const dd = new Date(); dd.setDate(dd.getDate()-i);
     const dk = fmtDate(dd);
-    const mood = state.review.entries[dk]?.mood || state.review.entries[dk]?.mood;
+    const mood = state.review.entries[dk]?.mood || state.dailyRecords?.[dk]?.mood;
     days.push({date:dk, mood, dd});
   }
   moodBar.innerHTML = days.map(d => {
@@ -2626,14 +2720,28 @@ function renderReview(){
   }).join('');
 
   // 歷史
-  const hist = Object.entries(state.review.entries).filter(([k])=>k !== d).sort().reverse();
+  const histDates = new Set([
+    ...Object.keys(state.review.entries || {}),
+    ...Object.keys(state.dailyRecords || {})
+  ]);
+  const hist = [...histDates].filter(k=>k !== d).sort().reverse();
   const h = $('#reviewHistory');
   if(!hist.length){ h.innerHTML = '<div class="empty">還沒有歷史復盤</div>'; }
-  else h.innerHTML = hist.map(([k,v]) => {
+  else h.innerHTML = hist.map(k => {
+    const v = state.review.entries[k] || {};
+    const snap = state.dailyRecords[k] || {};
+    const life = snap.life || {};
+    const taskText = snap.tasks ? `完成待辦 ${snap.tasks.done}/${snap.tasks.total}` : '';
+    const moodText = snap.mood ? `心情：${moodLabels[snap.mood] || snap.mood}` : '';
+    const lifeText = [life.weight&&`體重 ${life.weight}kg`,life.water&&`飲水 ${life.water}杯`,life.exercise&&`運動 ${life.exercise}分鐘`].filter(Boolean).join(' · ');
     return `<div class="review-history-item" data-review-date="${k}" style="padding:10px 12px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer">
       <div style="font-size:11px;color:var(--ink-3);margin-bottom:4px">${k}</div>
+      ${[moodText,taskText,lifeText].filter(Boolean).length?`<div style="font-size:11px;color:var(--ink-2);margin-bottom:5px">${esc([moodText,taskText,lifeText].filter(Boolean).join(' · '))}</div>`:''}
       ${v.learned?`<div style="font-size:13px;margin-bottom:2px"><b>學到：</b>${esc(v.learned)}</div>`:''}
       ${v.next?`<div style="font-size:13px;margin-bottom:2px"><b>下一步：</b>${esc(v.next)}</div>`:''}
+      ${snap.focus?`<div style="font-size:13px;margin-bottom:2px"><b>今日焦點：</b>${esc(snap.focus)}</div>`:''}
+      ${snap.plan?`<div style="font-size:13px;margin-bottom:2px"><b>今日計劃：</b>${esc(snap.plan)}</div>`:''}
+      ${Object.values(snap.highlights||{}).some(Boolean)?`<div style="font-size:13px"><b>生活亮點：</b>${esc(Object.values(snap.highlights).filter(Boolean).join(' · '))}</div>`:''}
     </div>`;
   }).join('');
   $$('.review-history-item', h).forEach(item => item.onclick = () => { reviewSelectedDate=item.dataset.reviewDate; renderReview(); });
@@ -2684,11 +2792,13 @@ function bindAll(){
   $('#focusText').addEventListener('input', e => {
     state.focus.text = e.target.textContent.trim();
     e.target.dataset.empty = state.focus.text ? 'false' : 'true';
+    saveDailySnapshot();
     saveState();
   });
   $('#focusText').addEventListener('blur', () => {
     const t = state.focus.text.trim();
     state.focus.progress = Math.min(100, Math.round((t.length / 8) * 25));
+    saveDailySnapshot();
     saveState(); renderOverview();
   });
 
@@ -2696,14 +2806,14 @@ function bindAll(){
   const addTask = () => {
     const v = $('#newTask').value.trim(); if(!v) return;
     state.tasks.push({id:uid(), text:v, done:false, prio:currentPrio, createdAt: Date.now()});
-    $('#newTask').value=''; saveState(); renderOverview(); showToast('已新增待辦 ✓');
+    $('#newTask').value=''; saveDailySnapshot(); saveState(); renderOverview(); showToast('已新增待辦 ✓');
   };
   $('#addTask').onclick = addTask;
   $('#newTask').onkeydown = e => { if(e.key==='Enter') addTask(); };
 
-  $('#lifeWeight').oninput = e => { state.todayLife.weight = e.target.value; saveState(); };
-  $('#lifeWater').oninput = e => { state.todayLife.water = e.target.value; saveState(); };
-  $('#lifeExercise').oninput = e => { state.todayLife.exercise = e.target.value; saveState(); };
+  $('#lifeWeight').oninput = e => { state.todayLife.weight = e.target.value; saveDailySnapshot(); saveState(); };
+  $('#lifeWater').oninput = e => { state.todayLife.water = e.target.value; saveDailySnapshot(); saveState(); };
+  $('#lifeExercise').oninput = e => { state.todayLife.exercise = e.target.value; saveDailySnapshot(); saveState(); };
 
   $$('.mood-btn').forEach(b => b.onclick = () => {
     state.todayMood = b.dataset.mood;
@@ -2711,6 +2821,7 @@ function bindAll(){
     const d = today();
     if(!state.review.entries[d]) state.review.entries[d] = {};
     state.review.entries[d].mood = b.dataset.mood;
+    saveDailySnapshot();
     saveState(); renderOverview(); showToast(`今日情緒：${moodLabels[b.dataset.mood]}`);
   });
 
@@ -2719,12 +2830,13 @@ function bindAll(){
     if(!el) return;
     el.oninput = e => {
       state.highlights[k] = e.target.value;
+      saveDailySnapshot();
       saveState();
     };
   });
 
   // 時間管理
-  $('#todayPlan').oninput = e => { state.time.todayPlan = e.target.value; saveState(); };
+  $('#todayPlan').oninput = e => { state.time.todayPlan = e.target.value; saveDailySnapshot(); saveState(); };
   $$('#timeTabs .tab').forEach(t => t.onclick = () => {
     $$('#timeTabs .tab').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
@@ -2912,6 +3024,13 @@ function bindAll(){
   $('#wlDate').onkeydown = e => { if(e.key==='Enter') $('#wlWeight').focus(); };
 
   $('#wlAddWeightBtn').onclick = () => { go('weightloss'); setTimeout(()=>$('#wlWeight').focus(), 100); };
+  $('#wlAddExercise').onclick = () => {
+    const minutes=+$('#wlExerciseMinutes').value;
+    if(!minutes || minutes<1){showToast('請輸入運動分鐘');return;}
+    if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
+    state.wl.exerciseRecords.push({id:uid(),type:$('#wlExerciseType').value,date:$('#wlExerciseDate').value||today(),minutes});
+    $('#wlExerciseMinutes').value=''; saveState(); renderWeightLoss(); showToast('運動已記錄 ✓');
+  };
 
   $('#wlClearAll').onclick = () => {
     if(!Object.keys(state.wl.records).length){ showToast('沒有記錄可清空'); return; }
@@ -3137,28 +3256,12 @@ function renderWeightLoss(){
     </div>
   `).join('');
 
-  // 一週訓練
-  const dayNames = ['日','一','二','三','四','五','六'];
-  const todayIdx = new Date().getDay();
-  // 簡單排程：週二、四、六標記為「上班加量」，週日為「周末」
-  const defaultTypes = ['weekend','work','work','work','work','work','weekend'];
-  $('#wlWeekGrid').innerHTML = dayNames.map((d,i) => {
-    const t = state.wl.schedule?.[i] || defaultTypes[i];
-    const isToday = i === todayIdx;
-    const isActive = state.wl.activeDay === i;
-    return `<div class="wl-wd ${t} ${isActive?'active':''}" data-idx="${i}" style="${isToday?'box-shadow:0 0 0 2px var(--warm)':''}">
-      <div class="wd-name">周${d}</div>
-      <div class="wd-type">${t==='work'?'上班':'周末'}</div>
-    </div>`;
-  }).join('');
-  $$('.wl-wd', $('#wlWeekGrid')).forEach(el => el.onclick = () => {
-    state.wl.activeDay = +el.dataset.idx; saveState(); renderWeightLoss();
-  });
-
-  // 瑜伽墊訓練
-  $('#wlExBody').innerHTML = state.wl.exerciseRoutine.map(r => `
-    <tr><td>${esc(r.name)}</td><td>${esc(r.sets)}</td><td>${esc(r.tip)}</td></tr>
-  `).join('');
+  // 運動記錄
+  if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
+  if(!$('#wlExerciseDate').value) $('#wlExerciseDate').value=today();
+  const exerciseList=$('#wlExerciseRecords');
+  exerciseList.innerHTML=state.wl.exerciseRecords.length ? state.wl.exerciseRecords.slice().reverse().map(r=>`<div class="exercise-row" data-id="${r.id}"><div class="exercise-main"><b>${esc(r.type)}</b><div class="exercise-meta">${esc(r.date)} · ${esc(r.minutes)} 分鐘</div></div><button class="del" title="刪除">✕</button></div>`).join('') : '<div class="empty">還沒有運動記錄</div>';
+  $$('#wlExerciseRecords .del').forEach(b=>b.onclick=()=>{state.wl.exerciseRecords=state.wl.exerciseRecords.filter(r=>r.id!==b.closest('.exercise-row').dataset.id);saveState();renderWeightLoss();});
 
   // 貼士
   $('#wlTips').innerHTML = state.wl.tips.map(t => `
