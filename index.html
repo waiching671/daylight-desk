@@ -402,6 +402,7 @@
   .task-item .prio-dot.mid{background:#ffb74d}
   .task-item .prio-dot.low{background:var(--accent-2)}
   .task-item .task-text{flex:1;font-size:13px}
+  .task-item .todo-date{font-size:10px;color:var(--ink-3);margin-top:1px}
   .task-item .del{color:var(--ink-3);font-size:14px;opacity:0;transition:opacity .15s}
   .task-item:hover .del{opacity:1}
   .task-item .del:hover{color:var(--warm)}
@@ -496,6 +497,9 @@
   .ev-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface-2);border-radius:10px;margin-bottom:6px}
   .ev-row .time{font-size:12px;color:var(--ink-2);min-width:50px;font-variant-numeric:tabular-nums}
   .ev-row .title{flex:1;font-size:13px}
+  .ev-row.todo-row .title.done{text-decoration:line-through;color:var(--ink-3)}
+  .ev-row.todo-row .todo-kind{font-size:10px;color:var(--accent);min-width:38px}
+  .ev-row.todo-row .todo-check{font-size:13px;color:var(--accent);padding:2px 4px}
   .ev-row .ev-action{color:var(--ink-3);font-size:12px;opacity:0;transition:opacity .15s;padding:2px 4px}
   .ev-row:hover .ev-action{opacity:1}.ev-row .ev-action:hover{color:var(--accent)}
   .ev-row .ev-action.del:hover{color:var(--warm)}
@@ -1241,6 +1245,7 @@
           <div class="task-list" id="weekTodos"></div>
           <div class="input-inline" style="margin-top:10px">
             <input type="text" id="newWeekTodo" placeholder="新增本週待辦…" />
+            <input type="date" id="weekTodoDate" aria-label="本週待辦日期" style="max-width:160px" />
             <button class="btn btn-mini" id="addWeekTodo">＋</button>
           </div>
         </div>
@@ -1252,6 +1257,7 @@
           <div class="task-list" id="dayTodos"></div>
           <div class="input-inline" style="margin-top:10px">
             <input type="text" id="newDayTodo" placeholder="新增今日待辦…" />
+            <input type="date" id="dayTodoDate" aria-label="日待辦日期" style="max-width:160px" />
             <button class="btn btn-mini" id="addDayTodo">＋</button>
           </div>
         </div>
@@ -2105,6 +2111,7 @@ let selectedDate = today();
 
 function renderTime(){
   $('#todayPlan').value = state.time.todayPlan || '';
+  if(!$('#dayTodoDate').value) $('#dayTodoDate').value = selectedDate || today();
   renderCalendar();
   renderSelectedDay();
 
@@ -2144,11 +2151,13 @@ function renderCalendar(){
       const isToday = c.date === today();
       const isSel = c.date === selectedDate;
       const hasEvent = (state.time.events[c.date]||[]).length > 0;
-      return `<div class="cal-day ${c.dim?'dim':''} ${isToday?'today':''} ${isSel?'selected':''}" data-date="${c.date}">${c.d}${hasEvent?'<span class="dot"></span>':''}</div>`;
+      const hasTodo = [...(state.time.dailyTodos||[]),...(state.time.weeklyTodos||[])].some(t=>t.date===c.date);
+      return `<div class="cal-day ${c.dim?'dim':''} ${isToday?'today':''} ${isSel?'selected':''}" data-date="${c.date}">${c.d}${(hasEvent||hasTodo)?'<span class="dot"></span>':''}</div>`;
     }).join('')}
   `;
   $$('.cal-day').forEach(el => el.onclick = () => {
     selectedDate = el.dataset.date;
+    if($('#dayTodoDate')) $('#dayTodoDate').value = selectedDate;
     renderCalendar();
     renderSelectedDay();
   });
@@ -2157,14 +2166,22 @@ function renderCalendar(){
 function renderSelectedDay(){
   $('#selDateLabel').textContent = selectedDate;
   const evs = state.time.events[selectedDate] || [];
+  const todos = [...(state.time.dailyTodos||[]),...(state.time.weeklyTodos||[])].filter(t=>t.date===selectedDate);
   const el = $('#eventList');
-  if(!evs.length){ el.innerHTML = '<div class="empty">這一天還沒有安排</div>'; return; }
+  if(!evs.length && !todos.length){ el.innerHTML = '<div class="empty">這一天還沒有安排</div>'; return; }
   el.innerHTML = evs.map(e => `
-    <div class="ev-row" data-id="${e.id}">
+    <div class="ev-row event-row" data-id="${e.id}">
       <div class="time">${esc(e.time||'—')}</div>
       <div class="title">${esc(e.title)}</div>
       <button class="ev-action edit" title="編輯">✎</button>
       <button class="ev-action del" title="刪除">✕</button>
+    </div>
+  `).join('') + todos.map(t => `
+    <div class="ev-row todo-row ${t.done?'done':''}" data-id="${t.id}">
+      <div class="todo-kind">${t.date===selectedDate?'To-do':'待辦'}</div>
+      <div class="title ${t.done?'done':''}">${esc(t.text)}</div>
+      <button class="todo-check" title="${t.done?'取消完成':'標記完成'}">${t.done?'✓':'○'}</button>
+      <button class="ev-action todo-del del" title="刪除">✕</button>
     </div>
   `).join('');
   $$('.ev-row .edit', el).forEach(b => b.onclick = async e => {
@@ -2176,11 +2193,22 @@ function renderSelectedDay(){
     ],submitText:'保存修改'});
     if(data && data.title){ event.title=data.title; event.time=data.time||''; saveState(); renderSelectedDay(); renderCalendar(); showToast('日程已更新 ✓'); }
   });
-  $$('.ev-row .del', el).forEach(b => b.onclick = e => {
+  $$('.event-row .del', el).forEach(b => b.onclick = e => {
     const id = e.target.closest('.ev-row').dataset.id;
     state.time.events[selectedDate] = (state.time.events[selectedDate]||[]).filter(x=>x.id!==id);
     if(!state.time.events[selectedDate].length) delete state.time.events[selectedDate];
     saveState(); renderSelectedDay(); renderCalendar();
+  });
+  $$('.todo-row .todo-check', el).forEach(b => b.onclick = e => {
+    const id = e.target.closest('.todo-row').dataset.id;
+    const todo = [...(state.time.dailyTodos||[]),...(state.time.weeklyTodos||[])].find(x=>x.id===id);
+    if(todo){ todo.done=!todo.done; saveState(); renderTime(); }
+  });
+  $$('.todo-row .todo-del', el).forEach(b => b.onclick = e => {
+    const id = e.target.closest('.todo-row').dataset.id;
+    state.time.dailyTodos = (state.time.dailyTodos||[]).filter(x=>x.id!==id);
+    state.time.weeklyTodos = (state.time.weeklyTodos||[]).filter(x=>x.id!==id);
+    saveState(); renderTime();
   });
 }
 
@@ -2216,15 +2244,15 @@ function renderTodoList(sel, arr, key){
   el.innerHTML = arr.map(t => `
     <div class="task-item ${t.done?'done':''}" data-id="${t.id}">
       <div class="check">${t.done?'✓':''}</div>
-      <div class="task-text">${esc(t.text)}</div>
+      <div class="task-text"><div>${esc(t.text)}</div>${t.date?`<div class="todo-date">📅 ${esc(t.date)}</div>`:''}</div>
       <button class="del">✕</button>
     </div>
   `).join('');
   $$('.task-item', el).forEach(item => {
     const id = item.dataset.id;
-    $('.check', item).onclick = () => { const t = arr.find(x=>x.id===id); t.done = !t.done; saveState(); renderTodoList(sel, arr, key); };
+    $('.check', item).onclick = () => { const t = arr.find(x=>x.id===id); t.done = !t.done; saveState(); renderTime(); };
     $('.del', item).onclick = () => {
-      const idx = arr.findIndex(x=>x.id===id); arr.splice(idx,1); saveState(); renderTodoList(sel, arr, key);
+      const idx = arr.findIndex(x=>x.id===id); arr.splice(idx,1); saveState(); renderTime();
     };
   });
 }
@@ -2843,6 +2871,12 @@ function bindAll(){
     $$('.tab-panel').forEach(p => p.style.display = p.dataset.panel === t.dataset.tab ? 'block' : 'none');
     if(t.dataset.tab === 'schedule'){ renderCalendar(); renderSelectedDay(); }
   });
+  $('#weekTodoDate').onchange = e => {
+    if(e.target.value){ selectedDate=e.target.value; calRef=new Date(e.target.value+'T00:00:00'); renderCalendar(); renderSelectedDay(); }
+  };
+  $('#dayTodoDate').onchange = e => {
+    if(e.target.value){ selectedDate=e.target.value; calRef=new Date(e.target.value+'T00:00:00'); renderCalendar(); renderSelectedDay(); }
+  };
   $('#calPrev').onclick = () => { calRef = new Date(calRef.getFullYear(), calRef.getMonth()-1, 1); renderCalendar(); };
   $('#calNext').onclick = () => { calRef = new Date(calRef.getFullYear(), calRef.getMonth()+1, 1); renderCalendar(); };
 
@@ -2882,7 +2916,9 @@ function bindAll(){
 
   const addTodoList = (sel, inputSel, key, arr) => {
     const input = $(inputSel); const v = input.value.trim(); if(!v) return;
-    arr.push({id:uid(), text:v, done:false});
+    const dateInput = key==='day' ? $('#dayTodoDate') : $('#weekTodoDate');
+    const date = dateInput?.value || '';
+    arr.push({id:uid(), text:v, done:false, ...(date?{date}: {})});
     input.value=''; saveState(); renderTime();
   };
   $('#addWeekTodo').onclick = () => addTodoList('#weekTodos', '#newWeekTodo', 'week', state.time.weeklyTodos);
