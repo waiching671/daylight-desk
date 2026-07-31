@@ -656,6 +656,12 @@
   .asset-group:first-child{margin-top:0}
   .asset-group-title{font-size:12px;color:var(--ink-2);font-weight:600;margin-bottom:7px}
   .asset-actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .asset-transfer{margin-top:18px;padding-top:15px;border-top:1px solid var(--line-soft)}
+  .asset-transfer-title{font-size:13px;font-weight:600;margin-bottom:9px}
+  .asset-transfer-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;align-items:center}
+  .asset-transfer-form .wide{grid-column:1/-1}
+  .asset-transfer-hint{font-size:11px;color:var(--ink-3);margin-top:8px}
+  @media (max-width:760px){.asset-actions,.asset-transfer-form{display:grid;grid-template-columns:1fr 1fr}.asset-actions .btn,.asset-transfer-form .btn{justify-self:start}.asset-transfer-form .wide{grid-column:1/-1}}
   .finance-news{grid-column:1/-1}
   .finance-chart{grid-column:1/-1}.finance-chart-controls{display:flex;gap:8px;margin-bottom:14px}.finance-chart-controls select,.finance-chart-controls input{max-width:150px}.finance-status{padding:3px 9px;border-radius:99px;font-size:11px}.finance-status.normal{background:var(--accent-bg);color:var(--accent)}.finance-status.over{background:#f8dede;color:#c44b4b}.finance-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.pie-wrap{min-width:0}.pie-title{font-size:12px;color:var(--ink-2);margin-bottom:8px}.pie{width:150px;height:150px;margin:0 auto 10px;border-radius:50%;background:conic-gradient(var(--line) 0 100%);position:relative}.pie::after{content:'';position:absolute;inset:35px;background:var(--surface);border-radius:50%}.pie-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;font-size:11px;color:var(--ink-2)}.pie-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--pie-color);margin-right:4px}@media (max-width:760px){.finance-chart-grid{grid-template-columns:1fr}}
   @media (max-width:960px){.finance-summary,.finance-grid{grid-template-columns:1fr}.finance-assets,.finance-news{grid-column:auto}}
@@ -1441,6 +1447,20 @@
             <input type="text" id="finAssetAmount" placeholder="金額" />
             <button class="btn btn-mini" id="finAddAsset">＋ 新增</button>
           </div>
+          <div class="asset-transfer">
+            <div class="asset-transfer-title">↔ 帳戶互轉</div>
+            <div class="asset-transfer-form">
+              <select id="finTransferFrom" aria-label="轉出帳戶"></select>
+              <select id="finTransferTo" aria-label="轉入帳戶"></select>
+              <input type="number" min="0" step="0.01" id="finTransferFromAmount" placeholder="轉出金額" />
+              <input type="number" min="0" step="0.01" id="finTransferToAmount" placeholder="轉入金額" />
+              <input type="date" id="finTransferDate" />
+              <input class="wide" type="text" id="finTransferNote" placeholder="備註（可選；不同幣種可填匯率後的轉入金額）" />
+              <button class="btn btn-mini" id="finAddTransfer">＋ 確認轉帳</button>
+            </div>
+            <div class="asset-transfer-hint">同幣種會直接等額轉入；不同幣種請填寫轉入金額。刪除轉帳紀錄會自動還原兩個帳戶。</div>
+            <div class="finance-list" id="finTransferList"></div>
+          </div>
         </div>
 
         <div class="card finance-news">
@@ -1784,7 +1804,8 @@ const defaultState = () => ({
       { id:'wechat-hk', group:'微信', name:'香港微信', amount:'', currency:'HKD' },
       { id:'wechat-mainland', group:'微信', name:'內地微信', amount:'', currency:'CNY' }
     ],
-    investmentNews: []
+    investmentNews: [],
+    transfers: []
   },
   media: [],
   newsSources: [],
@@ -2458,12 +2479,13 @@ function renderLearning(){
 
 /* ========== 理財工作台 ========== */
 function financeData(){
-  if(!state.finance) state.finance = {expenses:[], incomes:[], assets:[], investmentNews:[]};
+  if(!state.finance) state.finance = {expenses:[], incomes:[], assets:[], investmentNews:[], transfers:[]};
   if(state.personal && state.personal.finance) delete state.personal.finance;
   state.finance.expenses = Array.isArray(state.finance.expenses) ? state.finance.expenses : [];
   state.finance.incomes = Array.isArray(state.finance.incomes) ? state.finance.incomes : [];
   state.finance.assets = Array.isArray(state.finance.assets) ? state.finance.assets : [];
   state.finance.investmentNews = Array.isArray(state.finance.investmentNews) ? state.finance.investmentNews : [];
+  state.finance.transfers = Array.isArray(state.finance.transfers) ? state.finance.transfers : [];
   state.finance.expenses = state.finance.expenses.map(x => Object.assign({date:today(),currency:'HKD',category:'其他'},x));
   state.finance.incomes = state.finance.incomes.map(x => Object.assign({date:today(),currency:'HKD',category:'其他'},x));
   return state.finance;
@@ -2544,6 +2566,32 @@ function renderFinance(){
     const id = b.closest('.finance-row').dataset.id; f.assets = f.assets.filter(x=>x.id!==id); saveState(); renderFinance();
   });
 
+  const assetLabel = x => `${x.name} · ${x.currency||'HKD'} · 餘額 ${String(x.amount||'').trim()?moneyText(x.amount):'未設定'}`;
+  const assetOptions = f.assets.length ? f.assets.map(x=>`<option value="${esc(x.id)}">${esc(assetLabel(x))}</option>`).join('') : '<option value="">請先新增資產帳戶</option>';
+  const fromSelect=$('#finTransferFrom'), toSelect=$('#finTransferTo');
+  const previousFrom=fromSelect.value, previousTo=toSelect.value;
+  fromSelect.innerHTML=assetOptions; toSelect.innerHTML=assetOptions;
+  if(f.assets.some(x=>x.id===previousFrom)) fromSelect.value=previousFrom;
+  if(f.assets.some(x=>x.id===previousTo)) toSelect.value=previousTo;
+  if(!fromSelect.value && f.assets[0]) fromSelect.value=f.assets[0].id;
+  if(!toSelect.value && f.assets[1]) toSelect.value=f.assets[1].id;
+  if(!$('#finTransferDate').value) $('#finTransferDate').value=today();
+  const transferList=$('#finTransferList');
+  transferList.innerHTML=f.transfers.length ? f.transfers.slice().reverse().map(t=>{
+    const from=f.assets.find(x=>x.id===t.fromId), to=f.assets.find(x=>x.id===t.toId);
+    const fromName=from?.name||'已刪除帳戶', toName=to?.name||'已刪除帳戶';
+    const fromCurrency=t.fromCurrency||from?.currency||'HKD', toCurrency=t.toCurrency||to?.currency||fromCurrency;
+    return `<div class="finance-row transfer-row" data-id="${esc(t.id)}"><div class="row-main"><div class="row-title">${esc(fromName)} → ${esc(toName)}</div><div class="row-meta">${esc(t.date||'')} · ${moneyText(t.fromAmount)} ${esc(fromCurrency)} → ${moneyText(t.toAmount)} ${esc(toCurrency)}${t.note?' · '+esc(t.note):''}</div></div><button class="del" title="撤銷轉帳">↶</button></div>`;
+  }).join('') : '<div class="empty">還沒有轉帳紀錄</div>';
+  $$('#finTransferList .del').forEach(b => b.onclick = () => {
+    const id=b.closest('.transfer-row').dataset.id, transfer=f.transfers.find(x=>x.id===id);
+    if(!transfer) return;
+    const from=f.assets.find(x=>x.id===transfer.fromId), to=f.assets.find(x=>x.id===transfer.toId);
+    if(from) from.amount=String(moneyValue(from.amount)+moneyValue(transfer.fromAmount));
+    if(to) to.amount=String(moneyValue(to.amount)-moneyValue(transfer.toAmount));
+    f.transfers=f.transfers.filter(x=>x.id!==id); saveState(); renderFinance(); showToast('已撤銷轉帳，帳戶餘額已還原');
+  });
+
   $('#finAddExpense').onclick = () => {
     const amount=$('#finExpenseAmount').value.trim(); if(!moneyValue(amount)){showToast('請先填寫支出金額');return;}
     f.expenses.push({id:uid(),category:$('#finExpenseCategory').value,currency:$('#finExpenseCurrency').value,amount,note:$('#finExpenseNote').value.trim(),date:$('#finExpenseDate').value||today()});
@@ -2558,6 +2606,20 @@ function renderFinance(){
     const name=$('#finAssetName').value.trim(); if(!name){showToast('請填寫帳戶名稱');return;}
     f.assets.push({id:uid(),group:$('#finAssetGroup').value,name,amount:$('#finAssetAmount').value.trim(),currency:$('#finAssetCurrency').value});
     $('#finAssetName').value=''; $('#finAssetAmount').value=''; saveState(); renderFinance();
+  };
+  $('#finAddTransfer').onclick = () => {
+    const from=f.assets.find(x=>x.id===$('#finTransferFrom').value), to=f.assets.find(x=>x.id===$('#finTransferTo').value);
+    const fromAmount=moneyValue($('#finTransferFromAmount').value), enteredTo=$('#finTransferToAmount').value.trim(), toAmount=enteredTo?moneyValue(enteredTo):fromAmount;
+    if(!from||!to){showToast('請先新增至少兩個資產帳戶');return;}
+    if(from.id===to.id){showToast('轉出和轉入帳戶不能相同');return;}
+    if(!fromAmount){showToast('請填寫轉出金額');return;}
+    if(!toAmount){showToast('請填寫轉入金額');return;}
+    if(!String(from.amount||'').trim()){showToast('請先填寫轉出帳戶目前餘額');return;}
+    if(moneyValue(from.amount)<fromAmount){showToast('轉出帳戶餘額不足');return;}
+    if((from.currency||'HKD')===(to.currency||'HKD') && Math.abs(fromAmount-toAmount)>0.000001){showToast('同幣種轉帳的轉入金額應與轉出金額相同');return;}
+    from.amount=String(moneyValue(from.amount)-fromAmount); to.amount=String(moneyValue(to.amount)+toAmount);
+    f.transfers.push({id:uid(),fromId:from.id,toId:to.id,fromAmount,toAmount,fromCurrency:from.currency||'HKD',toCurrency:to.currency||'HKD',date:$('#finTransferDate').value||today(),note:$('#finTransferNote').value.trim()});
+    $('#finTransferFromAmount').value=''; $('#finTransferToAmount').value=''; $('#finTransferNote').value=''; $('#finTransferDate').value=today(); saveState(); renderFinance(); showToast('轉帳完成 ✓');
   };
   $('#finAddNews').onclick = () => {
     const title=$('#finNewsTitle').value.trim(); if(!title){showToast('請填寫資訊標題');return;}
