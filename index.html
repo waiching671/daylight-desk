@@ -2659,8 +2659,26 @@ async function newsFetchWithTimeout(url, options={}){
   try { return await fetch(url,Object.assign({cache:'no-store',signal:controller.signal},options)); }
   finally { clearTimeout(timer); }
 }
+function newsFetchJsonp(feed){
+  return new Promise((resolve,reject)=>{
+    const callback='daylightRss_'+String(uid()).replace(/[^a-zA-Z0-9_$]/g,'');
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>finish(new Error('RSS timeout')),12000);
+    function finish(error,value){
+      clearTimeout(timer); delete window[callback]; script.remove(); error?reject(error):resolve(value);
+    }
+    window[callback]=data=>{
+      if(!data || (data.status && data.status!=='ok')) return finish(new Error(data?.message||'feed unavailable'));
+      finish(null,Array.isArray(data.items)?data.items:[]);
+    };
+    script.onerror=()=>finish(new Error('RSS request failed'));
+    script.src='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12&callback='+callback;
+    document.head.appendChild(script);
+  });
+}
 async function newsFetchSource(source){
   const feed = source.feed;
+  if(typeof fetch!=='function') return newsFetchJsonp(feed);
   const endpoint='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12';
   try {
     const response=await newsFetchWithTimeout(endpoint);
@@ -2671,10 +2689,14 @@ async function newsFetchSource(source){
   } catch(e) {}
   // 部分 RSS 不允許瀏覽器直接讀取，改用公開轉接服務再解析 XML。
   const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(feed);
-  const response=await newsFetchWithTimeout(proxy);
-  if(!response.ok) throw new Error('feed request failed');
-  const xml=await response.text();
-  return newsXmlItems(xml);
+  try {
+    const response=await newsFetchWithTimeout(proxy);
+    if(response.ok){
+      const xml=await response.text();
+      return newsXmlItems(xml);
+    }
+  } catch(e) {}
+  return newsFetchJsonp(feed);
 }
 async function loadNewsFeeds(){
   const button=$('#newsRefreshBtn'); if(!button) return;
