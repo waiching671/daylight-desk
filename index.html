@@ -1487,14 +1487,14 @@
         <div class="news-form">
           <input type="text" id="newsSourceName" placeholder="來源名稱，例如：明報" />
           <input type="text" id="newsSourceUrl" placeholder="網址 https://…" />
-          <input type="text" id="newsSourceRss" placeholder="RSS 地址（可選）" />
+          <input type="text" id="newsSourceRss" placeholder="RSS 地址（可選；內置來源不用填）" />
           <input type="text" id="newsSourceCategory" placeholder="分類，例如：香港 / 中文" />
           <button class="btn" id="newsAddSource">＋ 新增來源</button>
         </div>
         <div class="news-list" id="newsCustomList"></div>
       </div>
 
-      <div class="news-note" style="margin-top:18px">新聞會在打開本頁或點擊右上角刷新時，自動從已連接的 RSS 來源讀取；你不需要逐條新增新聞。若來源暫時無法讀取，仍可點擊來源網站查看最新內容。</div>
+      <div class="news-note" style="margin-top:18px">新聞會在打開本頁或點擊右上角刷新時自動讀取。內置來源已經設定好，你不需要逐條新增新聞；如果某個 RSS 暫時失效，其他來源仍會繼續顯示。</div>
     </section>
 
     <!-- ===== 7. 書影音 ===== -->
@@ -2643,19 +2643,50 @@ function newsFeedItem(source,item){
   if(item.pubDate){const d=new Date(item.pubDate);date=Number.isNaN(d.getTime())?'':fmtDate(d);}
   return {id:`feed-${source.id}-${uid()}`,category:newsFeedCategory(source),title:cleanNewsText(item.title)||'未命名資訊',summary:description.slice(0,180),source:source.name,url:safeHttpUrl(item.link||item.guid||''),date,cover:safeHttpUrl(image)};
 }
+function newsXmlItems(xml){
+  const doc = new DOMParser().parseFromString(xml,'text/xml');
+  if(doc.querySelector('parsererror')) throw new Error('RSS 格式錯誤');
+  return [...doc.querySelectorAll('item, entry')].slice(0,12).map(node=>{
+    const text = name => node.querySelector(name)?.textContent || '';
+    const linkNode = node.querySelector('link');
+    const link = linkNode?.getAttribute('href') || linkNode?.textContent || text('guid');
+    return {title:text('title'),description:text('description')||text('summary')||text('content'),link,guid:text('guid'),pubDate:text('pubDate')||text('published')||text('updated'),thumbnail:(node.querySelector('media\\:thumbnail, thumbnail')?.getAttribute('url')||'')};
+  });
+}
+async function newsFetchWithTimeout(url, options={}){
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(),10000);
+  try { return await fetch(url,Object.assign({cache:'no-store',signal:controller.signal},options)); }
+  finally { clearTimeout(timer); }
+}
+async function newsFetchSource(source){
+  const feed = source.feed;
+  const endpoint='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12';
+  try {
+    const response=await newsFetchWithTimeout(endpoint);
+    if(response.ok){
+      const data=await response.json();
+      if(data.status==='ok' && Array.isArray(data.items) && data.items.length) return data.items;
+    }
+  } catch(e) {}
+  // 部分 RSS 不允許瀏覽器直接讀取，改用公開轉接服務再解析 XML。
+  const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(feed);
+  const response=await newsFetchWithTimeout(proxy);
+  if(!response.ok) throw new Error('feed request failed');
+  const xml=await response.text();
+  return newsXmlItems(xml);
+}
 async function loadNewsFeeds(){
   const button=$('#newsRefreshBtn'); if(!button) return;
   button.classList.add('loading'); button.disabled=true;
   const sources=[...defaultNewsSources,...newsData().filter(x=>x.rss).map(x=>Object.assign({},x,{feed:x.rss}))].filter(x=>x.feed);
   const batches=await Promise.allSettled(sources.map(async source=>{
-    const endpoint='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(source.feed)+'&count=12';
-    const response=await fetch(endpoint,{cache:'no-store'}); if(!response.ok) throw new Error('feed request failed');
-    const data=await response.json(); if(data.status && data.status!=='ok') throw new Error(data.message||'feed unavailable');
-    return (data.items||[]).slice(0,8).map(item=>newsFeedItem(source,item));
+    const items=await newsFetchSource(source);
+    return items.slice(0,8).map(item=>newsFeedItem(source,item));
   }));
   newsLiveItems=batches.filter(x=>x.status==='fulfilled').flatMap(x=>x.value).filter(x=>x.title).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   renderNews(); button.classList.remove('loading'); button.disabled=false;
-  showToast(newsLiveItems.length?`已更新 ${newsLiveItems.length} 條新聞 ✓`:'暫時讀不到新聞來源，仍可使用自訂資訊');
+  showToast(newsLiveItems.length?`已更新 ${newsLiveItems.length} 條新聞 ✓`:'暫時讀不到即時 RSS，請先點擊下方來源查看新聞');
 }
 function bindNews(){
   $('#newsAddSource').onclick = () => {
