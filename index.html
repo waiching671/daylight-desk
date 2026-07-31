@@ -2685,14 +2685,15 @@ function newsFetchJsonp(feed){
       finish(null,Array.isArray(data.items)?data.items:[]);
     };
     script.onerror=()=>finish(new Error('RSS request failed'));
-    script.src='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12&callback='+callback;
+    // rss2json 的 count 參數現在需要 API key；不帶 count 可直接讀取公開 RSS。
+    script.src='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&callback='+callback;
     document.head.appendChild(script);
   });
 }
 async function newsFetchSource(source){
   const feed = source.feed;
   if(typeof fetch!=='function') return newsFetchJsonp(feed);
-  const endpoint='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12';
+  const endpoint='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed);
   try {
     const response=await newsFetchWithTimeout(endpoint);
     if(response.ok){
