@@ -1607,18 +1607,18 @@
         <div class="wl-meta">
           <span class="wl-tag" id="wlProfileTag">女 · 26歲 · 160cm</span>
           <span class="wl-tag" id="wlDayTag">第 1 天</span>
-          <span class="wl-tag" id="wlStartTag">起點 100 → 目標 99 斤</span>
+          <span class="wl-tag" id="wlStartTag">起點 50 → 目標 49.5 kg</span>
         </div>
         <div class="wl-stats">
           <div class="wl-stat">
-            <div class="num" id="wlCurrentWeight">100.0<span style="font-size:18px;color:var(--ink-2)"> 斤</span></div>
+            <div class="num" id="wlCurrentWeight">50.0<span style="font-size:18px;color:var(--ink-2)"> kg</span></div>
             <div class="lbl">當前體重</div>
             <div class="sub" id="wlChangeSub">—</div>
           </div>
           <div class="wl-stat">
-            <div class="num warm" id="wlLost">0<span style="font-size:18px;color:var(--ink-2)"> 斤</span></div>
+            <div class="num warm" id="wlLost">0<span style="font-size:18px;color:var(--ink-2)"> kg</span></div>
             <div class="lbl">已減 / 目標差</div>
-            <div class="sub" id="wlGoalSub">還差 1 斤達標</div>
+            <div class="sub" id="wlGoalSub">還差 0.5 kg達標</div>
           </div>
           <div class="wl-stat">
             <div class="num" id="wlBmi">39.1</div>
@@ -1649,7 +1649,7 @@
               <input type="text" id="wlDate" placeholder="2026-07-30" />
             </div>
             <div class="field">
-              <label>今日體重（斤）</label>
+              <label>今日體重（kg）</label>
               <input type="text" id="wlWeight" placeholder="例：99.5" />
             </div>
             <button class="btn" id="wlRecordBtn">記錄</button>
@@ -1821,7 +1821,8 @@ const defaultState = () => ({
   },
   pomo: { count: 0, date: '' },
   wl: {
-    profile: { gender: '女', age: 26, height: 160, startWeight: 100, targetWeight: 99, currentWeight: 100, day: 1 },
+    unit: 'kg',
+    profile: { gender: '女', age: 26, height: 160, startWeight: 50, targetWeight: 49.5, currentWeight: 50, day: 1 },
     records: {},                 // date -> weight
     checks: {},                  // date -> { [key]: true }
     activeDay: 0,                // 0=週日
@@ -1876,6 +1877,15 @@ function loadState(){
       next.newsSources = next.newsSources.map(x => Object.assign({id:uid(),name:'',url:'',category:'其他'},x)).filter(x => x.name && x.url);
       if(!Array.isArray(next.newsItems)) next.newsItems=[];
       next.newsItems = next.newsItems.map(x => Object.assign({id:uid(),category:'其他',title:'',summary:'',source:'',url:'',date:'',cover:''},x)).filter(x => x.title);
+      if(!next.wl || typeof next.wl !== 'object') next.wl = defaultState().wl;
+      if(next.wl.unit !== 'kg'){
+        const toKg = value => { const n=Number(value); return Number.isFinite(n) ? Math.round(n*5)/10 : value; };
+        if(next.wl.profile){
+          ['startWeight','targetWeight','currentWeight'].forEach(k => { if(next.wl.profile[k] !== undefined && next.wl.profile[k] !== '') next.wl.profile[k]=toKg(next.wl.profile[k]); });
+        }
+        if(next.wl.records && typeof next.wl.records === 'object') Object.keys(next.wl.records).forEach(k => { next.wl.records[k]=toKg(next.wl.records[k]); });
+        next.wl.unit='kg';
+      }
       return next;
     }
   }catch(e){}
@@ -3352,7 +3362,7 @@ function bindAll(){
     saveState();
     $('#wlWeight').value = '';
     renderWeightLoss();
-    showToast(`已記錄 ${date}：${w} 斤 ✓`);
+    showToast(`已記錄 ${date}：${w} kg ✓`);
   };
   $('#wlWeight').onkeydown = e => { if(e.key==='Enter') $('#wlRecordBtn').click(); };
   $('#wlDate').onkeydown = e => { if(e.key==='Enter') $('#wlWeight').focus(); };
@@ -3382,8 +3392,8 @@ function bindAll(){
         { key:'gender', label:'性別', type:'select', value:p.gender, options:[{value:'女',label:'女'},{value:'男',label:'男'}] },
         { key:'age', label:'年齡', placeholder:'26', value:String(p.age||'') },
         { key:'height', label:'身高 (cm)', placeholder:'160', value:String(p.height||'') },
-        { key:'startWeight', label:'起點體重 (斤)', placeholder:'100', value:String(p.startWeight||'') },
-        { key:'targetWeight', label:'目標體重 (斤)', placeholder:'99', value:String(p.targetWeight||'') }
+        { key:'startWeight', label:'起點體重 (kg)', placeholder:'50', value:String(p.startWeight||'') },
+        { key:'targetWeight', label:'目標體重 (kg)', placeholder:'49.5', value:String(p.targetWeight||'') }
       ],
       submitText: '儲存'
     });
@@ -3462,8 +3472,8 @@ function bindAll(){
 /* ========== 減肥工作台 ========== */
 function wlBmi(weight, height){
   if(!weight || !height) return 0;
-  // 斤 → kg, cm → m
-  const m = (weight/2) / Math.pow(height/100, 2);
+  // kg, cm → m
+  const m = weight / Math.pow(height/100, 2);
   return Math.round(m * 10) / 10;
 }
 
@@ -3513,17 +3523,17 @@ function renderWeightLoss(){
   // Hero
   $('#wlProfileTag').textContent = wlProfileSummary();
   $('#wlDayTag').textContent = `第 ${s.days} 天`;
-  $('#wlStartTag').textContent = `起點 ${p.startWeight} → 目標 ${p.targetWeight} 斤`;
-  $('#wlCurrentWeight').innerHTML = `${s.currentWeight.toFixed(1)}<span style="font-size:18px;color:var(--ink-2)"> 斤</span>`;
-  $('#wlLost').innerHTML = `${s.lost.toFixed(1)}<span style="font-size:18px;color:var(--ink-2)"> 斤</span>`;
+  $('#wlStartTag').textContent = `起點 ${p.startWeight} → 目標 ${p.targetWeight} kg`;
+  $('#wlCurrentWeight').innerHTML = `${s.currentWeight.toFixed(1)}<span style="font-size:18px;color:var(--ink-2)"> kg</span>`;
+  $('#wlLost').innerHTML = `${s.lost.toFixed(1)}<span style="font-size:18px;color:var(--ink-2)"> kg</span>`;
   $('#wlChangeSub').textContent = s.records.length > 1
-    ? `上次 ${s.records[s.records.length-1].w} → ${(s.records[s.records.length-1].w - s.records[s.records.length-2].w).toFixed(1)} 斤`
+    ? `上次 ${s.records[s.records.length-1].w} → ${(s.records[s.records.length-1].w - s.records[s.records.length-2].w).toFixed(1)} kg`
     : '尚未記錄過';
-  $('#wlGoalSub').textContent = s.goalDiff > 0 ? `還差 ${s.goalDiff.toFixed(1)} 斤達標` : `已達標 🎉`;
+  $('#wlGoalSub').textContent = s.goalDiff > 0 ? `還差 ${s.goalDiff.toFixed(1)} kg達標` : `已達標 🎉`;
   $('#wlBmi').textContent = s.bmi || '—';
   $('#wlBmiSub').textContent = `（${wlBmiLabel(s.bmi)} · 正常 18.5–24）`;
   $('#wlFill').style.width = s.pct + '%';
-  $('#wlPctLabel').textContent = `已減 ${s.lost.toFixed(1)} 斤，按穩減節奏約還需 ${Math.max(0, Math.ceil(s.goalDiff/0.5))} 天 · ${s.pct}%`;
+  $('#wlPctLabel').textContent = `已減 ${s.lost.toFixed(1)} kg，按穩減節奏約還需 ${Math.max(0, Math.ceil(s.goalDiff/0.5))} 天 · ${s.pct}%`;
 
   // Target mark 在進度條上的位置 = 100%（因為終點就是目標）
   $('#wlTargetMark').style.left = '100%';
@@ -3543,7 +3553,7 @@ function renderWeightLoss(){
       const dStr = delta < 0 ? `▼ ${Math.abs(delta).toFixed(1)}` : delta > 0 ? `▲ ${delta.toFixed(1)}` : '— 持平';
       return `<div class="wl-wh-row" data-date="${r.date}">
         <span class="dt">${r.date}</span>
-        <span class="wt">${r.w.toFixed(1)} 斤</span>
+        <span class="wt">${r.w.toFixed(1)} kg</span>
         <span class="delta ${delta<0?'down':''}">${dStr}</span>
         <span class="up" data-del="${r.date}">✕</span>
       </div>`;
@@ -3619,7 +3629,7 @@ function renderWlChart(s){
   const path = s.records.map((r,i) => `${i===0?'M':'L'} ${xScale(i).toFixed(1)} ${yScale(r.w).toFixed(1)}`).join(' ');
   const targetY = yScale(state.wl.profile.targetWeight).toFixed(1);
   const startY = yScale(state.wl.profile.startWeight).toFixed(1);
-  const dots = s.records.map((r,i) => `<circle class="weight-dot" cx="${xScale(i).toFixed(1)}" cy="${yScale(r.w).toFixed(1)}" r="3"><title>${r.date}: ${r.w} 斤</title></circle>`).join('');
+  const dots = s.records.map((r,i) => `<circle class="weight-dot" cx="${xScale(i).toFixed(1)}" cy="${yScale(r.w).toFixed(1)}" r="3"><title>${r.date}: ${r.w} kg</title></circle>`).join('');
 
   // x 軸標籤（首/中/末）
   const mid = Math.floor(s.records.length/2);
