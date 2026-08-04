@@ -3874,12 +3874,19 @@ function bindAll(){
       submitText: '儲存'
     });
     if(data){
+      const positiveNumber = (value, fallback) => {
+        const n = Number(value);
+        return Number.isFinite(n) && n > 0 ? n : fallback;
+      };
       p.gender = data.gender || p.gender;
-      p.age = +data.age || p.age;
-      p.height = +data.height || p.height;
-      p.startWeight = +data.startWeight || p.startWeight;
-      p.targetWeight = +data.targetWeight || p.targetWeight;
-      saveState(); renderWeightLoss(); showToast('已更新資料 ✓');
+      p.age = positiveNumber(data.age, p.age);
+      p.height = positiveNumber(data.height, p.height);
+      p.startWeight = positiveNumber(data.startWeight, p.startWeight);
+      p.targetWeight = positiveNumber(data.targetWeight, p.targetWeight);
+      state.wl.profile = Object.assign({}, p);
+      saveState();
+      renderWeightLoss();
+      showToast('已更新資料 ✓');
     }
   };
 
@@ -4019,7 +4026,7 @@ function wlBmiLabel(bmi){
 function renderWeightLoss(){
   // 確保結構存在
   if(!state.wl) state.wl = defaultState().wl;
-  if(!state.wl.profile) state.wl.profile = defaultState().wl.profile;
+  state.wl.profile = Object.assign({}, defaultState().wl.profile, state.wl.profile || {});
   if(!state.wl.records) state.wl.records = {};
   if(!state.wl.checks) state.wl.checks = {};
   if(!state.wl.mealPlan || !state.wl.mealPlan.length) state.wl.mealPlan = defaultState().wl.mealPlan;
