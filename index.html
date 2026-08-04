@@ -132,6 +132,17 @@
   }
   .theme-toggle:hover{background:var(--surface-mint);color:var(--accent)}
   .theme-toggle .t-ico{font-size:16px}
+  .sync-toggle{margin-top:8px;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line-soft);cursor:pointer;font-size:12px;color:var(--ink-2);transition:all .15s;width:100%;text-align:left}
+  .sync-toggle:hover{background:var(--surface-mint);color:var(--accent)}
+  .sync-toggle .sync-ico{font-size:16px}
+  .sync-toggle .sync-state{margin-left:auto;font-size:10px;color:var(--ink-3);white-space:nowrap}
+  .sync-help{font-size:12px;color:var(--ink-2);line-height:1.65;margin:0 0 14px}
+  .sync-help a{color:var(--accent);text-decoration:underline}
+  .sync-status-line{padding:9px 11px;border-radius:10px;background:var(--surface-2);color:var(--ink-2);font-size:12px;margin:10px 0}
+  .sync-status-line.ok{background:var(--accent-bg);color:var(--accent)}
+  .sync-status-line.error{background:var(--warm-bg);color:var(--warm)}
+  .sync-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .sync-actions .btn{flex:1;min-width:120px}
 
   .search-box{
     margin: 16px 0 4px;
@@ -443,6 +454,12 @@
   .mood-btn .emo{font-size:22px;display:block;margin-bottom:2px}
   .mood-btn .name{font-size:10px;color:var(--ink-2);letter-spacing:1px}
   .mood-week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.mood-day{padding:8px 4px;text-align:center;background:var(--surface-2);border-radius:9px}.mood-day.today{background:var(--accent-bg);box-shadow:0 0 0 1px var(--accent-2)}.mood-day .wd{font-size:10px;color:var(--ink-3)}.mood-day .emo{font-size:22px;margin:4px 0}.mood-day .md{font-size:10px;color:var(--ink-2)}
+  .overview-habit-row{display:grid;grid-template-columns:minmax(62px,1fr) repeat(7,24px) 28px;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid var(--line-soft);font-size:11px}
+  .overview-habit-row:last-child{border-bottom:0}.overview-habit-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+  .overview-habit-dot{width:22px;height:22px;border-radius:7px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-3);font-size:11px}
+  .overview-habit-dot.checked{background:var(--accent);border-color:var(--accent);color:#fff}.overview-habit-total{font-size:10px;color:var(--ink-3);text-align:right;white-space:nowrap}
+  .overview-record-item{padding:8px 0;border-bottom:1px solid var(--line-soft);cursor:pointer}.overview-record-item:last-child{border-bottom:0}.overview-record-item:hover{color:var(--accent)}
+  .overview-record-date{font-size:11px;color:var(--ink-3);margin-bottom:3px}.overview-record-summary{font-size:12px;color:var(--ink-2);line-height:1.5}
 
   .highlights{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
   .hi-card{background:var(--surface);border-radius:var(--r-lg);padding:14px;border:1px solid var(--line-soft)}
@@ -471,32 +488,77 @@
   .cal-nav button:hover{background:var(--surface-mint);color:var(--accent)}
   .cal-nav .month{font-weight:600;color:var(--ink-1);min-width:90px;text-align:center;font-size:14px}
 
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(112px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);overflow-x:auto}
   .cal-wd{font-size:11px;color:var(--ink-3);text-align:center;padding:6px 0;letter-spacing:1px}
   .cal-day{
-    aspect-ratio:1/1;
-    background:var(--surface);border-radius:10px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    cursor:pointer;border:1px solid transparent;
+    min-height:126px;
+    background:var(--surface);
+    display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+    cursor:pointer;border:2px solid transparent;
+    padding:8px 7px 6px;
     font-size:13px;color:var(--ink-2);
     position:relative;
     transition: all .15s;
   }
   .cal-day:hover{border-color:var(--accent-2)}
-  .cal-day.dim{color:var(--ink-3);opacity:.55}
-  .cal-day.today{background:var(--surface-mint);color:var(--accent);font-weight:600}
-  .cal-day.selected{background:var(--accent);color:#fff;font-weight:600}
-  .cal-day .dot{
-    width:4px;height:4px;border-radius:99px;background:var(--accent);
-    position:absolute;bottom:6px;
-  }
-  .cal-day.selected .dot{background:#fff}
+  .cal-day.dim{color:var(--ink-3);opacity:.58}
+  .cal-day.today{background:var(--surface-mint)}
+  .cal-day.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .cal-day-num{font-size:14px;font-weight:600;line-height:1.2;margin-bottom:6px;text-align:right;color:var(--ink-1)}
+  .cal-day.today .cal-day-num{color:var(--accent)}
+  .cal-items{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .cal-item{display:flex;align-items:center;gap:5px;min-width:0;line-height:1.3;font-size:12px;padding:2px 1px;color:var(--ink-1)}
+  .cal-item-marker{width:5px;height:18px;border-radius:99px;flex:0 0 5px;background:var(--accent)}
+  .cal-item.event .cal-item-marker{background:#e47ee6}
+  .cal-item.todo .cal-item-marker{background:#1686ee}
+  .cal-item.task .cal-item-marker{background:#f5b800}
+  .cal-item.plan .cal-item-marker{background:#f07b63}
+  .cal-item-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+  .cal-item-time{font-size:10px;color:var(--ink-3);white-space:nowrap;margin-left:auto}
+  .cal-item.done .cal-item-title{text-decoration:line-through;color:var(--ink-3)}
+  .cal-more{font-size:10px;color:var(--accent);padding:2px 1px}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:-4px 0 10px;font-size:11px;color:var(--ink-2)}
+  .cal-legend span{display:inline-flex;align-items:center;gap:5px}
+  .cal-legend i{width:6px;height:16px;border-radius:99px;background:var(--accent)}
+  .cal-legend .lg-event{background:#e47ee6}.cal-legend .lg-todo{background:#1686ee}.cal-legend .lg-task{background:#f5b800}.cal-legend .lg-plan{background:#f07b63}
+
+  /* ========== Todo 總覽 ========== */
+  .todo-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+  .todo-stat{min-height:86px;border-radius:14px;padding:12px 14px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm)}
+  .todo-stat .todo-stat-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600}
+  .todo-stat .todo-stat-ico{font-size:17px}.todo-stat .todo-stat-num{font-size:25px;font-weight:700;line-height:1}
+  .todo-stat.today{background:linear-gradient(135deg,#67a5e8,#4d8cdb)}.todo-stat.scheduled{background:linear-gradient(135deg,#f18a8c,#e96b72)}
+  .todo-stat.all{background:linear-gradient(135deg,#777b80,#53575c)}
+  .todo-stat.urgent{background:linear-gradient(135deg,#ec7197,#df4d7b)}.todo-stat.completed{background:linear-gradient(135deg,#9aa3aa,#7f8991)}
+  .todo-quick-add{display:grid;grid-template-columns:1fr 120px 100px 150px auto auto;gap:8px;margin-bottom:16px}
+  .todo-urgent-option{display:flex;align-items:center;justify-content:center;gap:5px;padding:0 8px;border:1px solid var(--line);border-radius:9px;color:var(--ink-2);font-size:12px;white-space:nowrap;cursor:pointer}
+  .todo-urgent-option input{accent-color:#df4d7b}
+  .todo-urgent-badge{font-size:10px;color:#c84e68;background:#f9e0e6;border-radius:99px;padding:2px 6px;white-space:nowrap}
+  .todo-shell{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+  .todo-category-list{display:flex;flex-direction:column;gap:4px;padding:10px 0}
+  .todo-category-list h4{font-size:12px;color:var(--ink-3);letter-spacing:1px;margin:0 10px 6px}
+  .todo-category-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;color:var(--ink-2);cursor:pointer}
+  .todo-category-item:hover,.todo-category-item.active{background:var(--surface-mint);color:var(--ink-1)}
+  .todo-category-icon{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent-bg);font-size:13px}
+  .todo-category-name{flex:1}.todo-category-count{color:var(--ink-3);font-size:12px}
+  .todo-groups{display:flex;flex-direction:column;gap:4px}
+  .todo-group{border-bottom:1px solid var(--line-soft)}.todo-group summary{list-style:none;cursor:pointer;padding:12px 4px;display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;color:var(--ink-1)}
+  .todo-group summary::-webkit-details-marker{display:none}.todo-group summary::after{content:'⌄';margin-left:auto;color:var(--ink-2);font-size:16px}.todo-group:not([open]) summary::after{content:'›'}
+  .todo-group-count{font-size:11px;color:var(--ink-3);font-weight:400}.todo-group-body{padding:0 0 8px}
+  .todo-hub-row{display:flex;align-items:center;gap:10px;min-height:42px;padding:8px 4px;border-top:1px solid var(--line-soft)}
+  .todo-hub-row:hover{background:var(--surface-2)}.todo-hub-row .todo-hub-check{width:20px;height:20px;border:1.5px solid var(--ink-3);border-radius:50%;display:grid;place-items:center;color:var(--accent);flex:0 0 20px}
+  .todo-hub-row.done .todo-hub-check{background:var(--accent);border-color:var(--accent);color:#fff}.todo-hub-row .todo-hub-text{flex:1;font-size:14px}.todo-hub-row.done .todo-hub-text{text-decoration:line-through;color:var(--ink-3)}
+  .todo-hub-meta{font-size:11px;color:var(--ink-3);white-space:nowrap}.todo-hub-del{color:var(--ink-3);opacity:0;padding:2px 5px}.todo-hub-row:hover .todo-hub-del{opacity:1}.todo-hub-del:hover{color:var(--warm)}
+  .todo-source{font-size:10px;color:var(--accent);background:var(--accent-bg);padding:2px 7px;border-radius:99px;white-space:nowrap}
+  @media (max-width:1050px){.todo-summary{grid-template-columns:repeat(3,1fr)}.todo-quick-add{grid-template-columns:1fr 1fr 1fr}.todo-quick-add .wide{grid-column:1/-1}}
+  @media (max-width:760px){.todo-summary{grid-template-columns:repeat(2,1fr)}.todo-shell{grid-template-columns:1fr}.todo-category-list{display:grid;grid-template-columns:repeat(2,1fr);padding:0}.todo-category-list h4{grid-column:1/-1}.todo-quick-add{grid-template-columns:1fr}.todo-quick-add .wide{grid-column:auto}.todo-hub-meta{display:none}}
 
   .day-events{margin-top:14px}
   .day-events h4{margin:0 0 8px;font-size:14px;color:var(--ink-1);display:flex;justify-content:space-between;align-items:center}
   .ev-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface-2);border-radius:10px;margin-bottom:6px}
   .ev-row .time{font-size:12px;color:var(--ink-2);min-width:50px;font-variant-numeric:tabular-nums}
   .ev-row .title{flex:1;font-size:13px}
+  .event-category{font-size:10px;color:var(--accent);background:var(--accent-bg);border-radius:99px;padding:2px 7px;white-space:nowrap}
   .ev-row.todo-row .title.done{text-decoration:line-through;color:var(--ink-3)}
   .ev-row.todo-row .todo-kind{font-size:10px;color:var(--accent);min-width:38px}
   .ev-row.todo-row .todo-check{font-size:13px;color:var(--accent);padding:2px 4px}
@@ -1070,6 +1132,11 @@
       <span class="t-ico" id="themeIco">🌙</span>
       <span id="themeLabel">切換暗色模式</span>
     </button>
+    <button class="sync-toggle" id="syncBtn">
+      <span class="sync-ico">☁️</span>
+      <span>雲端同步</span>
+      <span class="sync-state" id="syncState">未連接</span>
+    </button>
   </aside>
 
   <!-- ============ 主區 ============ -->
@@ -1083,9 +1150,9 @@
           <div class="sub" id="dateLine">—</div>
         </div>
         <div class="quick">
-          <button class="btn btn-ghost" id="exportBtn">↗ 匯出</button>
-          <button class="btn" id="importBtn">↙ 匯入</button>
-          <input type="file" id="importFile" accept=".json" style="display:none">
+          <button class="btn btn-ghost" id="exportBtn" title="把資料保存成可在手機、電腦之間轉移的資料包">↗ 匯出資料包</button>
+          <button class="btn" id="importBtn" title="從另一台裝置匯入 daylight 資料包">↙ 匯入資料包</button>
+          <input type="file" id="importFile" accept=".json,.daylight" style="display:none">
         </div>
       </div>
 
@@ -1146,19 +1213,11 @@
 
         <div class="card">
           <div class="card-title">
-            <span><span class="badge">TODAY</span> 今日待辦</span>
+            <span><span class="badge">TIME TODO</span> 今日待辦</span>
             <span style="font-size:12px;color:var(--ink-3)" id="taskCount">0/0</span>
           </div>
           <div class="task-list" id="taskList"></div>
-          <div class="input-inline" style="margin-top:10px;align-items:center">
-            <div class="prio-select" id="prioSelect">
-              <span class="prio-opt on" data-prio="low" style="background:#7cb097" title="低優先">L</span>
-              <span class="prio-opt" data-prio="mid" style="background:#ffb74d" title="中優先">M</span>
-              <span class="prio-opt" data-prio="high" style="background:#e57373" title="高優先">H</span>
-            </div>
-            <input type="text" id="newTask" placeholder="新增待辦，Enter 送出" />
-            <button class="btn btn-mini" id="addTask">＋</button>
-          </div>
+          <button class="btn btn-mini" id="overviewGoTime" style="margin-top:10px">前往時間管理新增或整理</button>
         </div>
       </div>
 
@@ -1185,6 +1244,17 @@
 
       <div class="card" style="margin-top:18px"><div class="card-title"><span class="badge">7 DAYS</span> 一周心情</div><div class="mood-week" id="moodWeek"></div></div>
 
+      <div class="row" style="margin-top:18px">
+        <div class="card">
+          <div class="card-title"><span><span class="badge">HABITS</span> 習慣打卡</span><span style="font-size:11px;color:var(--ink-3)">本週完成情況</span></div>
+          <div id="overviewHabitStatus"></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span><span class="badge">HISTORY</span> 歷史記錄</span><input type="search" id="overviewRecordSearch" placeholder="搜尋過往記錄…" style="max-width:170px" /></div>
+          <div id="overviewRecordHistory"></div>
+        </div>
+      </div>
+
       <div class="card" style="margin-top:18px">
         <div class="card-title"><span class="badge">HIGHLIGHTS</span> 生活亮點</div>
         <div class="highlights">
@@ -1201,7 +1271,7 @@
       <div class="page-header">
         <div>
           <h1>把時間，留給真正重要的事。</h1>
-          <div class="sub">為每一天定下清楚的形狀</div>
+          <div class="sub">Todo、日程和今日計劃會自動顯示在月曆裡</div>
         </div>
       </div>
 
@@ -1217,8 +1287,24 @@
         <div class="tab" data-tab="day">日 To-do</div>
       </div>
 
-      <!-- 日程總覽 -->
+      <!-- 日程總覽：Todo、日程和月曆放在同一個時間總覽裡 -->
       <div class="tab-panel" data-panel="schedule">
+        <div class="todo-summary" id="todoSummary"></div>
+        <div class="card">
+          <div class="card-title"><span><span class="badge">QUICK ADD</span> 新增 Todo</span><span style="font-size:11px;color:var(--ink-3)">周 Todo、日 Todo會同步到日程月曆</span></div>
+          <div class="todo-quick-add">
+            <input class="wide" type="text" id="todoQuickText" placeholder="例如：完成報告、背 20 個單字…" />
+            <select id="todoQuickCategory" aria-label="Todo 類別"><option>工作</option><option>學習</option><option>健康</option><option>生活</option><option>旅行</option><option>其他</option></select>
+            <select id="todoQuickType" aria-label="Todo 類型"><option value="day">日 Todo</option><option value="week">週 Todo</option><option value="overview">總覽待辦</option></select>
+            <input type="date" id="todoQuickDate" aria-label="Todo 日期" />
+            <label class="todo-urgent-option"><input type="checkbox" id="todoQuickUrgent" /> 緊急</label>
+            <button class="btn btn-mini" id="todoQuickAdd">＋ 新增</button>
+          </div>
+        </div>
+        <div class="todo-shell" style="margin-top:16px">
+          <div class="card todo-category-list" id="todoCategoryList"></div>
+          <div class="card todo-groups" id="todoGroups"></div>
+        </div>
         <div class="card">
           <div class="cal-header">
             <h3 id="calTitle">—</h3>
@@ -1227,6 +1313,12 @@
               <div class="month" id="calMonth">—</div>
               <button id="calNext">›</button>
             </div>
+          </div>
+          <div class="cal-legend">
+            <span><i class="lg-event"></i>日程</span>
+            <span><i class="lg-todo"></i>To-do</span>
+            <span><i class="lg-task"></i>總覽待辦</span>
+            <span><i class="lg-plan"></i>今日計劃</span>
           </div>
           <div class="cal-grid" id="calGrid"></div>
           <div class="day-events">
@@ -1266,6 +1358,8 @@
           <div class="input-inline" style="margin-top:10px">
             <input type="text" id="newWeekTodo" placeholder="新增本週待辦…" />
             <input type="date" id="weekTodoDate" aria-label="本週待辦日期" style="max-width:160px" />
+            <select id="weekTodoCategory" aria-label="本週待辦類別" style="max-width:120px"><option>工作</option><option>學習</option><option>健康</option><option>生活</option><option>旅行</option><option>其他</option></select>
+            <label class="todo-urgent-option"><input type="checkbox" id="weekTodoUrgent" /> 緊急</label>
             <button class="btn btn-mini" id="addWeekTodo">＋</button>
           </div>
         </div>
@@ -1278,6 +1372,8 @@
           <div class="input-inline" style="margin-top:10px">
             <input type="text" id="newDayTodo" placeholder="新增今日待辦…" />
             <input type="date" id="dayTodoDate" aria-label="日待辦日期" style="max-width:160px" />
+            <select id="dayTodoCategory" aria-label="日待辦類別" style="max-width:120px"><option>工作</option><option>學習</option><option>健康</option><option>生活</option><option>旅行</option><option>其他</option></select>
+            <label class="todo-urgent-option"><input type="checkbox" id="dayTodoUrgent" /> 緊急</label>
             <button class="btn btn-mini" id="addDayTodo">＋</button>
           </div>
         </div>
@@ -1762,6 +1858,7 @@
 <button class="fab" id="fab" title="快速新增待辦 (N)">＋</button>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ========== 狀態 ========== */
 const KEY = 'daylight-desk-v1';
@@ -1891,11 +1988,149 @@ function loadState(){
   }catch(e){}
   return defaultState();
 }
-function saveState(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function saveState(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+  scheduleCloudPush();
+}
 function saveDailySnapshot(){
   if(!state.dailyRecords || typeof state.dailyRecords!=='object') state.dailyRecords={};
   const d=today(), prev=state.dailyRecords[d]||{};
-  state.dailyRecords[d]=Object.assign(prev,{date:d,life:Object.assign({},state.todayLife),mood:state.todayMood,focus:state.focus.text,plan:state.time?.todayPlan||'',highlights:Object.assign({},state.highlights),tasks:{total:state.tasks.length,done:state.tasks.filter(t=>t.done).length}});
+  const todos=[...(state.tasks||[]).map(t=>({text:t.text,done:!!t.done,source:'總覽'})),...(state.time?.dailyTodos||[]).filter(t=>(t.date||d)===d).map(t=>({text:t.text,done:!!t.done,source:'日 Todo'})),...(state.time?.weeklyTodos||[]).filter(t=>(t.date||d)===d).map(t=>({text:t.text,done:!!t.done,source:'週 Todo'}))];
+  state.dailyRecords[d]=Object.assign(prev,{date:d,life:Object.assign({},state.todayLife),mood:state.todayMood,focus:state.focus.text,plan:state.time?.todayPlan||'',highlights:Object.assign({},state.highlights),habits:Object.assign({},state.review?.entries?.[d]?.habits||{}),todos,tasks:{total:state.tasks.length,done:state.tasks.filter(t=>t.done).length}});
+}
+
+/* ========== 雲端同步（Supabase） ========== */
+const SUPABASE_PROJECT_URL = 'https://plldljqwtanehybijqoi.supabase.co';
+const SYNC_CONFIG_KEY = 'daylight-desk-sync-config-v1';
+const SYNC_META_KEY = 'daylight-desk-sync-meta-v1';
+const cloudSync = { client:null, user:null, url:'', anonKey:'', timer:null, applying:false };
+
+function readSyncConfig(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(SYNC_CONFIG_KEY)||'{}');
+    return {url:saved.url||SUPABASE_PROJECT_URL, anonKey:saved.anonKey||'', email:saved.email||''};
+  }catch(e){ return {url:SUPABASE_PROJECT_URL, anonKey:'', email:''}; }
+}
+function writeSyncConfig(config){
+  localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify({url:config.url, anonKey:config.anonKey, email:config.email||''}));
+}
+function setSyncState(label, kind=''){
+  const el = $('#syncState');
+  if(el){ el.textContent=label; el.className='sync-state'+(kind?' '+kind:''); }
+}
+function syncClient(config){
+  if(!window.supabase || typeof window.supabase.createClient !== 'function') throw new Error('同步元件尚未載入，請重新整理頁面');
+  const url = safeHttpUrl(config.url);
+  if(!url || !config.anonKey) throw new Error('請填寫 Supabase URL 和 anon public key');
+  if(!cloudSync.client || cloudSync.url!==url || cloudSync.anonKey!==config.anonKey){
+    cloudSync.client = window.supabase.createClient(url, config.anonKey, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    cloudSync.url=url; cloudSync.anonKey=config.anonKey;
+  }
+  return cloudSync.client;
+}
+function stateHasContent(){
+  try{ return JSON.stringify(state).length > JSON.stringify(defaultState()).length + 120; }catch(e){ return true; }
+}
+function renderCurrentSection(){
+  const active = document.querySelector('.section.active');
+  if(active) render(active.id.replace('sec-',''));
+}
+async function cloudPush(){
+  if(!cloudSync.client || !cloudSync.user || cloudSync.applying) return;
+  setSyncState('同步中…');
+  const {error} = await cloudSync.client.from('app_state').upsert({
+    user_id:cloudSync.user.id,
+    data:state,
+    updated_at:new Date().toISOString()
+  }, {onConflict:'user_id'});
+  if(error){ setSyncState('同步失败','error'); showToast('云端同步失败：请确认 app_state 表已建立'); return; }
+  localStorage.setItem(SYNC_META_KEY, JSON.stringify({lastSyncAt:new Date().toISOString(),email:cloudSync.user.email||''}));
+  setSyncState('已同步','ok');
+}
+function scheduleCloudPush(){
+  if(!cloudSync.client || !cloudSync.user || cloudSync.applying) return;
+  clearTimeout(cloudSync.timer);
+  setSyncState('待同步');
+  cloudSync.timer=setTimeout(()=>cloudPush(),900);
+}
+async function cloudPull(){
+  if(!cloudSync.client || !cloudSync.user) return false;
+  setSyncState('读取中…');
+  const {data:row,error} = await cloudSync.client.from('app_state').select('data,updated_at').eq('user_id',cloudSync.user.id).maybeSingle();
+  if(error) throw error;
+  if(!row || !row.data) return false;
+  cloudSync.applying=true;
+  state = Object.assign(defaultState(), row.data);
+  localStorage.setItem(KEY, JSON.stringify(state));
+  localStorage.setItem(SYNC_META_KEY, JSON.stringify({lastSyncAt:row.updated_at||new Date().toISOString(),email:cloudSync.user.email||''}));
+  cloudSync.applying=false;
+  $('#userName').textContent=state.meta.userName;
+  renderCurrentSection();
+  setSyncState('已同步','ok');
+  return true;
+}
+async function cloudConnect(config, mode){
+  try{
+    if(!config.email || !config.password) throw new Error('請填寫登入電郵和密碼');
+    const client=syncClient(config);
+    writeSyncConfig(config);
+    setSyncState('連接中…');
+    const result = mode==='register'
+      ? await client.auth.signUp({email:config.email,password:config.password})
+      : await client.auth.signInWithPassword({email:config.email,password:config.password});
+    if(result.error) throw result.error;
+    if(mode==='register' && !result.data.session){
+      setSyncState('待確認電郵');
+      showToast('註冊成功，請先到電郵確認，再按「登入並同步」');
+      return;
+    }
+    cloudSync.user=result.data.user || result.data.session?.user;
+    const hasRemote=await cloudPull();
+    if(!hasRemote) await cloudPush();
+    showToast('已連接 Supabase，資料會自動同步 ✓');
+  }catch(error){
+    cloudSync.user=null;
+    setSyncState('連接失敗','error');
+    showToast('同步未完成：'+(error.message||'請檢查設定'));
+  }
+}
+async function initCloudSync(){
+  const config=readSyncConfig();
+  if(!config.anonKey){ setSyncState('待配置'); return; }
+  try{
+    const client=syncClient(config);
+    const {data,error}=await client.auth.getSession();
+    if(error) throw error;
+    if(data.session?.user){
+      cloudSync.user=data.session.user;
+      const hasRemote=await cloudPull();
+      if(!hasRemote && stateHasContent()) await cloudPush();
+    }else setSyncState('未登入');
+  }catch(error){ setSyncState('待配置','error'); }
+}
+function openSyncModal(){
+  const config=readSyncConfig();
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.innerHTML=`<div class="modal-box" style="width:520px">
+    <h3>☁️ 雲端同步</h3>
+    <p class="sync-help">連接後，總覽、日程、筆記、理財、書影音和每日記錄都會同步到你的 Supabase 帳戶。GitHub 連接不是必須的。</p>
+    <div class="modal-field"><label>Supabase Project URL</label><input id="syncUrl" type="url" value="${esc(config.url)}" placeholder="https://你的项目.supabase.co"></div>
+    <div class="modal-field"><label>anon public key（只使用公開 anon key，不要填 service_role key）</label><input id="syncAnonKey" type="password" value="${esc(config.anonKey)}" placeholder="到 Project Settings → API 複製 anon public key"></div>
+    <div class="modal-field"><label>同步帳戶電郵</label><input id="syncEmail" type="email" value="${esc(config.email)}" placeholder="用同一個電郵在手機、電腦和 iPad 登入"></div>
+    <div class="modal-field"><label>同步帳戶密碼</label><input id="syncPassword" type="password" placeholder="至少 6 位；不會保存密碼"></div>
+    <div class="sync-status-line" id="syncModalHint">第一次使用前，請在 Supabase SQL Editor 執行專案內的 supabase-sync.sql。</div>
+    <div class="sync-actions"><button class="btn btn-ghost" id="syncSqlHelp">打開 SQL Editor</button><button class="btn btn-ghost" id="syncCancel">取消</button></div>
+    <div class="sync-actions"><button class="btn btn-ghost" id="syncRegister">註冊帳戶</button><button class="btn" id="syncLogin">登入並同步</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();
+  $('#syncCancel',overlay).onclick=close;
+  overlay.onclick=e=>{if(e.target===overlay)close();};
+  const collect=()=>({url:$('#syncUrl',overlay).value.trim(),anonKey:$('#syncAnonKey',overlay).value.trim(),email:$('#syncEmail',overlay).value.trim(),password:$('#syncPassword',overlay).value});
+  $('#syncLogin',overlay).onclick=async()=>{const data=collect();close();await cloudConnect(data,'login');};
+  $('#syncRegister',overlay).onclick=async()=>{const data=collect();close();await cloudConnect(data,'register');};
+  $('#syncSqlHelp',overlay).onclick=()=>{ window.open('https://supabase.com/dashboard/project/plldljqwtanehybijqoi/sql/new','_blank'); showToast('請在 SQL Editor 執行 supabase-sync.sql'); };
 }
 
 /* ========== 公用 ========== */
@@ -1997,6 +2232,8 @@ function openModal({title, fields, submitText='確認'}) {
             return `<div class="modal-field"><label>${esc(f.label)}</label><textarea data-k="${f.key}" placeholder="${esc(f.placeholder||'')}">${esc(f.value||'')}</textarea></div>`;
           if(f.type === 'select')
             return `<div class="modal-field"><label>${esc(f.label)}</label><select data-k="${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}" ${o.value===f.value?'selected':''}>${esc(o.label)}</option>`).join('')}</select></div>`;
+          if(f.type === 'date')
+            return `<div class="modal-field"><label>${esc(f.label)}</label><input type="date" data-k="${f.key}" value="${esc(f.value||'')}" /></div>`;
           if(f.type === 'time')
             return `<div class="modal-field"><label>${esc(f.label)}</label>${timePickerHtml(f.key, f.value||'')}</div>`;
           return `<div class="modal-field"><label>${esc(f.label)}</label><input type="text" data-k="${f.key}" value="${esc(f.value||'')}" placeholder="${esc(f.placeholder||'')}" /></div>`;
@@ -2134,8 +2371,8 @@ function renderOverview(){
   $('#focusFill').style.width = state.focus.progress + '%';
   $('#focusPct').textContent = state.focus.progress + '%';
 
-  const td = state.tasks;
-  const todo = td.length, done = td.filter(t=>t.done).length, left = todo - done;
+  const todayTodos = collectTodoItems().filter(t=>t.date===today());
+  const todo = todayTodos.length, done = todayTodos.filter(t=>t.done).length, left = todo - done;
   const rate = todo ? Math.round(done/todo*100) : 0;
   $('#statTodo').textContent = todo;
   $('#statDone').textContent = done;
@@ -2144,25 +2381,28 @@ function renderOverview(){
   $('#taskCount').textContent = `${done}/${todo}`;
 
   const tl = $('#taskList');
-  if(!td.length){ tl.innerHTML = '<div class="empty">今天還沒有待辦，從下方新增第一個吧。</div>'; }
+  if(!todayTodos.length){ tl.innerHTML = '<div class="empty">今天還沒有待辦，請到時間管理新增。</div>'; }
   else{
-    const prioOrder = {high:0,mid:1,low:2};
-    const sorted = [...td].sort((a,b)=>prioOrder[a.prio||'low']-prioOrder[b.prio||'low']);
+    const sorted = [...todayTodos].sort((a,b)=>Number(b.urgent)-Number(a.urgent)||Number(a.done)-Number(b.done));
     tl.innerHTML = sorted.map(t => `
-      <div class="task-item ${t.done?'done':''}" data-id="${t.id}">
+      <div class="task-item ${t.done?'done':''}" data-id="${esc(t.id)}" data-source="${t.source}">
         <div class="check">${t.done?'✓':''}</div>
-        <span class="prio-dot ${t.prio||'low'}"></span>
-        <div class="task-text">${esc(t.text)}</div>
+        <span class="prio-dot ${t.urgent?'high':'low'}"></span>
+        <div class="task-text"><div>${esc(t.text)}</div><div class="todo-date">${esc(t.category)} · ${esc(t.sourceLabel)}</div></div>
+        ${t.urgent?'<span class="todo-urgent-badge">⚡ 緊急</span>':''}
         <button class="del" title="刪除">✕</button>
       </div>
     `).join('');
     $$('.task-item .check', tl).forEach(el => el.onclick = e => {
-      const id = e.target.closest('.task-item').dataset.id;
-      const t = state.tasks.find(x=>x.id===id); t.done = !t.done; saveDailySnapshot(); saveState(); renderOverview();
+      const row=e.target.closest('.task-item'), item=todoStoreItem(row.dataset.source,row.dataset.id);
+      if(item){ item.done=!item.done; saveDailySnapshot(); saveState(); renderOverview(); renderTime(); }
     });
     $$('.task-item .del', tl).forEach(el => el.onclick = e => {
-      const id = e.target.closest('.task-item').dataset.id;
-      state.tasks = state.tasks.filter(x=>x.id!==id); saveDailySnapshot(); saveState(); renderOverview();
+      const row=e.target.closest('.task-item'), source=row.dataset.source, id=row.dataset.id;
+      if(source==='overview') state.tasks=(state.tasks||[]).filter(x=>x.id!==id);
+      else if(source==='daily') state.time.dailyTodos=(state.time.dailyTodos||[]).filter(x=>x.id!==id);
+      else state.time.weeklyTodos=(state.time.weeklyTodos||[]).filter(x=>x.id!==id);
+      saveDailySnapshot(); saveState(); renderOverview(); renderTime();
     });
   }
 
@@ -2184,6 +2424,14 @@ function renderOverview(){
     return `<div class="mood-day ${dk===today()?'today':''}"><div class="wd">周${['一','二','三','四','五','六','日'][i]}</div><div class="emo">${moodEmos[mood]||'—'}</div><div class="md">${moodNames[mood]||'未記錄'}</div></div>`;
   }).join('');
 
+  const wk = weekDates(), habits = state.review.habits || [];
+  const habitEl = $('#overviewHabitStatus');
+  habitEl.innerHTML = habits.length ? `<div class="overview-habit-row"><span></span>${wk.map(dd=>`<span class="overview-habit-dot" style="border:0;background:transparent;font-size:9px">${dd.getMonth()+1}/${dd.getDate()}</span>`).join('')}</div>${habits.map((h,hi)=>{
+    const checks=wk.map(dd=>!!state.review.entries[fmtDate(dd)]?.habits?.[hi]);
+    return `<div class="overview-habit-row"><span class="overview-habit-name">${esc(h)}</span>${checks.map(done=>`<span class="overview-habit-dot ${done?'checked':''}">${done?'✓':'·'}</span>`).join('')}<span class="overview-habit-total">${checks.filter(Boolean).length}/7</span></div>`;
+  }).join('')}` : '<div class="empty">還沒有習慣，請到復盤新增。</div>';
+  renderOverviewHistory();
+
   $('#hiWork').value = state.highlights.work || '';
   $('#hiLearning').value = state.highlights.learning || '';
   $('#hiLife').value = state.highlights.life || '';
@@ -2197,13 +2445,114 @@ function renderOverview(){
   saveState();
 }
 
+function renderOverviewHistory(){
+  const el=$('#overviewRecordHistory');
+  if(!el) return;
+  const q=($('#overviewRecordSearch')?.value||'').trim().toLowerCase();
+  const dates=[...new Set([...Object.keys(state.dailyRecords||{}),...Object.keys(state.review?.entries||{})])].sort().reverse();
+  const filtered=dates.filter(k=>{
+    if(!q) return true;
+    return `${k} ${JSON.stringify(state.dailyRecords?.[k]||{})} ${JSON.stringify(state.review?.entries?.[k]||{})}`.toLowerCase().includes(q);
+  });
+  if(!filtered.length){ el.innerHTML='<div class="empty">找不到符合的歷史記錄</div>'; return; }
+  el.innerHTML=filtered.slice(0,30).map(k=>{
+    const v=state.review?.entries?.[k]||{}, snap=state.dailyRecords?.[k]||{};
+    const mood=snap.mood||v.mood||'';
+    const habitMap=v.habits||snap.habits||{};
+    const habits=Object.values(habitMap).filter(Boolean).length;
+    const pieces=[];
+    if(mood) pieces.push(`心情：${moodLabels[mood]||mood}`);
+    if(Object.keys(habitMap).length) pieces.push(`習慣打卡：${habits} 項`);
+    if(snap.focus) pieces.push(`焦點：${snap.focus}`);
+    if(snap.plan) pieces.push(`計劃：${snap.plan}`);
+    if(v.learned) pieces.push(`學到：${v.learned}`);
+    if(v.self) pieces.push(`自我：${v.self}`);
+    if(v.improve) pieces.push(`改進：${v.improve}`);
+    if(v.next) pieces.push(`下一步：${v.next}`);
+    const highlights=Object.values(snap.highlights||{}).filter(Boolean);
+    if(highlights.length) pieces.push(highlights.join(' · '));
+    return `<div class="overview-record-item" data-review-date="${esc(k)}"><div class="overview-record-date">${esc(k)}</div><div class="overview-record-summary">${esc(pieces.join(' · ')||'已建立記錄，點擊查看完整內容')}</div></div>`;
+  }).join('');
+  $$('.overview-record-item',el).forEach(item=>item.onclick=()=>{ reviewSelectedDate=item.dataset.reviewDate; go('review'); });
+}
+
 /* ========== 時間管理 ========== */
 let calRef = new Date();
 let selectedDate = today();
+const scheduleCategoryOptions = [
+  {value:'學習',label:'學習'}, {value:'工作',label:'工作'}, {value:'運動',label:'運動'},
+  {value:'生活',label:'生活'}, {value:'約會',label:'約會'}, {value:'旅行',label:'旅行'},
+  {value:'其他',label:'其他'}
+];
+const scheduleCategoryColors = {
+  '學習':'#8a7be8', '工作':'#e47ee6', '運動':'#1686ee',
+  '生活':'#f5b800', '約會':'#ef6d78', '旅行':'#f18a3a', '其他':'#7cba8a'
+};
+const todoCategoryMeta = {
+  '工作':{icon:'💼'}, '學習':{icon:'📚'}, '健康':{icon:'🌿'},
+  '生活':{icon:'☀️'}, '旅行':{icon:'🚗'}, '其他':{icon:'☷'}
+};
+let activeTodoCategory = '全部';
+
+function collectTodoItems(){
+  const items=[];
+  (state.tasks||[]).forEach(t=>items.push({id:t.id,text:t.text,done:!!t.done,date:t.date||today(),scheduled:!!t.date,category:t.category||'其他',source:'overview',sourceLabel:'總覽',priority:t.prio||'low',urgent:!!t.urgent||t.prio==='high'}));
+  (state.time.dailyTodos||[]).forEach(t=>items.push({id:t.id,text:t.text,done:!!t.done,date:t.date||today(),scheduled:!!t.date,category:t.category||'其他',source:'daily',sourceLabel:'日 Todo',priority:t.priority||'low',urgent:!!t.urgent}));
+  (state.time.weeklyTodos||[]).forEach(t=>items.push({id:t.id,text:t.text,done:!!t.done,date:t.date||today(),scheduled:!!t.date,category:t.category||'其他',source:'weekly',sourceLabel:'週 Todo',priority:t.priority||'low',urgent:!!t.urgent}));
+  return items;
+}
+
+function todoStoreItem(source,id){
+  if(source==='overview') return (state.tasks||[]).find(x=>x.id===id);
+  if(source==='daily') return (state.time.dailyTodos||[]).find(x=>x.id===id);
+  return (state.time.weeklyTodos||[]).find(x=>x.id===id);
+}
+
+function renderTodoHub(){
+  const items=collectTodoItems(), open=items.filter(x=>!x.done), td=today();
+  const stats=[
+    ['today','▣','Today',open.filter(x=>x.date===td).length],
+    ['scheduled','▦','Scheduled',open.filter(x=>x.scheduled).length],
+    ['all','▤','All',items.length],
+    ['urgent','⏰','Urgent',open.filter(x=>x.urgent&&x.date===td).length],
+    ['completed','✓','Completed',items.filter(x=>x.done).length]
+  ];
+  $('#todoSummary').innerHTML=stats.map(s=>`<div class="todo-stat ${s[0]}"><div class="todo-stat-top"><span>${s[1]}　${s[2]}</span><span></span></div><div class="todo-stat-num">${s[3]}</div></div>`).join('');
+  const categoryNames=['全部',...Object.keys(todoCategoryMeta)];
+  const counts={}; items.forEach(x=>{counts[x.category]=(counts[x.category]||0)+1;});
+  $('#todoCategoryList').innerHTML=`<h4>我的列表</h4>${categoryNames.map(name=>{
+    const meta=todoCategoryMeta[name]||{icon:'✦'};
+    const count=name==='全部'?items.length:(counts[name]||0);
+    return `<div class="todo-category-item ${activeTodoCategory===name?'active':''}" data-category="${esc(name)}"><span class="todo-category-icon">${meta.icon}</span><span class="todo-category-name">${esc(name)}</span><span class="todo-category-count">${count}</span></div>`;
+  }).join('')}`;
+  $$('.todo-category-item', $('#todoCategoryList')).forEach(el=>el.onclick=()=>{activeTodoCategory=el.dataset.category;renderTodoHub();});
+
+  const visible=activeTodoCategory==='全部'?items:items.filter(x=>x.category===activeTodoCategory);
+  const groups=Object.keys(todoCategoryMeta).filter(name=>visible.some(x=>x.category===name));
+  $('#todoGroups').innerHTML=groups.length?groups.map(name=>{
+    const list=visible.filter(x=>x.category===name).sort((a,b)=>Number(a.done)-Number(b.done)||a.date.localeCompare(b.date));
+    const meta=todoCategoryMeta[name];
+    return `<details class="todo-group" open><summary><span>${meta.icon}</span>${name}<span class="todo-group-count">${list.length} 項</span></summary><div class="todo-group-body">${list.map(x=>`<div class="todo-hub-row ${x.done?'done':''}" data-id="${esc(x.id)}" data-source="${x.source}"><button class="todo-hub-check" title="${x.done?'取消完成':'完成'}">${x.done?'✓':''}</button><span class="todo-hub-text">${esc(x.text)}</span>${x.urgent?'<span class="todo-urgent-badge">⚡ 緊急</span>':''}<span class="todo-source">${esc(x.sourceLabel)}</span><span class="todo-hub-meta">${esc(x.date)}</span><button class="todo-hub-del" title="刪除">✕</button></div>`).join('')}</div></details>`;
+  }).join(''):'<div class="empty">這裡還沒有 Todo，從上方新增第一項吧。</div>';
+  $$('.todo-hub-check', $('#todoGroups')).forEach(btn=>btn.onclick=e=>{
+    const row=e.target.closest('.todo-hub-row'), item=todoStoreItem(row.dataset.source,row.dataset.id);
+    if(item){item.done=!item.done;saveState();renderTodoHub();renderOverview();renderTime();}
+  });
+  $$('.todo-hub-del', $('#todoGroups')).forEach(btn=>btn.onclick=e=>{
+    const row=e.target.closest('.todo-hub-row'), source=row.dataset.source, id=row.dataset.id;
+    if(source==='overview') state.tasks=(state.tasks||[]).filter(x=>x.id!==id);
+    else if(source==='daily') state.time.dailyTodos=(state.time.dailyTodos||[]).filter(x=>x.id!==id);
+    else state.time.weeklyTodos=(state.time.weeklyTodos||[]).filter(x=>x.id!==id);
+    saveState();renderTodoHub();renderOverview();renderTime();
+  });
+  if($('#todoQuickDate')&&!$('#todoQuickDate').value) $('#todoQuickDate').value=td;
+}
 
 function renderTime(){
   $('#todayPlan').value = state.time.todayPlan || '';
+  if(!$('#weekTodoDate').value) $('#weekTodoDate').value = selectedDate || today();
   if(!$('#dayTodoDate').value) $('#dayTodoDate').value = selectedDate || today();
+  renderTodoHub();
   renderCalendar();
   renderSelectedDay();
 
@@ -2224,6 +2573,46 @@ function renderTime(){
   renderTodoList('#dayTodos', state.time.dailyTodos, 'day');
 }
 
+function calendarEntriesFor(date){
+  const entries = [];
+  (state.time.events[date] || []).forEach(e => entries.push({
+    id:e.id, kind:'event', category:e.category||'其他', title:e.title, time:e.time||'', done:false, source:'event'
+  }));
+  (state.time.dailyTodos||[]).forEach(t => {
+    if((t.date || today()) === date) entries.push({
+      id:t.id, kind:'todo', todoType:'日', title:t.text, time:t.time||'', done:!!t.done, source:'dailyTodo'
+    });
+  });
+  (state.time.weeklyTodos||[]).forEach(t => {
+    if((t.date || today()) === date) entries.push({
+      id:t.id, kind:'todo', todoType:'週', title:t.text, time:t.time||'', done:!!t.done, source:'weeklyTodo'
+    });
+  });
+  (state.tasks||[]).forEach(t => {
+    if((t.date || today()) === date) entries.push({
+      id:t.id, kind:'task', title:t.text, time:t.time||'', done:!!t.done, source:'task'
+    });
+  });
+  if(date === today() && (state.time.todayPlan||'').trim()) entries.push({
+    id:'today-plan', kind:'plan', title:state.time.todayPlan.trim(), time:'', done:false, source:'plan'
+  });
+  return entries.sort((a,b) => {
+    if(a.time && !b.time) return -1;
+    if(!a.time && b.time) return 1;
+    return (a.time||'').localeCompare(b.time||'');
+  });
+}
+
+function calendarItemHtml(item){
+  const time = item.time ? `<span class="cal-item-time">${esc(item.time)}</span>` : '';
+  const label = item.category ? `${item.category} · ${item.title}` : item.todoType ? `${item.todoType} Todo · ${item.title}` : item.title;
+  const markerColor = item.category ? (scheduleCategoryColors[item.category]||scheduleCategoryColors['其他']) : '';
+  const markerStyle = markerColor ? ` style="background:${markerColor}"` : '';
+  return `<div class="cal-item ${item.kind} ${item.done?'done':''}" title="${esc(item.title)}">
+    <span class="cal-item-marker"${markerStyle}></span><span class="cal-item-title">${esc(label)}</span>${time}
+  </div>`;
+}
+
 function renderCalendar(){
   const y = calRef.getFullYear(), m = calRef.getMonth();
   $('#calMonth').textContent = `${y}年${m+1}月`;
@@ -2242,9 +2631,13 @@ function renderCalendar(){
     ${cells.map(c => {
       const isToday = c.date === today();
       const isSel = c.date === selectedDate;
-      const hasEvent = (state.time.events[c.date]||[]).length > 0;
-      const hasTodo = [...(state.time.dailyTodos||[]),...(state.time.weeklyTodos||[])].some(t=>t.date===c.date);
-      return `<div class="cal-day ${c.dim?'dim':''} ${isToday?'today':''} ${isSel?'selected':''}" data-date="${c.date}">${c.d}${(hasEvent||hasTodo)?'<span class="dot"></span>':''}</div>`;
+      const entries = calendarEntriesFor(c.date);
+      const visible = entries.slice(0,5).map(calendarItemHtml).join('');
+      const more = entries.length > 5 ? `<div class="cal-more">＋${entries.length-5} 項</div>` : '';
+      return `<div class="cal-day ${c.dim?'dim':''} ${isToday?'today':''} ${isSel?'selected':''}" data-date="${c.date}">
+        <div class="cal-day-num">${c.d}</div>
+        <div class="cal-items">${visible}${more}</div>
+      </div>`;
     }).join('')}
   `;
   $$('.cal-day').forEach(el => el.onclick = () => {
@@ -2258,32 +2651,62 @@ function renderCalendar(){
 function renderSelectedDay(){
   $('#selDateLabel').textContent = selectedDate;
   const evs = state.time.events[selectedDate] || [];
-  const todos = [...(state.time.dailyTodos||[]),...(state.time.weeklyTodos||[])].filter(t=>t.date===selectedDate);
+  const todos = [
+    ...(state.time.dailyTodos||[]).filter(t=>(t.date||today())===selectedDate).map(t=>Object.assign({todoType:'日'},t)),
+    ...(state.time.weeklyTodos||[]).filter(t=>(t.date||today())===selectedDate).map(t=>Object.assign({todoType:'週'},t))
+  ];
+  const overviewTasks = (state.tasks||[]).filter(t=>(t.date||today())===selectedDate);
+  const todayPlan = selectedDate===today() && (state.time.todayPlan||'').trim() ? state.time.todayPlan.trim() : '';
   const el = $('#eventList');
-  if(!evs.length && !todos.length){ el.innerHTML = '<div class="empty">這一天還沒有安排</div>'; return; }
+  if(!evs.length && !todos.length && !overviewTasks.length && !todayPlan){ el.innerHTML = '<div class="empty">這一天還沒有安排</div>'; return; }
   el.innerHTML = evs.map(e => `
     <div class="ev-row event-row" data-id="${e.id}">
       <div class="time">${esc(e.time||'—')}</div>
+      <div class="event-category">${esc(e.category||'其他')}</div>
       <div class="title">${esc(e.title)}</div>
       <button class="ev-action edit" title="編輯">✎</button>
       <button class="ev-action del" title="刪除">✕</button>
     </div>
   `).join('') + todos.map(t => `
     <div class="ev-row todo-row ${t.done?'done':''}" data-id="${t.id}">
-      <div class="todo-kind">${t.date===selectedDate?'To-do':'待辦'}</div>
+      <div class="todo-kind">${t.todoType||'To-do'} Todo</div>
       <div class="title ${t.done?'done':''}">${esc(t.text)}</div>
       <button class="todo-check" title="${t.done?'取消完成':'標記完成'}">${t.done?'✓':'○'}</button>
       <button class="ev-action todo-del del" title="刪除">✕</button>
     </div>
-  `).join('');
+  `).join('') + overviewTasks.map(t => `
+    <div class="ev-row todo-row ${t.done?'done':''} overview-task-row" data-id="${t.id}">
+      <div class="todo-kind">總覽</div>
+      <div class="title ${t.done?'done':''}">${esc(t.text)}</div>
+      <button class="todo-check" title="${t.done?'取消完成':'標記完成'}">${t.done?'✓':'○'}</button>
+      <button class="ev-action task-del del" title="刪除">✕</button>
+    </div>
+  `).join('') + (todayPlan ? `
+    <div class="ev-row plan-row">
+      <div class="todo-kind">計劃</div><div class="title">${esc(todayPlan)}</div>
+    </div>
+  ` : '');
   $$('.ev-row .edit', el).forEach(b => b.onclick = async e => {
     const row = e.target.closest('.ev-row');
     const event = evs.find(x=>x.id===row.dataset.id);
     const data = await openModal({title:'編輯日程',fields:[
       {key:'title',label:'日程內容',placeholder:'例：開會、看書…',value:event.title},
+      {key:'category',label:'日程類別',type:'select',value:event.category||'其他',options:scheduleCategoryOptions},
+      {key:'date',label:'日期',type:'date',value:selectedDate},
       {key:'time',type:'time',label:'時間（可不設定）',value:event.time||''}
     ],submitText:'保存修改'});
-    if(data && data.title){ event.title=data.title; event.time=data.time||''; saveState(); renderSelectedDay(); renderCalendar(); showToast('日程已更新 ✓'); }
+    if(data && data.title){
+      const nextDate = data.date || selectedDate;
+      event.title=data.title; event.category=data.category||'其他'; event.time=data.time||'';
+      if(nextDate !== selectedDate){
+        state.time.events[selectedDate] = (state.time.events[selectedDate]||[]).filter(x=>x.id!==event.id);
+        if(!state.time.events[selectedDate].length) delete state.time.events[selectedDate];
+        if(!state.time.events[nextDate]) state.time.events[nextDate]=[];
+        state.time.events[nextDate].push(event);
+        selectedDate=nextDate; calRef=new Date(nextDate+'T00:00:00');
+      }
+      saveState(); renderSelectedDay(); renderCalendar(); showToast('日程已更新 ✓');
+    }
   });
   $$('.event-row .del', el).forEach(b => b.onclick = e => {
     const id = e.target.closest('.ev-row').dataset.id;
@@ -2301,6 +2724,16 @@ function renderSelectedDay(){
     state.time.dailyTodos = (state.time.dailyTodos||[]).filter(x=>x.id!==id);
     state.time.weeklyTodos = (state.time.weeklyTodos||[]).filter(x=>x.id!==id);
     saveState(); renderTime();
+  });
+  $$('.overview-task-row .todo-check', el).forEach(b => b.onclick = e => {
+    const id = e.target.closest('.overview-task-row').dataset.id;
+    const task = (state.tasks||[]).find(x=>x.id===id);
+    if(task){ task.done=!task.done; saveState(); renderOverview(); renderTime(); }
+  });
+  $$('.overview-task-row .task-del', el).forEach(b => b.onclick = e => {
+    const id = e.target.closest('.overview-task-row').dataset.id;
+    state.tasks = (state.tasks||[]).filter(x=>x.id!==id);
+    saveState(); renderOverview(); renderTime();
   });
 }
 
@@ -3030,7 +3463,7 @@ function renderReview(){
     if(!state.review.entries[kd]) state.review.entries[kd] = {};
     if(!state.review.entries[kd].habits) state.review.entries[kd].habits = {};
     state.review.entries[kd].habits[hi] = !state.review.entries[kd].habits[hi];
-    saveState(); renderReview();
+    saveDailySnapshot(); saveState(); renderReview();
   });
   $$('.delHabit').forEach(b => b.onclick = () => {
     state.review.habits.splice(+b.dataset.hi, 1); saveState(); renderReview();
@@ -3068,10 +3501,12 @@ function renderReview(){
     const life = snap.life || {};
     const taskText = snap.tasks ? `完成待辦 ${snap.tasks.done}/${snap.tasks.total}` : '';
     const moodText = snap.mood ? `心情：${moodLabels[snap.mood] || snap.mood}` : '';
+    const habitMap = v.habits || snap.habits || {};
+    const habitText = Object.keys(habitMap).length ? `習慣打卡 ${Object.values(habitMap).filter(Boolean).length} 項` : '';
     const lifeText = [life.weight&&`體重 ${life.weight}kg`,life.water&&`飲水 ${life.water}杯`,life.exercise&&`運動 ${life.exercise}分鐘`].filter(Boolean).join(' · ');
     return `<div class="review-history-item" data-review-date="${k}" style="padding:10px 12px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer">
       <div style="font-size:11px;color:var(--ink-3);margin-bottom:4px">${k}</div>
-      ${[moodText,taskText,lifeText].filter(Boolean).length?`<div style="font-size:11px;color:var(--ink-2);margin-bottom:5px">${esc([moodText,taskText,lifeText].filter(Boolean).join(' · '))}</div>`:''}
+      ${[moodText,habitText,taskText,lifeText].filter(Boolean).length?`<div style="font-size:11px;color:var(--ink-2);margin-bottom:5px">${esc([moodText,habitText,taskText,lifeText].filter(Boolean).join(' · '))}</div>`:''}
       ${v.learned?`<div style="font-size:13px;margin-bottom:2px"><b>學到：</b>${esc(v.learned)}</div>`:''}
       ${v.next?`<div style="font-size:13px;margin-bottom:2px"><b>下一步：</b>${esc(v.next)}</div>`:''}
       ${snap.focus?`<div style="font-size:13px;margin-bottom:2px"><b>今日焦點：</b>${esc(snap.focus)}</div>`:''}
@@ -3097,16 +3532,34 @@ function doSearch(q){
   });
   state.learning.subjects.forEach(s => { if(s.name.toLowerCase().includes(ql)) results.push({tag:'科目', text:s.name, go:'learning'}); });
   state.learning.records.forEach(r => { if(r.content.toLowerCase().includes(ql)) results.push({tag:'學習', text:r.content, go:'learning'}); });
+  (state.learning.notes||[]).forEach(n => { if(String(n.content||'').toLowerCase().includes(ql)) results.push({tag:'學習筆記', text:n.content, go:'learning'}); });
   state.review.habits.forEach(h => { if(h.toLowerCase().includes(ql)) results.push({tag:'習慣', text:h, go:'review'}); });
+  Object.entries(state.review.entries||{}).forEach(([date,e]) => {
+    const text=[date,e.learned,e.self,e.improve,e.next,Object.keys(e.habits||{}).length?'習慣打卡':''].filter(Boolean).join(' · ');
+    if(text.toLowerCase().includes(ql)) results.push({tag:'復盤', text, go:'review', date});
+  });
+  Object.entries(state.dailyRecords||{}).forEach(([date,r]) => {
+    const life=r.life||{}, text=[date,r.focus,r.plan,r.mood,Object.values(r.highlights||{}).join(' '),life.weight,life.water,life.exercise].filter(Boolean).join(' · ');
+    if(text.toLowerCase().includes(ql)) results.push({tag:'每日記錄', text, go:'review', date});
+  });
+  Object.entries(state.time.events||{}).forEach(([date,events]) => (events||[]).forEach(e => {
+    const text=[date,e.title,e.category,e.time].filter(Boolean).join(' · ');
+    if(text.toLowerCase().includes(ql)) results.push({tag:'日程', text, go:'time', date});
+  }));
+  (state.media||[]).forEach(m => { const text=[m.title,m.type,m.date,m.note].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'書影音', text, go:'entertainment'}); });
+  (state.personal?.travel?.entries||[]).forEach(t => { const text=[t.location,t.date,t.itinerary,t.budget,t.spent,t.note].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'旅遊', text, go:'travel'}); });
+  (state.personal?.shopping||[]).forEach(s => { const text=[s.item,s.category,s.price,s.date,s.note].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'購物', text, go:'shopping'}); });
+  (state.finance?.expenses||[]).concat(state.finance?.incomes||[]).forEach(f => { const text=[f.date,f.category,f.amount,f.currency,f.note].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'理財', text, go:'finance'}); });
   (state.wl?.defaultChecks || []).forEach(c => { if(c.txt.toLowerCase().includes(ql)) results.push({tag:'減肥', text:c.txt, go:'weightloss'}); });
   (state.wl?.mealPlan || []).forEach(m => { if(m.meal.toLowerCase().includes(ql) || m.desc.toLowerCase().includes(ql)) results.push({tag:'飲食', text:`${m.meal}：${m.desc.replace(/<[^>]*>/g,'')}`, go:'weightloss'}); });
   (state.wl?.tips || []).forEach(t => { if(t.tag.toLowerCase().includes(ql) || t.text.toLowerCase().includes(ql)) results.push({tag:'貼士', text:`${t.tag}：${t.text}`, go:'weightloss'}); });
 
   const el = $('#searchResults');
   if(!results.length){ el.innerHTML = '<div class="sr-item" style="color:var(--ink-3)">沒有找到結果</div>'; }
-  else el.innerHTML = results.slice(0,12).map(r => `<div class="sr-item" data-go="${r.go}"><span class="sr-tag">${r.tag}</span><span class="sr-text">${esc(r.text)}</span></div>`).join('');
+  else el.innerHTML = results.slice(0,12).map(r => `<div class="sr-item" data-go="${r.go}"${r.date?` data-date="${esc(r.date)}"`:''}><span class="sr-tag">${r.tag}</span><span class="sr-text">${esc(r.text)}</span></div>`).join('');
   el.classList.add('show');
   $$('.sr-item[data-go]', el).forEach(it => it.onclick = () => {
+    if(it.dataset.date && it.dataset.go==='review') reviewSelectedDate=it.dataset.date;
     go(it.dataset.go); el.classList.remove('show'); $('#searchInput').value='';
   });
 }
@@ -3116,13 +3569,7 @@ function bindAll(){
   $$('.nav-item, .mod-card').forEach(el => el.onclick = () => go(el.dataset.go));
   bindEntertainment();
   bindNews();
-
-  // 優先級選擇
-  $$('#prioSelect .prio-opt').forEach(opt => opt.onclick = () => {
-    $$('#prioSelect .prio-opt').forEach(x => x.classList.remove('on'));
-    opt.classList.add('on');
-    currentPrio = opt.dataset.prio;
-  });
+  $('#syncBtn').onclick = openSyncModal;
 
   // 焦點
   $('#focusText').addEventListener('input', e => {
@@ -3138,14 +3585,7 @@ function bindAll(){
     saveState(); renderOverview();
   });
 
-  // 待辦
-  const addTask = () => {
-    const v = $('#newTask').value.trim(); if(!v) return;
-    state.tasks.push({id:uid(), text:v, done:false, prio:currentPrio, createdAt: Date.now()});
-    $('#newTask').value=''; saveDailySnapshot(); saveState(); renderOverview(); showToast('已新增待辦 ✓');
-  };
-  $('#addTask').onclick = addTask;
-  $('#newTask').onkeydown = e => { if(e.key==='Enter') addTask(); };
+  $('#overviewGoTime').onclick = () => { go('time'); setTimeout(()=>$('#todoQuickText')?.focus(),100); };
 
   $('#lifeWeight').oninput = e => { state.todayLife.weight = e.target.value; saveDailySnapshot(); saveState(); };
   $('#lifeWater').oninput = e => { state.todayLife.water = e.target.value; saveDailySnapshot(); saveState(); };
@@ -3170,9 +3610,37 @@ function bindAll(){
       saveState();
     };
   });
+  $('#overviewRecordSearch').oninput = () => renderOverviewHistory();
 
   // 時間管理
   $('#todayPlan').oninput = e => { state.time.todayPlan = e.target.value; saveDailySnapshot(); saveState(); };
+  $('#todoQuickAdd').onclick = () => {
+    const input = $('#todoQuickText');
+    const text = input.value.trim();
+    if(!text) return;
+    const category = $('#todoQuickCategory').value || '其他';
+    const type = $('#todoQuickType').value;
+    const date = $('#todoQuickDate').value || selectedDate || today();
+    const item = {id:uid(), text, done:false, date, category, urgent:$('#todoQuickUrgent').checked, createdAt:Date.now()};
+    if(type === 'overview'){
+      state.tasks = state.tasks || [];
+      state.tasks.push({...item, prio:'low'});
+      saveDailySnapshot();
+    }else if(type === 'week'){
+      state.time.weeklyTodos = state.time.weeklyTodos || [];
+      state.time.weeklyTodos.push(item);
+    }else{
+      state.time.dailyTodos = state.time.dailyTodos || [];
+      state.time.dailyTodos.push(item);
+    }
+    input.value='';
+    $('#todoQuickUrgent').checked=false;
+    saveState();
+    renderOverview();
+    renderTime();
+    showToast('Todo 已新增 ✓');
+  };
+  $('#todoQuickText').onkeydown = e => { if(e.key === 'Enter') $('#todoQuickAdd').click(); };
   $$('#timeTabs .tab').forEach(t => t.onclick = () => {
     $$('#timeTabs .tab').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
@@ -3194,13 +3662,17 @@ function bindAll(){
       title: '新增日程',
       fields: [
         {key:'title', label:'日程內容', placeholder:'例：開會、看書…'},
+        {key:'category', label:'日程類別', type:'select', value:'其他', options:scheduleCategoryOptions},
+        {key:'date', label:'日期', type:'date', value:selectedDate},
         {key:'time', type:'time', label:'時間（可不設定）'}
       ],
       submitText: '新增'
     });
     if(data && data.title){
-      if(!state.time.events[selectedDate]) state.time.events[selectedDate] = [];
-      state.time.events[selectedDate].push({id:uid(), title:data.title, time:data.time||''});
+      const eventDate = data.date || selectedDate;
+      if(!state.time.events[eventDate]) state.time.events[eventDate] = [];
+      state.time.events[eventDate].push({id:uid(), title:data.title, category:data.category||'其他', time:data.time||''});
+      selectedDate=eventDate; calRef=new Date(eventDate+'T00:00:00');
       saveState(); renderSelectedDay(); renderCalendar(); showToast('日程已新增 ✓');
     }
   };
@@ -3225,8 +3697,12 @@ function bindAll(){
   const addTodoList = (sel, inputSel, key, arr) => {
     const input = $(inputSel); const v = input.value.trim(); if(!v) return;
     const dateInput = key==='day' ? $('#dayTodoDate') : $('#weekTodoDate');
-    const date = dateInput?.value || '';
-    arr.push({id:uid(), text:v, done:false, ...(date?{date}: {})});
+    const categoryInput = key==='day' ? $('#dayTodoCategory') : $('#weekTodoCategory');
+    const urgentInput = key==='day' ? $('#dayTodoUrgent') : $('#weekTodoUrgent');
+    const date = dateInput?.value || selectedDate || today();
+    const category = categoryInput?.value || '其他';
+    arr.push({id:uid(), text:v, done:false, date, category, urgent:!!urgentInput?.checked});
+    if(urgentInput) urgentInput.checked=false;
     input.value=''; saveState(); renderTime();
   };
   $('#addWeekTodo').onclick = () => addTodoList('#weekTodos', '#newWeekTodo', 'week', state.time.weeklyTodos);
@@ -3421,7 +3897,7 @@ function bindAll(){
   };
 
   // 浮動新增
-  $('#fab').onclick = () => { go('overview'); setTimeout(() => $('#newTask').focus(), 100); };
+  $('#fab').onclick = () => { go('time'); setTimeout(() => $('#todoQuickText')?.focus(), 100); };
 
   // 搜尋
   $('#searchInput').oninput = e => doSearch(e.target.value);
@@ -3431,22 +3907,56 @@ function bindAll(){
       $('#searchResults').classList.remove('show');
   });
 
-  // 匯出 / 匯入
+  // 資料包匯出 / 匯入：檔案可透過 AirDrop、電郵、雲端硬碟或聊天工具轉到另一台裝置
+  const DATA_PACKAGE_FORMAT = 'daylight-data-package';
+  const DATA_PACKAGE_VERSION = 1;
+  function createDataPackage(){
+    saveDailySnapshot();
+    saveState();
+    return {
+      format: DATA_PACKAGE_FORMAT,
+      version: DATA_PACKAGE_VERSION,
+      app: 'daylight',
+      exportedAt: new Date().toISOString(),
+      data: state
+    };
+  }
+  function readDataPackage(raw){
+    if(!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('資料包格式不正確');
+    if(raw.format === DATA_PACKAGE_FORMAT){
+      if(raw.app !== 'daylight') throw new Error('這不是 daylight 的資料包');
+      if(!raw.data || typeof raw.data !== 'object') throw new Error('資料包沒有可匯入的內容');
+      return {data:raw.data, packaged:true, exportedAt:raw.exportedAt||''};
+    }
+    // 兼容舊版直接匯出的 JSON
+    if(raw.meta || raw.tasks || raw.finance || raw.time) return {data:raw, packaged:false, exportedAt:''};
+    throw new Error('找不到 daylight 資料');
+  }
   $('#exportBtn').onclick = () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const pack = createDataPackage();
+    const blob = new Blob([JSON.stringify(pack, null, 2)], {type:'application/json'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `daylight-${today()}.json`;
+    a.download = `daylight-data-${today()}.daylight.json`;
     a.click();
-    showToast('已匯出資料 ↗');
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    showToast('已匯出 daylight 資料包 ↗');
   };
   $('#importBtn').onclick = () => $('#importFile').click();
   $('#importFile').onchange = e => {
     const f = e.target.files[0]; if(!f) return;
     const r = new FileReader();
     r.onload = () => {
-      try{ state = Object.assign(defaultState(), JSON.parse(r.result)); saveState(); render('overview'); showToast('匯入成功 ✓'); }
+      try{
+        const pack = readDataPackage(JSON.parse(r.result));
+        if(!confirm('匯入後會取代這台裝置目前的 daylight 資料，確定繼續嗎？')) return;
+        state = Object.assign(defaultState(), pack.data);
+        saveState(); render('overview');
+        const suffix = pack.packaged && pack.exportedAt ? `（${new Date(pack.exportedAt).toLocaleDateString()}）` : '';
+        showToast(`資料包匯入成功 ✓${suffix}`);
+      }
       catch(err){ showToast('檔案格式不正確：' + err.message); }
+      finally{ e.target.value=''; }
     };
     r.readAsText(f);
   };
@@ -3456,7 +3966,7 @@ function bindAll(){
     if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
     const navMap = {'1':'overview','2':'time','3':'work','4':'learning','5':'entertainment','6':'finance','7':'news','8':'weightloss','9':'review'};
     if(navMap[e.key]){ go(navMap[e.key]); }
-    if(e.key === 'n' || e.key === 'N'){ go('overview'); setTimeout(()=>$('#newTask').focus(),100); }
+    if(e.key === 'n' || e.key === 'N'){ go('time'); setTimeout(()=>$('#todoQuickText')?.focus(),100); }
     if(e.key === ' '){ e.preventDefault(); startPomo(); }
     if(e.key === '/'){ e.preventDefault(); $('#searchInput').focus(); }
   });
@@ -3680,6 +4190,7 @@ const initSec = document.querySelector('.section.active');
 if(initSec) render(initSec.id.replace('sec-',''));
 else render('overview');
 setTimeout(()=>showToast('歡迎回到你的工作台 🌿'), 500);
+setTimeout(()=>initCloudSync(), 800);
 </script>
 </body>
 </html>
