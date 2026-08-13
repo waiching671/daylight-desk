@@ -1118,10 +1118,58 @@
   @media(max-width:760px){.main{padding:30px 18px 50px}.sidebar{padding:20px 18px}.nav-title{margin-top:20px}}
 </style>
 <style>
+  /* Weekly Budget: a quiet financial notebook rather than a form */
+  .weekly-budget-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;padding-bottom:18px;border-bottom:1px solid var(--line-soft)}
+  .weekly-budget-intro h2{margin:8px 0 5px;font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-weight:500;font-size:23px;letter-spacing:.03em}
+  .weekly-budget-intro p{margin:0;color:var(--ink-3);font-size:12px;line-height:1.6}
+  .weekly-budget-controls{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+  .weekly-budget-controls label,.weekly-budget-entry-grid label,.weekly-reflection-grid label{display:flex;flex-direction:column;gap:6px;color:var(--ink-3);font-size:11px}
+  .weekly-budget-controls input,.weekly-budget-controls select{min-width:138px}
+  .weekly-budget-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:22px;align-items:start;margin-top:20px}
+  .weekly-budget-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .weekly-budget-overview{padding:16px 17px;background:var(--surface-2);border-radius:14px}
+  .weekly-budget-overview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--ink-2);margin-bottom:14px}
+  .weekly-budget-overview-head span:last-child{font-size:11px;color:var(--accent)}
+  .weekly-budget-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .weekly-budget-metrics div{min-width:0;padding-right:12px;border-right:1px solid var(--line-soft)}
+  .weekly-budget-metrics div:last-child{border-right:0;padding-right:0}
+  .weekly-budget-metrics span{display:block;color:var(--ink-3);font-size:10px;margin-bottom:7px}
+  .weekly-budget-metrics strong{display:block;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .weekly-budget-progress{height:7px;margin-top:18px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+  .weekly-budget-progress i{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit;transition:width .25s ease}.weekly-budget-progress i.over{background:var(--warm)}
+  .weekly-budget-entry{padding:15px 17px;border:1px solid var(--line-soft);border-radius:14px;background:rgba(255,254,250,.35)}
+  .weekly-budget-entry-title{font-size:12px;color:var(--ink-2);margin-bottom:11px}
+  .weekly-budget-entry-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}.weekly-budget-entry-grid label span{font-size:11px;color:var(--ink-3)}.weekly-budget-entry-grid .btn{height:39px;white-space:nowrap}
+  .shopping-budget-chart{padding:16px 15px;background:var(--surface-2);border-radius:14px;min-width:0}.shopping-budget-chart .pie{width:176px;height:176px;margin:14px auto 11px}.shopping-budget-chart .pie::after{background:var(--surface-2)}
+  .weekly-chart-note{margin:-3px 0 10px;color:var(--ink-3);font-size:11px;line-height:1.5}.weekly-chart-empty{padding:10px 0;color:var(--ink-3);font-size:11px;text-align:center}
+  .weekly-category-bars{display:flex;flex-direction:column;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+  .weekly-category-bar>div{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--ink-2)}.weekly-category-bar strong{font-weight:500;color:var(--ink-3);font-variant-numeric:tabular-nums}.weekly-category-bar i{display:block;height:5px;margin-top:5px;background:var(--line-soft);border-radius:99px;overflow:hidden}.weekly-category-bar i b{display:block;height:100%;border-radius:inherit}
+  .weekly-reflection{padding:16px 17px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .weekly-reflection-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:13px}.weekly-reflection-head strong{font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-weight:500;font-size:16px}
+  .weekly-reflection-auto{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;margin-bottom:10px;background:var(--surface-2);border-radius:9px;font-size:11px;color:var(--ink-3)}.weekly-reflection-auto strong{font-weight:600;color:var(--ink-2)}
+  .weekly-reflection-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.weekly-reflection-grid textarea{width:100%;min-height:58px;padding:8px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;resize:vertical;outline:0;font:inherit;font-size:12px;line-height:1.6}.weekly-reflection-grid textarea:focus{border-color:var(--accent)}.weekly-reflection .btn{margin-top:13px}
+  .shopping-budget-row{padding:12px 0;border-bottom:1px solid var(--line-soft)}.shopping-budget-row:last-child{border-bottom:0}.shopping-budget-head{display:flex;align-items:center;gap:8px}.shopping-budget-head strong{flex:1;font-size:13px}.shopping-budget-head .tag{font-size:10px}.shopping-budget-meta{display:grid;grid-template-columns:auto minmax(65px,1fr) auto minmax(65px,1fr);gap:6px;align-items:center;margin-top:10px;color:var(--ink-3);font-size:10px}.shopping-budget-input{width:100%;padding:5px 6px;font-size:11px}.shopping-budget-progress{height:5px;margin-top:9px;background:var(--line-soft);border-radius:99px;overflow:hidden}.shopping-budget-progress i{display:block;height:100%;background:var(--accent);border-radius:inherit}.shopping-budget-progress i.over{background:var(--warm)}.shopping-budget-summary{display:flex;justify-content:space-between;gap:8px;margin-top:6px;color:var(--ink-3);font-size:10px}.shopping-budget-summary .over{color:var(--warm)}
+  body.dark .weekly-budget-entry{background:rgba(42,48,43,.35)}
+  @media(max-width:850px){.weekly-budget-layout{grid-template-columns:1fr}.shopping-budget-chart{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}.shopping-budget-chart .pie-title,.shopping-budget-chart .weekly-chart-note,.shopping-budget-chart .pie,.shopping-budget-chart .pie-legend{grid-column:1/-1}.weekly-category-bars{grid-column:1/-1}}
+  @media(max-width:600px){.weekly-budget-intro{flex-direction:column}.weekly-budget-controls{width:100%}.weekly-budget-controls label{flex:1}.weekly-budget-controls input,.weekly-budget-controls select{min-width:0;width:100%}.weekly-budget-metrics{grid-template-columns:1fr 1fr}.weekly-budget-metrics div:nth-child(2){border-right:0}.weekly-budget-entry-grid,.weekly-reflection-grid{grid-template-columns:1fr}.weekly-budget-entry-grid .btn{width:100%}.shopping-budget-chart{display:block}.shopping-budget-meta{grid-template-columns:auto minmax(55px,1fr) auto minmax(55px,1fr)}}
+</style>
+<style>
   .media-rating button{font-size:23px;padding:1px 2px;color:var(--line);background:transparent;border:0}
   .media-rating button.active,.media-rating button:hover{color:var(--warm)}
   .media-rating-label{font-size:12px;color:var(--ink-2);margin-left:7px}
   .finance-history-note{margin:-4px 0 12px;color:var(--ink-3);font-size:11px;line-height:1.5}
+  .media-rating button:not(.active){color:var(--line)!important}
+  .media-rating button.active{color:var(--warm)!important}
+  .media-rating-cell b.off{color:var(--line)!important}
+  .media-calendar-item{border-left-color:var(--accent);background:var(--accent-bg);color:var(--ink-1)}
+  .media-calendar-item.status-progress{border-left-color:#6ea5f3;background:#e7f0ff}
+  .media-calendar-item.status-done{border-left-color:#62c987;background:#e5f6ea}
+  .media-calendar-item.status-abandoned{border-left-color:#d76c6c;background:#f9e5e5}
+  .media-calendar-item.status-want{border-left-color:#e8a557;background:#fff0dc}
+  body.dark .media-calendar-item.status-progress{border-left-color:#75b1ff;background:#294363;color:#d7e8fa}
+  body.dark .media-calendar-item.status-done{border-left-color:#73d49a;background:#285139;color:#d4f0dc}
+  body.dark .media-calendar-item.status-abandoned{border-left-color:#e88484;background:#5b3538;color:#ffd0d0}
+  body.dark .media-calendar-item.status-want{border-left-color:#f1b55f;background:#5a4528;color:#ffe0a3}
 </style>
 </head>
 <body>
@@ -1150,14 +1198,14 @@
       <div class="nav-item" data-go="media"><span class="nav-ico">📚</span>書影音<span class="nav-key">4</span></div>
       <div class="nav-item" data-go="news"><span class="nav-ico">📰</span>新聞<span class="nav-key">5</span></div>
       <div class="nav-title nav-group-title">🌙 回望</div>
-      <div class="nav-item" data-go="today"><span class="nav-ico">✎</span>日記<span class="nav-key">6</span></div>
+      <div class="nav-item" data-go="journal"><span class="nav-ico">✎</span>日記<span class="nav-key">6</span></div>
       <div class="nav-item" data-go="review"><span class="nav-ico">🌙</span>復盤<span class="nav-key">7</span></div>
     </nav>
 
   <div class="nav-title nav-group-title archive-title">▱ 生活記錄</div>
     <nav class="nav archive-nav" aria-label="Archive">
       <div class="nav-item archive-item" data-go="time"><span class="nav-ico">◷</span>生活節奏</div>
-      <div class="nav-item archive-item" data-go="today"><span class="nav-ico">▱</span>個人記錄</div>
+      <div class="nav-item archive-item" data-go="journal"><span class="nav-ico">▱</span>個人記錄</div>
     </nav>
 
     <div class="space-card" id="spaceCard">
@@ -1194,12 +1242,16 @@
             <div class="today-label">想留意的事</div>
             <textarea id="todayFocusInput" placeholder="今天想把注意力放在哪裡？"></textarea>
           </div>
+          <div class="today-note today-agenda-note">
+            <div class="today-label">今日安排與待辦</div>
+            <div id="todayAgendaSummary" class="today-agenda-summary"></div>
+          </div>
         </div>
         <div class="today-column">
           <div class="today-note today-entry-note">
-            <div class="today-label">一則生活記錄</div>
-            <textarea id="todayEntryInput" placeholder="寫下今天發生的一件小事、一個片刻，或一種感受……"></textarea>
-            <button class="today-save" id="todaySaveBtn">儲存今天的記錄</button>
+            <div class="today-label">快速亮點</div>
+            <textarea id="todayEntryInput" placeholder="用一句話記下今天值得留意的片刻……"></textarea>
+            <button class="today-save" id="todaySaveBtn">儲存今日摘要</button>
           </div>
           <div class="today-history" id="todayRecentHistory"></div>
         </div>
@@ -1214,7 +1266,27 @@
         </div>
         <div class="moments-list" id="momentsList"></div>
       </div>
-      <div class="today-links"><span>從這裡進入</span><button data-go="review">復盤</button><button data-go="weightloss">健康</button><button data-go="finance">理財</button><button data-go="media">書影音</button><button data-go="travel">旅遊</button><button data-go="news">新聞</button></div>
+      <div class="today-links"><span>從這裡進入</span><button data-go="journal">寫日記</button><button data-go="review">復盤</button><button data-go="weightloss">健康</button><button data-go="finance">理財</button><button data-go="media">書影音</button><button data-go="travel">旅遊</button><button data-go="news">新聞</button></div>
+    </section>
+
+    <!-- ===== 日記：保存生活回憶 ===== -->
+    <section class="section" id="sec-journal" aria-hidden="true">
+      <div class="page-header">
+        <div><div class="eyebrow">JOURNAL · 私人日記</div><h1>日記</h1><div class="sub">把今天留下來，給未來的自己。</div></div>
+        <button class="btn btn-ghost" data-go="today">返回今日</button>
+      </div>
+      <div class="journal-layout">
+        <article class="journal-paper">
+          <div class="journal-paper-top"><button class="journal-back" data-go="today">‹ 返回今日</button><button class="journal-generate" id="journalGenerateBtn">從今日生成草稿</button></div>
+          <div class="journal-date-block"><div class="journal-date-week" id="journalDateWeek">今天</div><label class="journal-date-input"><input type="date" id="journalDate" aria-label="日記日期" /></label><div class="journal-date-rule"></div></div>
+          <div class="journal-atmosphere"><button type="button" class="journal-mood-chip" data-journal-mood="great">🥰 很好</button><button type="button" class="journal-mood-chip" data-journal-mood="good">😊 不錯</button><button type="button" class="journal-mood-chip" data-journal-mood="ok">😐 普通</button><button type="button" class="journal-mood-chip" data-journal-mood="meh">😔 低落</button><button type="button" class="journal-mood-chip" data-journal-mood="bad">😩 疲憊</button><select id="journalWeather" aria-label="天氣"><option value="">天氣</option><option>☀️ 晴</option><option>🌤️ 多雲</option><option>🌧️ 雨</option><option>🌬️ 風</option><option>🌙 夜</option></select></div>
+          <input id="journalTitle" class="journal-title-input" placeholder="今天想給這一頁什麼名字？" />
+          <textarea id="journalBody" class="journal-body" placeholder="今天發生了什麼？&#10;&#10;我的感受？&#10;&#10;今天值得記住的是什麼？&#10;&#10;給明天自己的話……"></textarea>
+          <div class="journal-prompts"><span>寫作提示</span><button type="button" data-journal-prompt="今天發生了什麼？">今天發生了什麼？</button><button type="button" data-journal-prompt="我的感受是：">我的感受是：</button><button type="button" data-journal-prompt="今天值得記住的是：">值得記住的是：</button><button type="button" data-journal-prompt="給明天自己的話：">給明天自己的話：</button></div>
+          <div class="journal-actions"><button class="btn btn-ghost" id="journalNewBtn">新的一頁</button><button class="btn btn-danger" id="journalDeleteBtn" hidden>刪除</button><button class="btn" id="journalSaveBtn">保存這一頁</button></div>
+        </article>
+        <aside class="journal-memory"><div class="journal-memory-head"><div><div class="journal-memory-kicker">MEMORIES</div><h2>曾經寫下的</h2></div><span class="journal-count" id="journalCount">0</span></div><div id="journalList" class="journal-list"></div></aside>
+      </div>
     </section>
 
     <!-- ===== Archive：時間管理（保留原有資料入口） ===== -->
@@ -1296,16 +1368,61 @@
         </div>
 
         <div class="card finance-shopping">
-          <div class="card-title"><span><span class="badge">WEEKLY BUDGET</span> 整體一週預算</span></div>
-          <div class="shopping-form">
-            <select id="shoppingCategory"><option>衣</option><option>食</option><option>住</option><option>行</option><option>工資</option><option>紅包</option><option>其他</option></select>
-            <select id="shoppingCurrency"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="OTHER">其他</option></select>
-            <input id="shoppingWeek" type="week" aria-label="預算周" />
-            <input id="shoppingBudget" type="number" min="0" step="0.01" placeholder="預算金額" />
-            <input id="shoppingUsed" type="number" min="0" step="0.01" placeholder="已使用金額" />
-            <button class="btn" id="shoppingAddBtn">＋ 儲存一週預算</button>
+          <div class="weekly-budget-intro">
+            <div>
+              <span class="badge">WEEKLY BUDGET</span>
+              <h2>我的生活花費節奏</h2>
+              <p>留意錢去了哪裡，也留意這些支出如何支持我的生活。</p>
+            </div>
+            <div class="weekly-budget-controls">
+              <label>本週 <input id="shoppingWeek" type="week" aria-label="預算周" /></label>
+              <label>幣種 <select id="shoppingCurrency"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="OTHER">其他</option></select></label>
+            </div>
           </div>
-          <div class="shopping-budget-layout"><div class="shopping-list" id="shoppingList"></div><div class="shopping-budget-chart"><div class="pie-title">本周各分類已使用</div><div class="pie" id="shoppingBudgetPie"></div><div class="pie-legend" id="shoppingBudgetLegend"></div></div></div>
+
+          <div class="weekly-budget-layout">
+            <div class="weekly-budget-main">
+              <div class="weekly-budget-overview">
+                <div class="weekly-budget-overview-head"><span>本週財務總覽</span><span id="shoppingWeekProgressLabel">尚未開始</span></div>
+                <div class="weekly-budget-metrics">
+                  <div><span>本週預算</span><strong id="shoppingWeekBudget">0</strong></div>
+                  <div><span>已使用</span><strong id="shoppingWeekUsed">0</strong></div>
+                  <div><span>剩餘金額</span><strong id="shoppingWeekRemaining">0</strong></div>
+                  <div><span>使用比例</span><strong id="shoppingWeekRatio">0%</strong></div>
+                </div>
+                <div class="weekly-budget-progress"><i id="shoppingWeekProgressFill"></i></div>
+              </div>
+
+              <div class="weekly-budget-entry">
+                <div class="weekly-budget-entry-title">記下一項本週預算</div>
+                <div class="weekly-budget-entry-grid">
+                  <label><span>分類</span><select id="shoppingCategory"><option>Daily Life</option><option>Transport</option><option>Food</option><option>Growth</option><option>Others</option></select></label>
+                  <label><span>預算金額</span><input id="shoppingBudget" type="number" min="0" step="0.01" placeholder="例如 500" /></label>
+                  <button class="btn" id="shoppingAddBtn">＋ 加入預算</button>
+                </div>
+              </div>
+
+              <div class="shopping-list" id="shoppingList"></div>
+
+              <div class="weekly-reflection">
+                <div class="weekly-reflection-head"><span class="badge">MONEY REFLECTION</span><strong>留一點空間，回望本週的選擇</strong></div>
+                <div class="weekly-reflection-auto"><span>本週花費最多</span><strong id="shoppingTopSpendAuto">—</strong></div>
+                <div class="weekly-reflection-grid">
+                  <label><span>最值得的支出</span><textarea id="shoppingWorthIt" rows="2" placeholder="這週哪一筆花費讓生活變得更好？"></textarea></label>
+                  <label><span>下週想調整</span><textarea id="shoppingNextAdjustment" rows="2" placeholder="下週想為自己留意什麼？"></textarea></label>
+                </div>
+                <button class="btn btn-ghost btn-mini" id="shoppingReflectionSave">保存本週反思</button>
+              </div>
+            </div>
+
+            <aside class="shopping-budget-chart">
+              <div class="pie-title">Where did my money go?</div>
+              <p class="weekly-chart-note">按分類看看本週的生活花費。</p>
+              <div class="pie" id="shoppingBudgetPie"></div>
+              <div class="pie-legend" id="shoppingBudgetLegend"></div>
+              <div class="weekly-category-bars" id="shoppingCategoryBars"></div>
+            </aside>
+          </div>
         </div>
 
         <div class="card finance-assets">
@@ -1604,7 +1721,7 @@
       <div class="card">
         <div class="card-title"><span class="badge">DAILY REVIEW</span> 每日記錄</div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><label for="rvDate" style="font-size:12px;color:var(--ink-2)">選擇日期</label><input type="date" id="rvDate" style="max-width:180px" /></div>
-        <div style="margin-bottom:16px"><div style="font-size:12px;color:var(--ink-2);margin-bottom:7px">今天的心情</div><div class="mood-row review-mood-row"><button type="button" class="mood-btn review-mood-btn" data-mood="great"><span class="emo">🥰</span><span class="name">很好</span></button><button type="button" class="mood-btn review-mood-btn" data-mood="good"><span class="emo">😊</span><span class="name">不錯</span></button><button type="button" class="mood-btn review-mood-btn" data-mood="ok"><span class="emo">😐</span><span class="name">普通</span></button><button type="button" class="mood-btn review-mood-btn" data-mood="meh"><span class="emo">😔</span><span class="name">低落</span></button><button type="button" class="mood-btn review-mood-btn" data-mood="bad"><span class="emo">😩</span><span class="name">疲憊</span></button></div></div>
+        <div class="review-mood-note">今天的心情已移到「今日」與「日記」記錄；這裡專心整理今天的經歷與想法。</div>
         <div class="rev-grid">
           <div><div style="font-size:12px;color:var(--ink-2);margin-bottom:6px">今天學到了什麼？</div><textarea id="rvLearned" placeholder="新的知識、新的洞見…"></textarea></div>
           <div><div style="font-size:12px;color:var(--ink-2);margin-bottom:6px">今天學到了關於自己的什麼？</div><textarea id="rvSelf" placeholder="新的自我認知…"></textarea></div>
@@ -1648,6 +1765,11 @@
   @media(max-width:760px){.moment-compose{grid-template-columns:1fr 1fr}.moment-compose input[type=file]{grid-column:1/-1}.moment-compose input[type=text]{grid-column:1/-1}.moment-compose .btn{grid-column:1/-1;justify-self:start}.moments-list{grid-template-columns:1fr 1fr}}
   @media(max-width:460px){.moments-list{grid-template-columns:1fr}}
 </style>
+<style>
+  .today-agenda-summary{display:flex;flex-direction:column;gap:7px}.today-agenda-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-1)}.today-agenda-item.done{text-decoration:line-through;color:var(--ink-3)}.today-agenda-item time{margin-left:auto;color:var(--ink-3);font-size:10px}.today-agenda-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 7px}.today-agenda-dot.todo{background:var(--warm)}.today-agenda-dot.plan{background:var(--accent-2)}.today-agenda-empty{color:var(--ink-3);font-size:12px}
+  .review-mood-note{margin-bottom:16px;padding:10px 12px;border-left:2px solid var(--accent);background:var(--surface-2);color:var(--ink-2);font-size:12px;line-height:1.6}
+  .journal-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:42px;align-items:start;max-width:1120px;margin:0 auto}.journal-paper{position:relative;min-height:760px;padding:34px clamp(24px,5vw,72px) 28px;background:var(--surface);border:1px solid var(--line-soft);box-shadow:0 16px 42px rgba(35,31,20,.08);border-radius:3px}.journal-paper:before{content:'';position:absolute;inset:14px;border:1px solid var(--line-soft);pointer-events:none}.journal-paper>*{position:relative}.journal-paper-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px}.journal-back,.journal-generate{border:0;background:transparent;color:var(--ink-3);font-size:11px;padding:5px}.journal-back:hover,.journal-generate:hover{color:var(--accent)}.journal-date-block{text-align:center}.journal-date-week{font-size:12px;letter-spacing:3px;color:var(--accent);margin-bottom:10px}.journal-date-input input{border:0;background:transparent;color:var(--ink-1);font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-size:clamp(36px,5vw,58px);text-align:center;padding:0;outline:0}.journal-date-rule{height:1px;background:var(--line-soft);max-width:420px;margin:18px auto 24px}.journal-atmosphere{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:24px}.journal-mood-chip{border:1px solid transparent;border-radius:999px;background:transparent;color:var(--ink-3);font-size:11px;padding:5px 9px}.journal-mood-chip:hover,.journal-mood-chip.active{border-color:var(--accent-2);background:var(--accent-bg);color:var(--accent)}.journal-atmosphere select{border:1px solid var(--line-soft);border-radius:999px;background:transparent;color:var(--ink-2);font-size:11px;padding:5px 9px}.journal-title-input{display:block;width:100%;font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-size:clamp(25px,3vw,34px)!important;text-align:center;border:0!important;border-bottom:1px solid var(--line-soft)!important;border-radius:0!important;background:transparent!important;padding:11px 0 16px!important;color:var(--ink-1)}.journal-body{display:block;width:100%;min-height:430px;border:0;background:transparent;color:var(--ink-1);outline:0;resize:vertical;font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-size:19px;line-height:2;padding:26px 0}.journal-body::placeholder{color:var(--ink-3)}.journal-prompts{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:15px;color:var(--ink-3);font-size:10px}.journal-prompts button{border:0;background:transparent;color:var(--accent);font-size:10px;padding:3px}.journal-prompts button:hover{text-decoration:underline}.journal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:21px}.journal-memory{position:sticky;top:24px;padding:8px 2px}.journal-memory-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line-soft);padding-bottom:16px}.journal-memory-kicker{font-size:10px;letter-spacing:2.5px;color:var(--accent);margin-bottom:6px}.journal-memory h2{font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-weight:500;font-size:25px;margin:0;color:var(--ink-1)}.journal-count{color:var(--ink-3);font-size:12px}.journal-list{position:relative;margin-top:8px;padding-left:21px}.journal-list:before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line-soft)}.journal-list-item{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:100%;text-align:left;padding:15px 0 17px 14px;border:0;border-bottom:1px solid var(--line-soft);background:transparent;color:var(--ink-1)}.journal-list-item:before{content:'';position:absolute;left:-20px;top:20px;width:9px;height:9px;border:2px solid var(--accent);border-radius:50%;background:var(--bg)}.journal-list-item:hover,.journal-list-item.active{color:var(--accent)}.journal-list-item span{font-size:10px;color:var(--ink-3)}.journal-list-item strong{font-size:14px;font-weight:600}.journal-list-item small{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:11px}@media(max-width:800px){.journal-layout{grid-template-columns:1fr;gap:24px}.journal-memory{position:static}.journal-paper{min-height:680px;padding-left:24px;padding-right:24px}.journal-paper:before{inset:9px}.journal-date-input input{font-size:42px}.journal-body{min-height:350px}}
+</style>
 
 <button class="fab" id="fab" title="快速新增待辦 (N)">＋</button>
 <div class="toast" id="toast"></div>
@@ -1688,11 +1810,13 @@ const defaultState = () => ({
       { id:'wechat-hk', group:'微信', name:'香港微信', amount:'', currency:'HKD' },
       { id:'wechat-mainland', group:'微信', name:'內地微信', amount:'', currency:'CNY' }
     ],
-    transfers: []
+    transfers: [],
+    weeklyReflections: {}
   },
   media: [],
   newsSources: [],
   newsItems: [],
+  journal: [],
   personal: {
     travel: { entries: [] },
     shopping: [],
@@ -1762,6 +1886,8 @@ function loadState(){
       next.newsItems = next.newsItems.map(x => Object.assign({id:uid(),category:'其他',title:'',summary:'',source:'',url:'',date:'',cover:''},x)).filter(x => x.title);
       if(!Array.isArray(next.moments)) next.moments=[];
       next.moments = next.moments.map(x => Object.assign({id:uid(),date:today(),text:'',photo:''},x)).filter(x => x.text || x.photo);
+      if(!Array.isArray(next.journal)) next.journal=[];
+      next.journal = next.journal.map(x => Object.assign({id:uid(),date:today(),title:'',body:'',mood:'',weather:'',createdAt:'',updatedAt:''},x)).filter(x => x.body || x.title);
       const normalizeTodo = item => {
         const planned = item.scheduledDate || item.date || (item.createdAt ? String(item.createdAt).slice(0,10) : today());
         return Object.assign(item, {
@@ -2003,10 +2129,56 @@ function renderToday(){
   $$('#todayMoodActions button').forEach(b=>b.classList.toggle('active',b.dataset.todayMood===mood));
   $('#todayFocusInput').value=record.focus||state.focus.text||'';
   $('#todayEntryInput').value=record.entry||'';
+  const agenda=$('#todayAgendaSummary');
+  if(agenda){
+    const entries=calendarEntriesFor(d).slice(0,8);
+    agenda.innerHTML=entries.length?entries.map(item=>`<div class="today-agenda-item ${item.done?'done':''}"><span class="today-agenda-dot ${item.kind||''}"></span><span>${esc(item.title)}</span>${item.time?`<time>${esc(item.time)}</time>`:''}</div>`).join(''):'<div class="today-agenda-empty">今天還沒有安排。</div>';
+  }
   const history=$('#todayRecentHistory');
   const dates=Object.keys(state.dailyRecords||{}).filter(k=>k!==d).sort().reverse().filter(k=>state.dailyRecords[k]?.entry||state.dailyRecords[k]?.focus||state.dailyRecords[k]?.mood).slice(0,3);
   history.innerHTML=dates.length?`<div class="today-history-label">最近留下的片段</div>${dates.map(k=>`<div class="today-history-item"><span class="today-history-date">${esc(k)}</span><span class="today-history-text">${esc(state.dailyRecords[k].entry||state.dailyRecords[k].focus||'已記下今天的心情')}</span></div>`).join('')}`:`<div class="today-history-label">最近留下的片段</div><div class="empty">這裡會保存你寫下的生活。</div>`;
   renderMoments();
+}
+
+/* ========== 私人日記 ========== */
+let journalEditingId = '';
+function journalEntries(){
+  if(!Array.isArray(state.journal)) state.journal=[];
+  return state.journal;
+}
+function journalDraftFor(date){
+  const d=String(date||today()).slice(0,10), record=state.dailyRecords?.[d]||{}, review=state.review?.entries?.[d]||{};
+  const lines=[];
+  const mood=moodLabels[record.mood||review.mood]||record.mood||review.mood;
+  const events=(state.time?.events?.[d]||[]).map(x=>`${x.time?x.time+' ':''}${x.title}`).filter(Boolean);
+  const todos=[...(state.time?.dailyTodos||[]),...(state.time?.weeklyTodos||[])].filter(x=>todoPlannedDate(x)===d).map(x=>x.text).filter(Boolean);
+  const moments=(state.moments||[]).filter(x=>String(x.date||'').slice(0,10)===d).map(x=>x.text).filter(Boolean);
+  if(mood) lines.push(`今天的心情：${mood}`);
+  if(record.focus) lines.push(`今天想留意的事：${record.focus}`);
+  if(events.length) lines.push(`今日安排：\n${events.map(x=>`- ${x}`).join('\n')}`);
+  if(todos.length) lines.push(`待辦事項：\n${todos.map(x=>`- ${x}`).join('\n')}`);
+  if(record.entry) lines.push(`生活片段：\n${record.entry}`);
+  if(moments.length) lines.push(`值得留住的片刻：\n${moments.join('\n')}`);
+  if(review.learned) lines.push(`今天學到的事：\n${review.learned}`);
+  if(review.self) lines.push(`關於自己的新發現：\n${review.self}`);
+  return lines.length?lines.join('\n\n'):`${d}\n\n今天發生了什麼？\n\n我的感受？\n\n今天值得記住的是什麼？\n\n給明天自己的話：`;
+}
+function renderJournal(){
+  const entries=journalEntries().slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.updatedAt||b.createdAt).localeCompare(String(a.updatedAt||a.createdAt)));
+  const current=entries.find(x=>x.id===journalEditingId);
+  const date=current?.date||$('#journalDate')?.value||today();
+  $('#journalDate').value=date;
+  const dateObj=new Date(`${date}T00:00:00`), weekday=['日','一','二','三','四','五','六'][dateObj.getDay()];
+  $('#journalDateWeek').textContent=`星期${weekday}`;
+  $('#journalTitle').value=current?.title||'';
+  $('#journalBody').value=current?.body||'';
+  $('#journalWeather').value=current?.weather||'';
+  const mood=current?.mood||state.review?.entries?.[date]?.mood||state.dailyRecords?.[date]?.mood||'';
+  $$('.journal-mood-chip').forEach(btn=>btn.classList.toggle('active',btn.dataset.journalMood===mood));
+  $('#journalDeleteBtn').hidden=!current;
+  $('#journalCount').textContent=String(entries.length);
+  $('#journalList').innerHTML=entries.length?entries.map(x=>`<button type="button" class="journal-list-item ${x.id===journalEditingId?'active':''}" data-journal-id="${esc(x.id)}"><span>${esc(x.date)}</span><strong>${esc(x.title||'無題日記')}</strong><small>${esc(String(x.body||'').replace(/\s+/g,' ').slice(0,90))}</small></button>`).join(''):'<div class="empty">還沒有日記。今天可以先寫下一頁。</div>';
+  $$('.journal-list-item').forEach(btn=>btn.onclick=()=>{journalEditingId=btn.dataset.journalId;renderJournal();});
 }
 
 function renderMoments(){
@@ -2434,6 +2606,7 @@ function financeData(){
   }
   state.finance.assets = Array.isArray(state.finance.assets) ? state.finance.assets : [];
   state.finance.transfers = Array.isArray(state.finance.transfers) ? state.finance.transfers : [];
+  if(!state.finance.weeklyReflections || typeof state.finance.weeklyReflections !== 'object') state.finance.weeklyReflections = {};
   state.finance.expenses = state.finance.expenses.map(x => Object.assign({date:today(),currency:'HKD',category:'其他',assetId:''},x));
   state.finance.incomes = state.finance.incomes.map(x => Object.assign({date:today(),currency:'HKD',category:'其他',assetId:''},x));
   state.finance.shopping = state.finance.shopping.map(x => Object.assign({id:uid(),week:'',month:monthKey(new Date()),currency:'HKD',category:'其他',budget:0,used:0,note:''},x,{week:x.week||'',month:x.month||x.date?.slice(0,7)||monthKey(new Date()),budget:Number(x.budget||x.amount||x.price||0),used:Number(x.used||0)}));
@@ -2523,6 +2696,7 @@ function renderFinance(){
   $('#finChartDate').onchange = () => renderFinanceChart(f);
   $('#finChartCurrency').onchange = () => renderFinanceChart(f);
   $('#shoppingWeek').onchange = () => renderShopping();
+  $('#shoppingCurrency').onchange = () => renderShopping();
 
   const renderRows = (el, arr, kind) => {
     if(!arr.length){ el.innerHTML = '<div class="empty">還沒有紀錄</div>'; return; }
@@ -2882,7 +3056,7 @@ function renderMedia(){
       const first=new Date(year,month,1), days=new Date(year,month+1,0).getDate(), start=(first.getDay()+6)%7;
       const dayMap={}; items.forEach(x=>{const d=mediaRecordDate(x);if(!d)return;if(!dayMap[d])dayMap[d]=[];dayMap[d].push(x);});
       const cells=[]; for(let i=0;i<start;i++) cells.push('<div class="media-calendar-day is-empty"></div>');
-      for(let day=1;day<=days;day++){const key=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`, list=dayMap[key]||[], todayClass=key===today()?' is-today':'';cells.push(`<div class="media-calendar-day${todayClass}"><strong>${day}</strong><div class="media-calendar-items">${list.map(x=>`<div class="media-calendar-item" title="${esc(x.title||'未命名')}">${esc(x.title||'未命名')}</div>`).join('')}</div></div>`);}
+      for(let day=1;day<=days;day++){const key=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`, list=dayMap[key]||[], todayClass=key===today()?' is-today':'';cells.push(`<div class="media-calendar-day${todayClass}"><strong>${day}</strong><div class="media-calendar-items">${list.map(x=>{const statusClass=x.status==='已完成'?'status-done':x.status==='進行中'?'status-progress':x.status==='已棄置'?'status-abandoned':'status-want';return `<div class="media-calendar-item ${statusClass}" title="${esc(x.title||'未命名')}">${esc(x.title||'未命名')}</div>`}).join('')}</div></div>`);}
       panel.innerHTML=`<div class="media-calendar-toolbar"><button type="button" id="mediaCalendarPrev">‹</button><strong>${monthName}</strong><div><button type="button" id="mediaCalendarToday">今天</button> <button type="button" id="mediaCalendarNext">›</button></div></div><div class="media-calendar-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div><div class="media-calendar-grid">${cells.join('')}</div>`;
       $('#mediaCalendarPrev').onclick=()=>{window.mediaCalendarCursor=new Date(year,month-1,1);renderMedia();}; $('#mediaCalendarNext').onclick=()=>{window.mediaCalendarCursor=new Date(year,month+1,1);renderMedia();}; $('#mediaCalendarToday').onclick=()=>{window.mediaCalendarCursor=new Date();renderMedia();};
     }else if(activeView==='stats'){
@@ -3047,27 +3221,67 @@ function renderTravel(){
     : '<div class="card empty">還沒有旅遊記錄，從上方新增第一趟旅程吧。</div>';
   $$('.travel-row .row-delete', list).forEach(b => b.onclick = () => { const row=b.closest('.travel-row'); data.entries=data.entries.filter(x=>x.id!==row.dataset.id); saveState(); renderTravel(); });
 }
+const weeklyBudgetCategory = value => {
+  const raw = String(value || '').trim();
+  if(['Daily Life','Transport','Food','Growth','Others'].includes(raw)) return raw;
+  if(/衣|住|生活|購物|日常/.test(raw)) return 'Daily Life';
+  if(/行|交通/.test(raw)) return 'Transport';
+  if(/食|餐飲|食品/.test(raw)) return 'Food';
+  if(/學|学|成長|成长|健康|運動|运动|書|书|影音/.test(raw)) return 'Growth';
+  return 'Others';
+};
+const weeklyBudgetColors = ['#6f9f84','#76a9c7','#df9a73','#9f91c8','#aaa28f'];
+
 function renderShopping(){
   const f = financeData(), data = f.shopping;
   const list = $('#shoppingList');
   if(!list) return;
   const currentWeek=$('#shoppingWeek')?.value||'';
-  const visible=data.filter(x=>x.week===currentWeek);
-  const budgetPie=$('#shoppingBudgetPie'), budgetLegend=$('#shoppingBudgetLegend');
+  const currency=$('#shoppingCurrency')?.value||'HKD';
+  const visible=data.filter(x=>x.week===currentWeek && (x.currency||'HKD')===currency);
   const weekParts=currentWeek.match(/^(\d{4})-W(\d{2})$/), weekAnchor=weekParts?(()=>{const jan4=new Date(Number(weekParts[1]),0,4),monday=new Date(jan4);monday.setDate(jan4.getDate()-((jan4.getDay()+6)%7)+(Number(weekParts[2])-1)*7);return fmtDate(monday);})():today();
-  const spentByCategory={};
-  (f.expenses||[]).filter(x=>financeDateMatch(x.date||'', 'week', weekAnchor) && (x.currency||'HKD')===($('#shoppingCurrency')?.value||'HKD')).forEach(x=>{spentByCategory[x.category||'其他']=(spentByCategory[x.category||'其他']||0)+moneyValue(x.amount);});
-  if(budgetPie&&budgetLegend){const entries=Object.entries(spentByCategory).filter(([,v])=>v>0),total=entries.reduce((n,[,v])=>n+v,0),colors=['#e57373','#ffb74d','#c4785c','#d95f8d','#9e9e9e','#7cb097'];if(total){let cursor=0;budgetPie.style.background='conic-gradient('+entries.map(([k,v],i)=>{const end=cursor+v/total*100,p=colors[i%colors.length]+' '+cursor+'% '+end+'%';cursor=end;return p;}).join(',')+')';budgetLegend.innerHTML=entries.map(([k,v],i)=>`<span style="--pie-color:${colors[i%colors.length]}">${esc(k)} ${moneyText(v)}</span>`).join('');}else{budgetPie.style.background='conic-gradient(var(--line) 0 100%)';budgetLegend.innerHTML='<span>本周暫無支出</span>';}}
+  const actualTotals={};
+  (f.expenses||[]).filter(x=>financeDateMatch(x.date||'', 'week', weekAnchor) && (x.currency||'HKD')===currency).forEach(x=>{const category=weeklyBudgetCategory(x.category);actualTotals[category]=(actualTotals[category]||0)+moneyValue(x.amount);});
+  const actualUsed=Object.values(actualTotals).reduce((n,v)=>n+v,0);
+  const manualUsed=visible.reduce((n,x)=>n+(Number(x.used)||0),0);
+  const categoryTotals=actualUsed>0 ? actualTotals : visible.reduce((out,x)=>{const category=weeklyBudgetCategory(x.category);out[category]=(out[category]||0)+(Number(x.used)||0);return out;},{});
+  const budgetTotal=visible.reduce((n,x)=>n+(Number(x.budget)||0),0);
+  const usedTotal=actualUsed>0 ? actualUsed : manualUsed;
+  const remaining=budgetTotal-usedTotal;
+  const ratio=budgetTotal ? Math.round(usedTotal/budgetTotal*100) : 0;
+  const ratioWidth=Math.min(100,Math.max(0,ratio));
+  const money=value=>currency+' '+moneyText(value);
+  $('#shoppingWeekBudget').textContent=money(budgetTotal);
+  $('#shoppingWeekUsed').textContent=money(usedTotal);
+  $('#shoppingWeekRemaining').textContent=(remaining<0?'−':'')+money(Math.abs(remaining));
+  $('#shoppingWeekRatio').textContent=ratio+'%';
+  $('#shoppingWeekProgressFill').style.width=ratioWidth+'%';
+  $('#shoppingWeekProgressFill').classList.toggle('over',ratio>100);
+  $('#shoppingWeekProgressLabel').textContent=budgetTotal?(ratio>100?'本週稍微超出預算':'本週使用 '+ratio+'%'):'先留下一筆本週預算';
+
+  const entries=Object.entries(categoryTotals).filter(([,v])=>v>0);
+  const total=entries.reduce((n,[,v])=>n+v,0), budgetPie=$('#shoppingBudgetPie'), budgetLegend=$('#shoppingBudgetLegend');
+  if(total){let cursor=0;budgetPie.style.background='conic-gradient('+entries.map(([k,v],i)=>{const end=cursor+v/total*100,p=weeklyBudgetColors[i%weeklyBudgetColors.length]+' '+cursor+'% '+end+'%';cursor=end;return p;}).join(',')+')';budgetLegend.innerHTML=entries.map(([k,v],i)=>`<span style="--pie-color:${weeklyBudgetColors[i%weeklyBudgetColors.length]}">${esc(k)} ${moneyText(v)}</span>`).join('');}
+  else{budgetPie.style.background='conic-gradient(var(--line) 0 100%)';budgetLegend.innerHTML='<span>本週暫無支出</span>';}
+  $('#shoppingCategoryBars').innerHTML=entries.length?entries.sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{const pct=total?Math.round(v/total*100):0;return `<div class="weekly-category-bar"><div><span>${esc(k)}</span><strong>${money(v)}</strong></div><i><b style="width:${pct}%;background:${weeklyBudgetColors[i%weeklyBudgetColors.length]}"></b></i></div>`;}).join(''):'<div class="weekly-chart-empty">有支出後，這裡會看見花費分布。</div>';
+
   list.innerHTML = visible.length ? visible.slice().reverse().map(x => {
     const budget=Number(x.budget)||0, used=Number(x.used)||0, pct=budget?Math.round(used/budget*100):0, width=Math.min(100,Math.max(0,pct));
     return '<div class="shopping-budget-row" data-id="'+x.id+'">'
-      + '<div class="shopping-budget-head"><strong>'+esc(x.category||'其他')+'</strong><span class="tag">'+esc(x.currency||'HKD')+'</span><button class="row-delete" title="刪除預算">✕</button></div>'
-      + '<div class="shopping-budget-meta"><span>預算</span><input class="shopping-budget-input" data-field="budget" type="number" min="0" step="0.01" value="'+esc(budget)+'" /><span>已使用</span><input class="shopping-budget-input" data-field="used" type="number" min="0" step="0.01" value="'+esc(used)+'" /></div>'
+      + '<div class="shopping-budget-head"><strong>'+esc(weeklyBudgetCategory(x.category))+'</strong><span class="tag">'+esc(x.currency||'HKD')+'</span><button class="row-delete" title="刪除預算">✕</button></div>'
+      + '<div class="shopping-budget-meta"><span>預算</span><input class="shopping-budget-input" data-field="budget" type="number" min="0" step="0.01" value="'+esc(budget)+'" /><span>手動記錄</span><input class="shopping-budget-input" data-field="used" type="number" min="0" step="0.01" value="'+esc(used)+'" /></div>'
       + '<div class="shopping-budget-progress"><i class="'+(pct>100?'over':'')+'" style="width:'+width+'%"></i></div>'
-      + '<div class="shopping-budget-summary"><span></span><span class="'+(pct>100?'over':'')+'">'+(pct>100?'超支 ':'剩餘 ')+esc(moneyText(Math.abs(budget-used)))+' · '+pct+'%</span></div></div>';
-  }).join('') : '<div class="card empty">這一周還沒有預算，從上方新增一筆吧。</div>';
+      + '<div class="shopping-budget-summary"><span>本分類預算</span><span class="'+(pct>100?'over':'')+'">'+(pct>100?'超支 ':'剩餘 ')+esc(moneyText(Math.abs(budget-used)))+' · '+pct+'%</span></div></div>';
+  }).join('') : '<div class="card empty">這一週還沒有分類預算，從上方留下一筆吧。</div>';
   $$('.shopping-budget-input', list).forEach(input=>input.onchange=()=>{const row=input.closest('.shopping-budget-row'), item=data.find(x=>x.id===row.dataset.id);if(item){item[input.dataset.field]=Math.max(0,Number(input.value)||0);saveState();renderShopping();}});
   $$('.shopping-budget-row .row-delete', list).forEach(b => b.onclick = () => { const row=b.closest('.shopping-budget-row'); state.finance.shopping=data.filter(x=>x.id!==row.dataset.id); saveState(); renderShopping(); });
+
+  const topEntry=entries.slice().sort((a,b)=>b[1]-a[1])[0];
+  $('#shoppingTopSpendAuto').textContent=topEntry?`${topEntry[0]} · ${money(topEntry[1])}`:'本週還沒有支出記錄';
+  const reflection=f.weeklyReflections[`${currentWeek}|${currency}`]||{};
+  $('#shoppingWorthIt').value=reflection.worthIt||'';
+  $('#shoppingNextAdjustment').value=reflection.nextAdjustment||'';
+  $('#shoppingReflectionSave').onclick=()=>{f.weeklyReflections[`${currentWeek}|${currency}`]={worthIt:$('#shoppingWorthIt').value.trim(),nextAdjustment:$('#shoppingNextAdjustment').value.trim()};saveState();showToast('本週財務反思已保存 ✓');};
 }
 function bindEntertainment(){
   $('#travelAddBtn')?.addEventListener('click', () => {
@@ -3076,13 +3290,13 @@ function bindEntertainment(){
     ['travelLocation','travelDate','travelItinerary','travelBudget','travelSpent','travelNote'].forEach(id=>$('#'+id).value=''); saveState(); renderTravel(); showToast('旅遊記錄已新增 ✓');
   });
   $('#shoppingAddBtn')?.addEventListener('click', () => {
-    const f=financeData(), week=$('#shoppingWeek').value, currency=$('#shoppingCurrency').value, budget=Number($('#shoppingBudget').value)||0, used=Number($('#shoppingUsed').value)||0;
+    const f=financeData(), week=$('#shoppingWeek').value, currency=$('#shoppingCurrency').value, category=$('#shoppingCategory').value, budget=Number($('#shoppingBudget').value)||0;
     if(!week){showToast('請先選擇預算周');return;}
     if(!budget){showToast('請先填寫預算金額');return;}
-    const existing=f.shopping.find(x=>x.week===week&&x.currency===currency);
-    if(existing){existing.budget=budget;existing.used=used;showToast('已更新這一週的預算 ✓');}
-    else f.shopping.push({id:uid(),category:'整體一週預算',week,currency,budget,used});
-    $('#shoppingBudget').value='';$('#shoppingUsed').value='';saveState();renderShopping();
+    const existing=f.shopping.find(x=>x.week===week&&x.currency===currency&&weeklyBudgetCategory(x.category)===category);
+    if(existing){existing.budget=budget;showToast('已更新這個分類的本週預算 ✓');}
+    else f.shopping.push({id:uid(),category,week,currency,budget,used:0});
+    $('#shoppingBudget').value='';saveState();renderShopping();
   });
 }
 
@@ -3094,8 +3308,6 @@ function renderReview(){
   const e = state.review.entries[d] || {};
   $('#reviewDate').textContent = '正在查看：' + d;
   $('#rvDate').value = d;
-  reviewMood = e.mood || state.dailyRecords?.[d]?.mood || '';
-  $$('.review-mood-btn').forEach(b=>b.classList.toggle('on',b.dataset.mood===reviewMood));
   $('#rvLearned').value = e.learned || '';
   $('#rvSelf').value = e.self || '';
   $('#rvImprove').value = e.improve || '';
@@ -3189,6 +3401,10 @@ function doSearch(q){
     const text=[date,e.learned,e.self,e.improve,e.next,Object.keys(e.habits||{}).length?'習慣打卡':''].filter(Boolean).join(' · ');
     if(text.toLowerCase().includes(ql)) results.push({tag:'復盤', text, go:'review', date});
   });
+  journalEntries().forEach(j => {
+    const text=[j.date,j.title,j.body].filter(Boolean).join(' · ');
+    if(text.toLowerCase().includes(ql)) results.push({tag:'日記', text, go:'journal', date:j.date});
+  });
   Object.entries(state.dailyRecords||{}).forEach(([date,r]) => {
     const life=r.life||{}, text=[date,r.focus,r.plan,r.mood,Object.values(r.highlights||{}).join(' '),life.weight,life.water,life.exercise].filter(Boolean).join(' · ');
     if(text.toLowerCase().includes(ql)) results.push({tag:'每日記錄', text, go:'review', date});
@@ -3241,8 +3457,40 @@ function bindAll(){
   $('#momentText').onkeydown=e=>{if(e.key==='Enter')$('#momentAddBtn').click();};
 
   // 復盤
+  $('#journalDate').onchange = () => { if(!journalEditingId) renderJournal(); };
+  $('#journalNewBtn').onclick = () => { journalEditingId=''; $('#journalDate').value=today(); $('#journalTitle').value=''; $('#journalBody').value=''; renderJournal(); };
+  $$('.journal-mood-chip').forEach(btn=>btn.onclick=()=>{$$('.journal-mood-chip').forEach(x=>x.classList.toggle('active',x===btn));});
+  $('#journalGenerateBtn').onclick = () => {
+    const date=$('#journalDate').value||today();
+    if(date===today()){
+      if(!state.dailyRecords[date]) state.dailyRecords[date]={date};
+      state.dailyRecords[date].focus=$('#todayFocusInput').value.trim();
+      state.dailyRecords[date].entry=$('#todayEntryInput').value.trim();
+      state.focus.text=state.dailyRecords[date].focus;
+      saveDailySnapshot();saveState();
+    }
+    $('#journalBody').value=journalDraftFor(date);
+    if(!$('#journalTitle').value.trim()) $('#journalTitle').value=`${date} 的日記`;
+    showToast('已生成今日日記草稿');
+  };
+  $$('.journal-prompts button').forEach(btn=>btn.onclick=()=>{const body=$('#journalBody'), prompt=btn.dataset.journalPrompt;body.value=body.value.trim()?(body.value.trim()+'\n\n'+prompt+' '):prompt+' ';body.focus();});
+  $('#journalSaveBtn').onclick = () => {
+    const date=$('#journalDate').value||today(), title=$('#journalTitle').value.trim(), body=$('#journalBody').value.trim();
+    if(!title && !body){showToast('先寫下一點內容吧');return;}
+    const now=new Date().toISOString();
+    let entry=journalEntries().find(x=>x.id===journalEditingId);
+    if(!entry){entry={id:uid(),createdAt:now};state.journal.unshift(entry);journalEditingId=entry.id;}
+    Object.assign(entry,{date,title,body,mood:$('.journal-mood-chip.active')?.dataset.journalMood||'',weather:$('#journalWeather').value||'',updatedAt:now});
+    saveState();renderJournal();showToast('日記已保存 ✓');
+  };
+  $('#journalDeleteBtn').onclick = () => {
+    if(!journalEditingId)return;
+    if(!confirm('確定刪除這篇日記嗎？'))return;
+    state.journal=journalEntries().filter(x=>x.id!==journalEditingId);journalEditingId='';saveState();renderJournal();showToast('日記已刪除');
+  };
+
+  // 復盤
   $('#rvDate').onchange = e => { reviewSelectedDate=e.target.value || today(); renderReview(); };
-  $$('.review-mood-btn').forEach(b=>b.onclick=()=>{reviewMood=b.dataset.mood;$$('.review-mood-btn').forEach(x=>x.classList.toggle('on',x===b));});
   $('#saveReview').onclick = () => {
     const d = reviewSelectedDate || today();
     if(!state.review.entries[d]) state.review.entries[d] = {};
@@ -3250,7 +3498,6 @@ function bindAll(){
     state.review.entries[d].self = $('#rvSelf').value;
     state.review.entries[d].improve = $('#rvImprove').value;
     state.review.entries[d].next = $('#rvNext').value;
-    state.review.entries[d].mood = reviewMood || '';
     saveState(); showToast('已儲存今日復盤 ✓');
   };
   $('#addHabitBtn').onclick = () => {
@@ -3414,6 +3661,8 @@ function bindAll(){
         state = Object.assign(defaultState(), pack.data);
         if(!Array.isArray(state.moments)) state.moments=[];
         state.moments = state.moments.map(x => Object.assign({id:uid(),date:today(),text:'',photo:''},x)).filter(x => x.text || x.photo);
+        if(!Array.isArray(state.journal)) state.journal=[];
+        state.journal = state.journal.map(x => Object.assign({id:uid(),date:today(),title:'',body:'',mood:'',weather:'',createdAt:'',updatedAt:''},x)).filter(x => x.body || x.title);
         delete state.tasks;
         delete state.work;
         delete state.learning;
@@ -3679,6 +3928,7 @@ function renderWlChart(s){
 /* ========== 入口 ========== */
 function render(name){
   if(name === 'today') renderToday();
+  else if(name === 'journal') renderJournal();
   else if(name === 'overview') renderOverview();
   else if(name === 'time') renderTime();
   else if(name === 'entertainment') renderEntertainment();
