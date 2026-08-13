@@ -1117,6 +1117,12 @@
   body.dark .media-editor-type.active,body.dark .media-side-item.active{background:var(--accent)!important;color:#172119!important}
   @media(max-width:760px){.main{padding:30px 18px 50px}.sidebar{padding:20px 18px}.nav-title{margin-top:20px}}
 </style>
+<style>
+  .media-rating button{font-size:23px;padding:1px 2px;color:var(--line);background:transparent;border:0}
+  .media-rating button.active,.media-rating button:hover{color:var(--warm)}
+  .media-rating-label{font-size:12px;color:var(--ink-2);margin-left:7px}
+  .finance-history-note{margin:-4px 0 12px;color:var(--ink-3);font-size:11px;line-height:1.5}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1261,7 +1267,8 @@
 
       <div class="finance-grid">
         <div class="card">
-          <div class="card-title"><span><span class="badge">EXPENSE</span> 支出</span></div>
+          <div class="card-title"><span><span class="badge">EXPENSE</span> 今日支出</span></div>
+          <div class="finance-history-note">這裡只顯示今天的支出；之前的記錄仍會保存在本機資料中。</div>
           <div class="finance-form">
             <select id="finExpenseCategory"><option>衣</option><option>食</option><option>住</option><option>行</option><option>其他</option></select>
             <select id="finExpenseCurrency"><option value="HKD">港幣 HKD</option><option value="CNY">人民幣 CNY</option><option value="USD">美元 USD</option><option value="EUR">歐元 EUR</option><option value="OTHER">其他</option></select>
@@ -2488,8 +2495,9 @@ function renderFinanceChart(f){
 
 function renderFinance(){
   const f = financeData();
+  const todayExpenses = f.expenses.filter(x => String(x.date||'').slice(0,10) === today());
   $('#finTotalIncome').textContent = currencySummary(f.incomes);
-  $('#finTotalExpense').textContent = currencySummary(f.expenses||[]);
+  $('#finTotalExpense').textContent = currencySummary(todayExpenses);
   const netAssets = financeNetAssetTotals(f);
   $('#finTotalAssets').textContent = currencyTotalsSummary(netAssets);
   if(!$('#finExpenseDate').value) $('#finExpenseDate').value=today();
@@ -2537,7 +2545,7 @@ function renderFinance(){
       saveState(); renderFinance();
     });
   };
-  renderRows($('#finExpenseList'), f.expenses, 'expense');
+  renderRows($('#finExpenseList'), todayExpenses, 'expense');
   renderRows($('#finIncomeList'), f.incomes, 'income');
   renderShopping();
 
@@ -2801,7 +2809,16 @@ function bindNews(){
 /* ========== 書影音 ========== */
 function mediaData(){
   if(!Array.isArray(state.media)) state.media = [];
-  state.media = state.media.map(x => Object.assign({id:uid(),type:'其他',title:'',originalTitle:'',category:'',year:'',date:'',rating:0,cover:'',status:'想看',creator:'',region:'',platform:'',progress:0,progressMode:'pages',progressTotal:'',progressCurrent:'',note:'',createdAt:''},x));
+  let changed=false;
+  state.media = state.media.map(x => {
+    const item = Object.assign({id:uid(),type:'其他',title:'',originalTitle:'',category:'',year:'',date:'',rating:0,cover:'',status:'想看',creator:'',region:'',platform:'',progress:0,progressMode:'pages',progressTotal:'',progressCurrent:'',note:'',createdAt:''},x);
+    const rawRating=Number(item.rating)||0, normalizedRating=rawRating>5?Math.round(rawRating/2):Math.round(rawRating);
+    const recordDate=String(item.date||item.createdAt||'').slice(0,10);
+    if(normalizedRating!==rawRating){item.rating=Math.max(0,Math.min(5,normalizedRating));changed=true;}
+    if(!item.date && recordDate){item.date=recordDate;changed=true;}
+    return item;
+  });
+  if(changed) saveState();
   // 將舊版個人管理的記錄搬到獨立書影音區，避免資料遺失
   if(state.personal && state.personal.records){
     const legacy = {books:'書籍', movies:'電影', podcasts:'播客'};
@@ -2814,6 +2831,8 @@ function mediaData(){
   }
   return state.media;
 }
+
+function mediaRecordDate(item){ return String(item?.date || item?.createdAt || '').slice(0,10); }
 
 function renderMedia(){
   const items = mediaData();
@@ -2835,7 +2854,7 @@ function renderMedia(){
   const setProgressMode = mode => {progressMode=mode;$$('.media-progress-mode').forEach(b=>b.classList.toggle('active',b.dataset.progressMode===mode));syncProgressUI();};
   const ratingBox = $('#mediaRating');
   const drawRating = () => {
-    ratingBox.innerHTML = Array.from({length:10},(_,i) => `<button type="button" class="${i<selectedRating?'active':''}" data-rating="${i+1}" title="${i+1} 分">★</button>`).join('') + `<span class="media-rating-label">${selectedRating}/10</span>`;
+    ratingBox.innerHTML = Array.from({length:5},(_,i) => `<button type="button" class="${i<selectedRating?'active':''}" data-rating="${i+1}" title="${i+1} 顆星">★</button>`).join('') + `<span class="media-rating-label">${selectedRating}/5</span>`;
     $$('#mediaRating button').forEach(b => b.onclick = () => { selectedRating=+b.dataset.rating; drawRating(); });
   };
   drawRating();
@@ -2861,7 +2880,7 @@ function renderMedia(){
       const cursor = window.mediaCalendarCursor ? new Date(window.mediaCalendarCursor) : new Date();
       const year=cursor.getFullYear(), month=cursor.getMonth(), monthName=`${year} 年 ${month+1} 月`;
       const first=new Date(year,month,1), days=new Date(year,month+1,0).getDate(), start=(first.getDay()+6)%7;
-      const dayMap={}; items.filter(x=>x.date).forEach(x=>{const d=String(x.date).slice(0,10);if(!dayMap[d])dayMap[d]=[];dayMap[d].push(x);});
+      const dayMap={}; items.forEach(x=>{const d=mediaRecordDate(x);if(!d)return;if(!dayMap[d])dayMap[d]=[];dayMap[d].push(x);});
       const cells=[]; for(let i=0;i<start;i++) cells.push('<div class="media-calendar-day is-empty"></div>');
       for(let day=1;day<=days;day++){const key=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`, list=dayMap[key]||[], todayClass=key===today()?' is-today':'';cells.push(`<div class="media-calendar-day${todayClass}"><strong>${day}</strong><div class="media-calendar-items">${list.map(x=>`<div class="media-calendar-item" title="${esc(x.title||'未命名')}">${esc(x.title||'未命名')}</div>`).join('')}</div></div>`);}
       panel.innerHTML=`<div class="media-calendar-toolbar"><button type="button" id="mediaCalendarPrev">‹</button><strong>${monthName}</strong><div><button type="button" id="mediaCalendarToday">今天</button> <button type="button" id="mediaCalendarNext">›</button></div></div><div class="media-calendar-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div><div class="media-calendar-grid">${cells.join('')}</div>`;
@@ -2869,8 +2888,8 @@ function renderMedia(){
     }else if(activeView==='stats'){
       const rated=items.filter(x=>Number(x.rating)>0), avg=rated.length?(rated.reduce((n,x)=>n+Number(x.rating),0)/rated.length).toFixed(1):'—';
       const types=['書籍','電影','影集','播客'], typeCounts=types.map(t=>items.filter(x=>x.type===t).length), maxType=Math.max(1,...typeCounts);
-      const ratingCounts=Array.from({length:10},(_,i)=>items.filter(x=>Number(x.rating)===i+1).length), maxRating=Math.max(1,...ratingCounts);
-      panel.innerHTML=`<div class="media-stats-grid"><div class="media-stat-card"><strong>${items.length}</strong><span>全部記錄</span></div><div class="media-stat-card"><strong>${counts['進行中']}</strong><span>進行中</span></div><div class="media-stat-card"><strong>${counts['已完成']}</strong><span>已完成</span></div><div class="media-stat-card"><strong>${avg}</strong><span>平均評分</span></div></div><div class="media-chart-grid"><div class="media-chart-card"><h3>按類型</h3>${types.map((t,i)=>`<div class="media-chart-row"><span>${t}</span><div class="media-chart-track"><i style="width:${typeCounts[i]/maxType*100}%"></i></div><b>${typeCounts[i]}</b></div>`).join('')}</div><div class="media-chart-card"><h3>評分分布</h3>${ratingCounts.map((n,i)=>`<div class="media-chart-row"><span>${i+1} 分</span><div class="media-chart-track"><i style="width:${n/maxRating*100}%"></i></div><b>${n}</b></div>`).join('')}</div></div>`;
+      const ratingCounts=Array.from({length:5},(_,i)=>items.filter(x=>Number(x.rating)===i+1).length), maxRating=Math.max(1,...ratingCounts);
+      panel.innerHTML=`<div class="media-stats-grid"><div class="media-stat-card"><strong>${items.length}</strong><span>全部記錄</span></div><div class="media-stat-card"><strong>${counts['進行中']}</strong><span>進行中</span></div><div class="media-stat-card"><strong>${counts['已完成']}</strong><span>已完成</span></div><div class="media-stat-card"><strong>${avg}</strong><span>平均評分（5 星）</span></div></div><div class="media-chart-grid"><div class="media-chart-card"><h3>按類型</h3>${types.map((t,i)=>`<div class="media-chart-row"><span>${t}</span><div class="media-chart-track"><i style="width:${typeCounts[i]/maxType*100}%"></i></div><b>${typeCounts[i]}</b></div>`).join('')}</div><div class="media-chart-card"><h3>評分分布</h3>${ratingCounts.map((n,i)=>`<div class="media-chart-row"><span>${i+1} 顆星</span><div class="media-chart-track"><i style="width:${n/maxRating*100}%"></i></div><b>${n}</b></div>`).join('')}</div></div>`;
     }else panel.innerHTML='';
   }
 
@@ -2879,20 +2898,20 @@ function renderMedia(){
   if(query) filtered=filtered.filter(x=>[x.title,x.creator,x.region,x.platform,x.note,x.type].join(' ').toLowerCase().includes(query));
   filtered.sort((a,b)=>sort==='title'?String(a.title).localeCompare(String(b.title),'zh-Hant'):sort==='rating'?Number(b.rating||0)-Number(a.rating||0):sort==='progress'?Number(b.progress||0)-Number(a.progress||0):String(b.createdAt||b.date||'').localeCompare(String(a.createdAt||a.date||'')));
   const list = $('#mediaList');
-  const header = `<div class="media-table-header"><span>▧ 名稱</span><span>◉ 分類</span><span>⑩ 評分</span><span>☰ 作者／導演／主創</span><span>◎ 國家／地區</span><span>▰ 平台／版本／學科</span><span></span></div>`;
+  const header = `<div class="media-table-header"><span>▧ 名稱</span><span>◉ 分類</span><span>★ 評分</span><span>☰ 作者／導演／主創</span><span>◎ 國家／地區</span><span>▰ 平台／版本／學科</span><span></span></div>`;
   const rows = filtered.map(x => {
-    const rating = Math.max(0,Math.min(10,Number(x.rating)||0));
-    const stars = Array.from({length:10},(_,i)=>`<b class="${i<rating?'':'off'}">★</b>`).join('');
+    const rating = Math.max(0,Math.min(5,Number(x.rating)||0));
+    const stars = Array.from({length:5},(_,i)=>`<b class="${i<rating?'':'off'}">★</b>`).join('');
     const progress=Math.max(0,Math.min(100,Number(x.progress)||0));
     const statusClass=x.status==='已完成'?'status-done':x.status==='已棄置'?'status-abandoned':x.status==='進行中'?'status-progress':'';
-    return `<div class="media-table-row" data-id="${esc(x.id)}"><div class="media-primary"><div class="media-primary-cover">${x.cover?`<img src="${x.cover}" alt="${esc(x.title||'封面')}" />`:'📖'}</div><div class="media-primary-copy"><div class="media-primary-title">${esc(x.title||'未命名')}</div><div class="media-primary-type"><i class="media-status-dot ${statusClass}"></i>${esc(x.status||'想看')}</div></div></div><div class="media-cell">${esc(x.type||'其他')}</div><div class="media-rating-cell">${stars}<span>${rating?rating+'/10':'—'}</span></div><div class="media-cell">${esc(x.creator||'—')}</div><div class="media-cell">${esc(x.region||'—')}</div><div class="media-cell"><div class="media-progress-cell"><div class="media-progress-bar"><i style="width:${progress}%"></i></div><em>${progress}%</em></div><div style="margin-top:3px;color:var(--ink-3);font-size:10px">${esc(x.platform||'—')}</div></div><div class="media-row-actions"><button class="media-row-action media-edit" title="編輯">✎</button><button class="media-row-action media-delete" title="刪除">✕</button></div></div>`;
+    return `<div class="media-table-row" data-id="${esc(x.id)}"><div class="media-primary"><div class="media-primary-cover">${x.cover?`<img src="${x.cover}" alt="${esc(x.title||'封面')}" />`:'📖'}</div><div class="media-primary-copy"><div class="media-primary-title">${esc(x.title||'未命名')}</div><div class="media-primary-type"><i class="media-status-dot ${statusClass}"></i>${esc(x.status||'想看')}</div></div></div><div class="media-cell">${esc(x.type||'其他')}</div><div class="media-rating-cell">${stars}<span>${rating?rating+'/5':'—'}</span></div><div class="media-cell">${esc(x.creator||'—')}</div><div class="media-cell">${esc(x.region||'—')}</div><div class="media-cell"><div class="media-progress-cell"><div class="media-progress-bar"><i style="width:${progress}%"></i></div><em>${progress}%</em></div><div style="margin-top:3px;color:var(--ink-3);font-size:10px">${esc(x.platform||'—')}</div></div><div class="media-row-actions"><button class="media-row-action media-edit" title="編輯">✎</button><button class="media-row-action media-delete" title="刪除">✕</button></div></div>`;
   }).join('');
   list.hidden = activeView!=='all';
   list.innerHTML = filtered.length ? header+rows : header+'<div class="empty" style="padding:28px 12px">沒有符合條件的記錄。</div>';
   $$('.media-delete', list).forEach(b => b.onclick = () => { const id=b.closest('.media-table-row').dataset.id; state.media=state.media.filter(x=>x.id!==id); saveState(); renderMedia(); });
   $$('.media-edit', list).forEach(b => b.onclick = () => {
     const x=state.media.find(item=>item.id===b.closest('.media-table-row').dataset.id); if(!x)return;
-    $('#mediaEditor').hidden=false; $('#mediaType').value=x.type||'其他'; $('#mediaTitle').value=x.title||''; $('#mediaOriginalTitle').value=x.originalTitle||''; $('#mediaCategory').value=x.category||''; $$('.media-category-chip').forEach(b=>b.classList.toggle('active',b.dataset.mediaCategory===(x.category||''))); $('#mediaYear').value=x.year||''; $('#mediaStatus').value=x.status||'想看'; $('#mediaCreator').value=x.creator||''; $('#mediaRegion').value=x.region||''; $('#mediaPlatform').value=x.platform||''; progressMode=x.progressMode||'pages'; if(progressTotal)progressTotal.value=x.progressTotal||''; if(progressCurrent)progressCurrent.value=x.progressCurrent||''; if(progressInput)progressInput.value=Number(x.progress)||0; setProgressMode(progressMode); $('#mediaDate').value=x.date||''; $('#mediaNote').value=x.note||''; selectedRating=Number(x.rating)||0; drawRating(); $('#mediaAddBtn').dataset.editId=x.id; $('#mediaAddBtn').textContent='儲存修改';
+    $('#mediaEditor').hidden=false; $('#mediaType').value=x.type||'其他'; $('#mediaTitle').value=x.title||''; $('#mediaOriginalTitle').value=x.originalTitle||''; $('#mediaCategory').value=x.category||''; $$('.media-category-chip').forEach(b=>b.classList.toggle('active',b.dataset.mediaCategory===(x.category||''))); $('#mediaYear').value=x.year||''; $('#mediaStatus').value=x.status||'想看'; $('#mediaCreator').value=x.creator||''; $('#mediaRegion').value=x.region||''; $('#mediaPlatform').value=x.platform||''; progressMode=x.progressMode||'pages'; if(progressTotal)progressTotal.value=x.progressTotal||''; if(progressCurrent)progressCurrent.value=x.progressCurrent||''; if(progressInput)progressInput.value=Number(x.progress)||0; setProgressMode(progressMode); $('#mediaDate').value=mediaRecordDate(x); $('#mediaNote').value=x.note||''; selectedRating=Math.max(0,Math.min(5,Number(x.rating)||0)); drawRating(); $('#mediaAddBtn').dataset.editId=x.id; $('#mediaAddBtn').textContent='儲存修改';
   });
 
   $('#mediaAddBtn').onclick = () => {
@@ -2900,7 +2919,7 @@ function renderMedia(){
     if(!title){ showToast('請先填寫標題'); return; }
     const editId=$('#mediaAddBtn').dataset.editId||'';
     const calculatedProgress=syncProgressUI();
-    const item = {id:editId||uid(),type:$('#mediaType').value,title,originalTitle:$('#mediaOriginalTitle').value.trim(),category:$('#mediaCategory').value.trim(),year:$('#mediaYear').value,date:$('#mediaDate').value,rating:selectedRating,cover:'',status:$('#mediaStatus').value,creator:$('#mediaCreator').value.trim(),region:$('#mediaRegion').value.trim(),platform:$('#mediaPlatform').value.trim(),progress:calculatedProgress,progressMode,progressTotal:progressTotal?.value||'',progressCurrent:progressCurrent?.value||'',note:$('#mediaNote').value.trim(),createdAt:editId?(state.media.find(x=>x.id===editId)?.createdAt||today()):today()};
+    const item = {id:editId||uid(),type:$('#mediaType').value,title,originalTitle:$('#mediaOriginalTitle').value.trim(),category:$('#mediaCategory').value.trim(),year:$('#mediaYear').value,date:$('#mediaDate').value||today(),rating:Math.max(0,Math.min(5,selectedRating)),cover:'',status:$('#mediaStatus').value,creator:$('#mediaCreator').value.trim(),region:$('#mediaRegion').value.trim(),platform:$('#mediaPlatform').value.trim(),progress:calculatedProgress,progressMode,progressTotal:progressTotal?.value||'',progressCurrent:progressCurrent?.value||'',note:$('#mediaNote').value.trim(),createdAt:editId?(state.media.find(x=>x.id===editId)?.createdAt||today()):today()};
     if(item.status==='已完成') item.progress=100;
     const file = $('#mediaCover').files[0];
     const finish = cover => {
