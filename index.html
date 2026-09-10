@@ -699,7 +699,7 @@
   .asset-transfer-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;align-items:center}
   .asset-transfer-form .wide{grid-column:1/-1}
   @media (max-width:760px){.asset-actions,.asset-transfer-form{display:grid;grid-template-columns:1fr 1fr}.asset-actions .btn,.asset-transfer-form .btn{justify-self:start}.asset-transfer-form .wide{grid-column:1/-1}}
-  .finance-chart{grid-column:1/-1}.finance-chart-controls{display:flex;gap:8px;margin-bottom:14px}.finance-chart-controls select,.finance-chart-controls input{max-width:150px}.finance-status{padding:3px 9px;border-radius:99px;font-size:11px}.finance-status.normal{background:var(--accent-bg);color:var(--accent)}.finance-status.over{background:#f8dede;color:#c44b4b}.finance-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.pie-wrap{min-width:0}.pie-title{font-size:12px;color:var(--ink-2);margin-bottom:8px}.pie{width:150px;height:150px;margin:0 auto 10px;border-radius:50%;background:conic-gradient(var(--line) 0 100%);position:relative}.pie::after{content:'';position:absolute;inset:35px;background:var(--surface);border-radius:50%}.pie-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;font-size:11px;color:var(--ink-2)}.pie-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--pie-color);margin-right:4px}@media (max-width:760px){.finance-chart-grid{grid-template-columns:1fr}}
+  .finance-chart{grid-column:1/-1;margin-top:26px}.finance-chart-controls{display:flex;gap:8px;margin-bottom:14px}.finance-chart-controls select,.finance-chart-controls input{max-width:150px}.finance-status{padding:3px 9px;border-radius:99px;font-size:11px}.finance-status.normal{background:var(--accent-bg);color:var(--accent)}.finance-status.over{background:#f8dede;color:#c44b4b}.finance-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.pie-wrap{min-width:0}.pie-title{font-size:12px;color:var(--ink-2);margin-bottom:8px}.pie{width:150px;height:150px;margin:0 auto 10px;border-radius:50%;background:conic-gradient(var(--line) 0 100%);position:relative}.pie::after{content:'';position:absolute;inset:35px;background:var(--surface);border-radius:50%}.pie-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;font-size:11px;color:var(--ink-2)}.pie-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--pie-color);margin-right:4px}@media (max-width:760px){.finance-chart-grid{grid-template-columns:1fr}}
   @media (max-width:960px){.finance-summary,.finance-grid{grid-template-columns:1fr}.finance-assets{grid-column:auto}}
   .workout-form{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:8px}.exercise-records{display:flex;flex-direction:column;gap:6px;margin-top:12px}.exercise-row{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface-2);border-radius:9px;font-size:12px}.exercise-row .exercise-main{flex:1}.exercise-row .exercise-meta{font-size:11px;color:var(--ink-3);margin-top:2px}.exercise-row .del{color:var(--ink-3)}.exercise-row .del:hover{color:var(--warm)}
   @media (max-width:760px){.workout-form{grid-template-columns:1fr 1fr}.workout-form .btn{grid-column:1/-1;justify-self:start}}
@@ -1379,7 +1379,7 @@
   .fitness-calendar-panel{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line-soft)}.fitness-calendar-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.fitness-calendar-head strong{display:block;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:19px;font-weight:500}.fitness-calendar-head span{display:block;margin-top:3px;color:var(--ink-3);font-size:11px}.fitness-calendar-nav{display:flex;align-items:center;gap:8px}.fitness-calendar-nav button{width:27px;height:27px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink-2);font-size:18px;line-height:1}.fitness-calendar-nav button:hover{border-color:var(--accent);color:var(--accent)}.fitness-calendar-nav b{min-width:84px;text-align:center;font-size:12px;font-weight:500;color:var(--ink-1)}.fitness-today-plan{min-height:44px;margin-bottom:13px;padding:10px 13px;border-left:2px solid var(--accent);background:var(--surface-mint);font-size:12px}.fitness-today-plan strong{color:var(--accent);font-weight:600}.fitness-today-plan span{display:block;margin-top:4px;color:var(--ink-2);line-height:1.6}.fitness-today-plan.is-rest{border-left-color:var(--line);background:transparent;color:var(--ink-3)}.fitness-calendar-weekdays,.fitness-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.fitness-calendar-weekdays{margin-bottom:5px;color:var(--ink-3);font-size:10px;text-align:center}.fitness-calendar-day{min-height:70px;padding:7px;border:1px solid var(--line-soft);border-radius:8px;background:var(--surface-2);overflow:hidden;cursor:pointer;transition:border-color .15s,background .15s}.fitness-calendar-day:hover{border-color:var(--accent)}.fitness-calendar-day.is-empty{border-color:transparent;background:transparent}.fitness-calendar-day.is-outside{opacity:.45}.fitness-calendar-day.is-today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.fitness-calendar-day.is-selected{border-color:var(--accent-2);background:var(--accent-bg);box-shadow:inset 0 0 0 1px var(--accent-2)}.fitness-calendar-day b{font-size:11px;font-weight:600}.fitness-calendar-day.is-today b,.fitness-calendar-day.is-selected b{color:var(--accent)}.fitness-calendar-plans{display:flex;flex-direction:column;gap:3px;margin-top:7px}.fitness-calendar-plan{padding:3px 5px;border-left:3px solid var(--accent);border-radius:3px;background:var(--surface-mint);color:var(--ink-2);font-size:10px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fitness-plan-days{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px;color:var(--ink-3);font-size:10px}.fitness-plan-days-label{margin-right:2px}.fitness-plan-day{width:25px;height:25px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink-2);font-size:10px}.fitness-plan-day.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:600}
   .fitness-plan-specific-date{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.fitness-plan-specific-date input{max-width:155px;padding:7px 9px;font-size:11px}.fitness-plan-specific-date button{color:var(--accent);font-size:11px}.fitness-plan-date-list{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.fitness-plan-date{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid var(--line-soft);border-radius:99px;color:var(--ink-2);font-size:10px}.fitness-plan-date button{color:var(--ink-3);font-size:10px}
   .fitness-calendar-assign{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding:11px 13px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}.fitness-calendar-assign strong{display:block;color:var(--ink-1);font-size:12px;font-weight:600}.fitness-calendar-assign span{display:block;margin-top:3px;color:var(--ink-3);font-size:10px}.fitness-calendar-assign-form{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}.fitness-calendar-assign-form input,.fitness-calendar-assign-form select{min-height:34px;padding:7px 9px;font-size:11px}.fitness-calendar-assign-form input{width:145px}.fitness-calendar-assign-form select{min-width:145px}
-  .fitness-plan-add{display:grid;grid-template-columns:minmax(0,1.5fr) .7fr .7fr .8fr auto;gap:6px;align-items:center;margin-top:10px}.fitness-plan-add input,.fitness-plan-add select{min-width:0;font-size:11px;padding:8px 9px}.fitness-plan-add button{white-space:nowrap}.fitness-plan-empty{padding:8px 0;color:var(--ink-3);font-size:11px}.fitness-plan-list-empty{padding:13px 0;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line-soft)}
+  .fitness-plan-add{display:grid;grid-template-columns:minmax(0,1.4fr) .65fr .65fr .7fr .75fr auto;gap:6px;align-items:center;margin-top:10px}.fitness-plan-add input,.fitness-plan-add select{min-width:0;font-size:11px;padding:8px 9px}.fitness-plan-add button{white-space:nowrap}.fitness-plan-empty{padding:8px 0;color:var(--ink-3);font-size:11px}.fitness-plan-list-empty{padding:13px 0;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line-soft)}
   .workout-form{grid-template-columns:minmax(150px,1.35fr) minmax(125px,1fr) repeat(4,minmax(80px,.8fr)) auto;align-items:center}.workout-form input,.workout-form select{min-width:0}
   .exercise-library-scenes{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 2px}.exercise-library-scenes button{padding:6px 10px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--ink-2);font-size:11px}.exercise-library-scenes button:hover,.exercise-library-scenes button.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
   @media(max-width:1050px){.workout-form{grid-template-columns:1fr 1fr 1fr 1fr}.workout-form .btn{grid-column:1/-1;justify-self:start}}
@@ -1983,16 +1983,6 @@
           <div class="fitness-plan-create"><input id="wlPlanName" placeholder="例如：下肢日、上肢日、全身訓練…" /><button class="btn btn-mini" id="wlPlanAdd">＋ 建立計劃</button></div>
           <div class="fitness-plan-list" id="wlTrainingPlans"></div>
         </div>
-        <div class="workout-form">
-          <select id="wlExerciseType"><option>步行</option><option>跑步</option><option>瑜伽</option><option>力量訓練</option><option>游泳</option><option>騎單車</option><option>跳舞</option><option>伸展</option><option>其他</option></select>
-          <input type="date" id="wlExerciseDate" />
-          <input type="number" min="1" id="wlExerciseSets" placeholder="組數（可選）" />
-          <input type="number" min="1" id="wlExerciseReps" placeholder="次數（可選）" />
-          <input type="number" min="0" step="0.5" id="wlExerciseWeight" placeholder="重量 kg（可選）" />
-          <input type="number" min="1" id="wlExerciseMinutes" placeholder="運動分鐘" />
-          <button class="btn btn-mini" id="wlAddExercise">＋ 記錄這次訓練</button>
-        </div>
-        <div class="exercise-records" id="wlExerciseRecords"></div>
         <details class="exercise-library" id="wlExerciseLibraryDetails">
           <summary>查看動作庫 <span>搜尋動作、肌群和器材</span></summary>
           <div class="exercise-library-tools"><input type="search" id="wlExerciseSearch" placeholder="搜尋動作、肌群或器材…" /><select id="wlExerciseCategory"><option value="all">全部肌群</option><option>下肢</option><option>核心</option><option>上肢</option><option>有氧</option><option>伸展</option></select><select id="wlExerciseEquipment"><option value="all">全部器材</option><option>徒手</option><option>瑜伽墊</option><option>啞鈴</option><option>槓鈴</option><option>滑輪機</option><option>器械</option></select></div>
@@ -3268,6 +3258,7 @@ function renderFinance(){
   const currentMonth = today().slice(0,7);
   const monthIncomes = f.incomes.filter(x => String(x.date||'').slice(0,7) === currentMonth);
   const monthExpenses = f.expenses.filter(x => String(x.date||'').slice(0,7) === currentMonth);
+  const todayExpenses = f.expenses.filter(x => x.date === today());
   $('#finTotalIncome').textContent = currencySummary(monthIncomes);
   $('#finTotalExpense').textContent = currencySummary(monthExpenses);
   const netAssets = financeNetAssetTotals(f);
@@ -4436,14 +4427,6 @@ function bindAll(){
     if(!plan.dates.includes(date))plan.dates.push(date);
     plan.dates.sort();wlPlanSelectedDate=date;saveState();renderFitnessPlans();showToast(`已將「${plan.name}」安排在 ${date}`);
   };
-  $('#wlAddExercise').onclick = () => {
-    const minutes=+$('#wlExerciseMinutes').value;
-    const sets=+$('#wlExerciseSets').value, reps=+$('#wlExerciseReps').value, weight=+$('#wlExerciseWeight').value;
-    if((!minutes || minutes<1) && (!sets || sets<1 || !reps || reps<1)){showToast('請填寫運動分鐘，或填寫組數與次數');return;}
-    if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
-    state.wl.exerciseRecords.push({id:uid(),type:$('#wlExerciseType').value,date:$('#wlExerciseDate').value||today(),minutes:minutes||'',sets:sets||'',reps:reps||'',weight:weight||''});
-    ['wlExerciseMinutes','wlExerciseSets','wlExerciseReps','wlExerciseWeight'].forEach(id=>$('#'+id).value=''); saveState(); renderFitness(); showToast('這次訓練已記錄 ✓');
-  };
   const mealFieldIds = ['wlMealBreakfast','wlMealLunch','wlMealDinner','wlMealBreakfastCalories','wlMealLunchCalories','wlMealDinnerCalories'];
   $('#wlMealDate').onchange = () => renderWeightLossMeals();
   $('#wlSaveMeals').onclick = () => {
@@ -4751,30 +4734,29 @@ function renderWlExerciseLibrary(){
       const media=slug
         ? `<img src="${WL_EXERCISE_IMAGE_BASE}${slug}/0.jpg" loading="lazy" alt="${esc(x.name)}" onerror="this.parentElement.classList.add('no-image');this.remove()">`
         : '<span aria-hidden="true">🏃</span>';
-      return `<article class="exercise-library-item"><div class="exercise-library-media">${media}</div><div class="exercise-library-copy"><div class="exercise-library-item-head"><div><strong>${esc(x.name)}</strong><small>${esc(x.category)} · ${esc(x.muscles)} · ${esc(x.equipment)} · ${esc(x.level)}</small></div><div class="exercise-library-actions"><button class="exercise-library-favorite${favorite?' active':''}" type="button" data-exercise-favorite="${esc(x.name)}" aria-label="${favorite?'取消收藏':'收藏'} ${esc(x.name)}" aria-pressed="${favorite}">${favorite?'★':'☆'}</button><button class="exercise-library-use" type="button" data-exercise-name="${esc(x.name)}">帶入記錄</button></div></div><p>${esc(x.tip)}</p></div></article>`;
+      return `<article class="exercise-library-item"><div class="exercise-library-media">${media}</div><div class="exercise-library-copy"><div class="exercise-library-item-head"><div><strong>${esc(x.name)}</strong><small>${esc(x.category)} · ${esc(x.muscles)} · ${esc(x.equipment)} · ${esc(x.level)}</small></div><div class="exercise-library-actions"><button class="exercise-library-favorite${favorite?' active':''}" type="button" data-exercise-favorite="${esc(x.name)}" aria-label="${favorite?'取消收藏':'收藏'} ${esc(x.name)}" aria-pressed="${favorite}">${favorite?'★':'☆'}</button></div></div><p>${esc(x.tip)}</p></div></article>`;
     }).join(''):'<div class="exercise-library-empty">沒有找到相符動作。</div>';
     list.querySelectorAll('[data-exercise-favorite]').forEach(btn=>btn.onclick=()=>{
       const name=btn.dataset.exerciseFavorite, favorites=new Set(state.wl.exerciseFavorites);
       if(favorites.has(name))favorites.delete(name);else favorites.add(name);
       state.wl.exerciseFavorites=[...favorites];saveState();draw();
     });
-    list.querySelectorAll('[data-exercise-name]').forEach(btn=>btn.onclick=()=>{
-      const name=btn.dataset.exerciseName, select=$('#wlExerciseType');
-      if(select&&!Array.from(select.options).some(o=>o.value===name)){const option=document.createElement('option');option.value=name;option.textContent=name;select.appendChild(option);}
-      if(select)select.value=name;
-      $('#wlExerciseMinutes')?.focus();
-      showToast(`已選擇「${name}」，填寫分鐘後即可記錄`);
-    });
   };
   const note=document.querySelector('.exercise-library-note');
-  if(note) note.innerHTML='按肌群、器材或場景找動作，也可以收藏常用動作；圖片僅作為動作示意。如動作引起疼痛，請停止並按自己的狀態調整。<div class="exercise-library-source">示意圖來源：<a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noreferrer">Free Exercise DB</a></div>';
+  if(note) note.innerHTML='按肌群、器材或場景找動作，也可以收藏常用動作；在上方訓練計劃中選擇動作並設定組數、次數、分鐘和重量。圖片僅作為動作示意。如動作引起疼痛，請停止並按自己的狀態調整。<div class="exercise-library-source">示意圖來源：<a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noreferrer">Free Exercise DB</a></div>';
   $$('#wlExerciseScenes button').forEach(btn=>{btn.classList.toggle('active',btn.dataset.exerciseScene===wlExerciseScene);btn.onclick=()=>{wlExerciseScene=btn.dataset.exerciseScene||'all';$$('#wlExerciseScenes button').forEach(x=>x.classList.toggle('active',x===btn));draw();};});
   search.oninput=draw;category.onchange=draw;equipment.onchange=draw;draw();
 }
 
 function fitnessPlanExerciseOptions(){
-  const names=[...WL_EXERCISE_LIBRARY,...WL_GYM_EXERCISE_LIBRARY].map(x=>x.name);
-  return [...new Set(names)].sort((a,b)=>a.localeCompare(b,'zh-Hant')).map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');
+  const groups={};
+  [...WL_EXERCISE_LIBRARY,...WL_GYM_EXERCISE_LIBRARY].forEach(x=>{
+    const category=x.category||'其他';
+    if(!groups[category])groups[category]=new Set();
+    groups[category].add(x.name);
+  });
+  const order=['下肢','上肢','核心','有氧','伸展','其他'];
+  return Object.keys(groups).sort((a,b)=>(order.indexOf(a)<0?99:order.indexOf(a))-(order.indexOf(b)<0?99:order.indexOf(b))).map(category=>`<optgroup label="${esc(category)}">${[...groups[category]].sort((a,b)=>a.localeCompare(b,'zh-Hant')).map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('')}</optgroup>`).join('');
 }
 function fitnessPlanDayMarkup(plan){
   const days=Array.isArray(plan.days)?plan.days:[];
@@ -4819,24 +4801,23 @@ function renderFitnessCalendar(){
 function renderFitnessPlans(){
   if(!state.wl) state.wl=defaultState().wl;
   if(!Array.isArray(state.wl.trainingPlans)) state.wl.trainingPlans=[];
-  state.wl.trainingPlans=state.wl.trainingPlans.map(x=>typeof x==='string'?{id:uid(),name:x,exercises:[],days:[],dates:[]}:Object.assign({id:uid(),name:'未命名計劃',exercises:[],days:[],dates:[]},x,{days:Array.isArray(x?.days)?x.days.map(Number).filter(day=>day>=0&&day<=6):[],dates:Array.isArray(x?.dates)?x.dates.map(String).filter(date=>/^\d{4}-\d{2}-\d{2}$/.test(date)):[ ],exercises:Array.isArray(x?.exercises)?x.exercises.map(ex=>Object.assign({id:uid(),name:'',sets:'',reps:'',weight:''},ex)).filter(ex=>ex.name):[]})).filter(x=>x.name);
+  state.wl.trainingPlans=state.wl.trainingPlans.map(x=>typeof x==='string'?{id:uid(),name:x,exercises:[],days:[],dates:[]}:Object.assign({id:uid(),name:'未命名計劃',exercises:[],days:[],dates:[]},x,{days:Array.isArray(x?.days)?x.days.map(Number).filter(day=>day>=0&&day<=6):[],dates:Array.isArray(x?.dates)?x.dates.map(String).filter(date=>/^\d{4}-\d{2}-\d{2}$/.test(date)):[ ],exercises:Array.isArray(x?.exercises)?x.exercises.map(ex=>Object.assign({id:uid(),name:'',sets:'',reps:'',minutes:'',weight:''},ex)).filter(ex=>ex.name):[]})).filter(x=>x.name);
   const list=$('#wlTrainingPlans'),count=$('#wlPlanCount');
   if(!list||!count)return;
   count.textContent=`${state.wl.trainingPlans.length} 個計劃`;
   const options=fitnessPlanExerciseOptions();
-  list.innerHTML=state.wl.trainingPlans.length?state.wl.trainingPlans.map(plan=>`<article class="fitness-plan" data-plan-id="${esc(plan.id)}"><div class="fitness-plan-title"><strong>${esc(plan.name)}</strong><div class="fitness-plan-actions"><button type="button" data-plan-start="${esc(plan.id)}">開始</button><button type="button" data-plan-delete="${esc(plan.id)}">刪除</button></div></div>${fitnessPlanDayMarkup(plan)}${fitnessPlanDateMarkup(plan)}<div class="fitness-plan-exercises">${Array.isArray(plan.exercises)&&plan.exercises.length?plan.exercises.map(ex=>`<div class="fitness-plan-exercise" data-plan-exercise-id="${esc(ex.id)}"><span>${esc(ex.name)}</span><small>${esc([ex.sets&&`${ex.sets} 組`,ex.reps&&`${ex.reps} 次`,ex.weight&&`${ex.weight} kg`].filter(Boolean).join(' · ')||'待設定')}</small><button type="button" data-plan-remove-exercise="${esc(ex.id)}" title="移除動作">✕</button></div>`).join(''):'<div class="fitness-plan-empty">還沒有加入動作。</div>'}</div><div class="fitness-plan-add"><select data-plan-exercise><option value="">選擇一個動作</option>${options}</select><input type="number" min="1" data-plan-sets placeholder="組數" /><input type="number" min="1" data-plan-reps placeholder="次數" /><input type="number" min="0" step="0.5" data-plan-weight placeholder="重量 kg" /><button class="btn btn-mini" type="button" data-plan-add-exercise="${esc(plan.id)}">＋ 加動作</button></div></article>`).join(''):'<div class="fitness-plan-list-empty">還沒有計劃。先建立一個你想重複的訓練日。</div>';
+  list.innerHTML=state.wl.trainingPlans.length?state.wl.trainingPlans.map(plan=>`<article class="fitness-plan" data-plan-id="${esc(plan.id)}"><div class="fitness-plan-title"><strong>${esc(plan.name)}</strong><div class="fitness-plan-actions"><button type="button" data-plan-delete="${esc(plan.id)}">刪除</button></div></div>${fitnessPlanDayMarkup(plan)}${fitnessPlanDateMarkup(plan)}<div class="fitness-plan-exercises">${Array.isArray(plan.exercises)&&plan.exercises.length?plan.exercises.map(ex=>`<div class="fitness-plan-exercise" data-plan-exercise-id="${esc(ex.id)}"><span>${esc(ex.name)}</span><small>${esc([ex.sets&&`${ex.sets} 組`,ex.reps&&`${ex.reps} 次`,ex.minutes&&`${ex.minutes} 分鐘`,ex.weight&&`${ex.weight} kg`].filter(Boolean).join(' · ')||'待設定')}</small><button type="button" data-plan-remove-exercise="${esc(ex.id)}" title="移除動作">✕</button></div>`).join(''):'<div class="fitness-plan-empty">還沒有加入動作。</div>'}</div><div class="fitness-plan-add"><select data-plan-exercise><option value="">選擇一個動作</option>${options}</select><input type="number" min="1" data-plan-sets placeholder="組數" /><input type="number" min="1" data-plan-reps placeholder="次數" /><input type="number" min="1" data-plan-minutes placeholder="分鐘" /><input type="number" min="0" step="0.5" data-plan-weight placeholder="重量 kg" /><button class="btn btn-mini" type="button" data-plan-add-exercise="${esc(plan.id)}">＋ 加動作</button></div></article>`).join(''):'<div class="fitness-plan-list-empty">還沒有計劃。先建立一個你想重複的訓練日。</div>';
   $$('[data-plan-day]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId),day=Number(btn.dataset.planDay);if(!plan)return;if(!Array.isArray(plan.days))plan.days=[];plan.days=plan.days.includes(day)?plan.days.filter(x=>x!==day):[...plan.days,day].sort((a,b)=>a-b);saveState();renderFitnessPlans();});
   $$('[data-plan-add-exercise]').forEach(btn=>btn.onclick=()=>{
     const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId),name=card.querySelector('[data-plan-exercise]').value;
     if(!plan||!name){showToast('請先選擇一個動作');return;}
     if(!Array.isArray(plan.exercises))plan.exercises=[];
-    plan.exercises.push({id:uid(),name,sets:+card.querySelector('[data-plan-sets]').value||'',reps:+card.querySelector('[data-plan-reps]').value||'',weight:+card.querySelector('[data-plan-weight]').value||''});
+    plan.exercises.push({id:uid(),name,sets:+card.querySelector('[data-plan-sets]').value||'',reps:+card.querySelector('[data-plan-reps]').value||'',minutes:+card.querySelector('[data-plan-minutes]').value||'',weight:+card.querySelector('[data-plan-weight]').value||''});
     saveState();renderFitnessPlans();showToast('動作已加入計劃 ✓');
   });
   $$('[data-plan-remove-exercise]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId);if(plan)plan.exercises=(plan.exercises||[]).filter(x=>x.id!==btn.dataset.planRemoveExercise);saveState();renderFitnessPlans();});
   $$('[data-plan-remove-date]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId);if(plan)plan.dates=(plan.dates||[]).filter(date=>date!==btn.dataset.planRemoveDate);saveState();renderFitnessPlans();});
   $$('[data-plan-delete]').forEach(btn=>btn.onclick=()=>{if(!confirm('確定要刪除這個訓練計劃嗎？'))return;state.wl.trainingPlans=state.wl.trainingPlans.filter(x=>x.id!==btn.dataset.planDelete);saveState();renderFitnessPlans();showToast('訓練計劃已刪除');});
-  $$('[data-plan-start]').forEach(btn=>btn.onclick=()=>{const plan=state.wl.trainingPlans.find(x=>x.id===btn.dataset.planStart),ex=plan?.exercises?.[0];if(!ex){showToast('先在計劃中加入一個動作');return;}const select=$('#wlExerciseType');if(select&&!Array.from(select.options).some(o=>o.value===ex.name)){const option=document.createElement('option');option.value=ex.name;option.textContent=ex.name;select.appendChild(option);}if(select)select.value=ex.name;$('#wlExerciseSets').value=ex.sets||'';$('#wlExerciseReps').value=ex.reps||'';$('#wlExerciseWeight').value=ex.weight||'';$('#wlExerciseMinutes').focus();showToast(`已帶入「${plan.name}」的第一個動作`);});
   renderFitnessCalendar();
 }
 
@@ -4952,10 +4933,6 @@ function renderWeightLoss(){
 function renderFitness(){
   if(!state.wl) state.wl=defaultState().wl;
   if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
-  if(!$('#wlExerciseDate').value) $('#wlExerciseDate').value=today();
-  const exerciseList=$('#wlExerciseRecords');
-  exerciseList.innerHTML=state.wl.exerciseRecords.length ? state.wl.exerciseRecords.slice().reverse().map(r=>{const detail=[r.sets&&`${r.sets} 組`,r.reps&&`${r.reps} 次`,r.weight&&`${r.weight} kg`,r.minutes&&`${r.minutes} 分鐘`].filter(Boolean).join(' · ')||'已記錄';return `<div class="exercise-row" data-id="${r.id}"><div class="exercise-main"><b>${esc(r.type)}</b><div class="exercise-meta">${esc(r.date)} · ${esc(detail)}</div></div><button class="del" title="刪除">✕</button></div>`;}).join('') : '<div class="empty">還沒有運動記錄</div>';
-  $$('#wlExerciseRecords .del').forEach(b=>b.onclick=()=>{state.wl.exerciseRecords=state.wl.exerciseRecords.filter(r=>r.id!==b.closest('.exercise-row').dataset.id);saveState();renderFitness();});
   renderFitnessPlans();
   renderWlExerciseLibrary();
 }
