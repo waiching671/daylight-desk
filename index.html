@@ -6,6 +6,75 @@
 <title>daylight · 我的生活檔案</title>
 <link rel="stylesheet" href="assets/workspace.css" />
 <style>
+  /* 健康／運動動作庫 */
+  .exercise-library{margin-top:18px;border-top:1px solid var(--line-soft);padding-top:14px}
+  .exercise-library summary{cursor:pointer;color:var(--accent);font-size:13px;list-style:none;display:flex;align-items:center;gap:8px}
+  .exercise-library summary::-webkit-details-marker{display:none}.exercise-library summary:before{content:'＋';font-size:16px}.exercise-library[open] summary:before{content:'−'}
+  .exercise-library summary span{color:var(--ink-3);font-size:11px}
+  .exercise-library-tools{display:grid;grid-template-columns:minmax(0,1fr) 120px 120px;gap:8px;margin-top:14px}
+  .exercise-library-tools input,.exercise-library-tools select{min-width:0}
+  .exercise-library-note{color:var(--ink-3);font-size:10px;line-height:1.6;margin:10px 0}
+  .exercise-library-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .exercise-library-item{padding:11px 12px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}
+  .exercise-library-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.exercise-library-item strong{font-size:13px;font-weight:600}
+  .exercise-library-item small{display:block;color:var(--ink-3);font-size:10px;line-height:1.5;margin-top:3px}
+  .exercise-library-item p{color:var(--ink-2);font-size:11px;line-height:1.6;margin:8px 0}
+  .exercise-library-use{color:var(--accent);font-size:11px;white-space:nowrap}.exercise-library-empty{color:var(--ink-3);font-size:11px;padding:14px 0}
+  @media(max-width:600px){.exercise-library-tools,.exercise-library-list{grid-template-columns:1fr}.exercise-library-tools select{width:100%}}
+</style>
+<style>
+  /* 動作庫：圖片優先、文字保持可讀；圖片載入失敗時保留簡潔佔位 */
+  .exercise-library-list{align-items:stretch}
+  .exercise-library-item{display:grid;grid-template-columns:74px minmax(0,1fr);gap:11px;min-height:96px;padding:10px}
+  .exercise-library-media{width:74px;height:74px;border-radius:9px;overflow:hidden;background:var(--surface);border:1px solid var(--line-soft);display:grid;place-items:center;color:var(--accent);font-size:24px;align-self:start}
+  .exercise-library-media img{display:block;width:100%;height:100%;object-fit:cover}
+  .exercise-library-media.no-image{font-size:21px;opacity:.8}
+  .exercise-library-copy{min-width:0}
+  .exercise-library-item-head{min-width:0}
+  .exercise-library-actions{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .exercise-library-favorite{color:var(--ink-3);font-size:15px;line-height:1}.exercise-library-favorite.active{color:var(--accent)}
+  .exercise-library-item p{margin:7px 0 0}
+  .exercise-library-item p:before{content:'操作重點　';color:var(--accent);font-size:10px;letter-spacing:.04em}
+  .exercise-library-source{margin-top:8px;color:var(--ink-3);font-size:10px}
+  .exercise-library-source a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media(max-width:600px){.exercise-library-item{grid-template-columns:64px minmax(0,1fr)}.exercise-library-media{width:64px;height:64px}}
+</style>
+<style>
+  /* 書影音：收藏檔案頁，不再使用獨立的品牌面板 */
+  .media-archive{max-width:1120px;margin:0 auto}
+  .media-sidebar{display:flex;align-items:center;gap:6px;margin:0 0 34px;padding:0 0 13px;border:0;border-bottom:1px solid var(--line-soft);border-radius:0;background:transparent;overflow-x:auto}
+  .media-side-brand{display:none}
+  .media-side-item{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--ink-2);font-size:12px;white-space:nowrap}
+  .media-side-item:hover{background:var(--surface-2);color:var(--ink-1)}
+  .media-side-item.active{background:var(--accent-bg);border-color:var(--accent-2);color:var(--accent);font-weight:600}
+  .media-side-item span{font-size:10px;color:var(--ink-3)}
+  .media-side-heading{margin-left:auto;padding-left:14px;border-left:1px solid var(--line-soft);color:var(--ink-3);font-size:10px;white-space:nowrap}
+  .media-archive-main{padding:0 2px}
+  .media-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:10px;margin-bottom:30px}
+  .media-toolbar select,.media-toolbar .media-add-btn{min-height:40px}
+  .media-search input{height:40px;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding-left:13px}
+  .media-archive-title-row{align-items:flex-end;margin-top:0;padding-bottom:22px;border-bottom:1px solid var(--line-soft)}
+  .media-archive-kicker{font-size:11px;letter-spacing:1.8px;color:var(--accent);font-weight:600}
+  .media-archive-title{margin-top:7px;font-family:var(--font-serif);font-size:clamp(32px,4vw,44px);font-weight:500;letter-spacing:.02em}
+  .media-archive-sub{margin-top:8px;font-size:12px;color:var(--ink-3)}
+  .media-statline{gap:20px;padding-bottom:4px;color:var(--ink-3);font-size:11px}
+  .media-statline strong{color:var(--ink-1);font-family:var(--font-ui);font-size:17px;font-weight:600}
+  .media-filter-tabs{margin-top:20px;padding-bottom:10px;border-bottom:0;gap:7px}
+  .media-filter-tab{border:1px solid transparent;border-radius:999px;padding:7px 12px;color:var(--ink-2)}
+  .media-filter-tab:hover,.media-filter-tab.active{background:var(--surface-2);color:var(--accent);font-weight:600}
+  .media-status-tabs{gap:16px;padding:0 0 13px;border-bottom:1px solid var(--line-soft);color:var(--ink-3)}
+  .media-status-tab.active{color:var(--ink-1)}
+  .media-table{margin-top:0;border-top:0}
+  .media-table-header{background:transparent;color:var(--ink-3);border-bottom:1px solid var(--line)}
+  .media-table-row{min-height:86px;background:var(--surface);border-bottom:1px solid var(--line-soft)}
+  .media-table-row:hover{background:var(--surface-2)}
+  .media-primary-title{font-family:var(--font-serif);font-size:16px;font-weight:500}
+  .media-rating-cell{color:var(--warm)}
+  .media-editor{border-radius:14px;box-shadow:0 18px 60px rgba(35,66,96,.18),0 0 0 100vmax rgba(22,32,42,.24)}
+  @media(max-width:900px){.media-toolbar{grid-template-columns:minmax(0,1fr) auto}.media-toolbar select{grid-column:1}.media-toolbar .media-add-btn{grid-column:2;grid-row:1}.media-side-heading{display:none}.media-archive-title-row{display:flex}}
+  @media(max-width:600px){.media-toolbar{display:flex;flex-wrap:wrap}.media-search{flex-basis:100%}.media-toolbar select{flex:1}.media-toolbar .media-add-btn{flex:1}.media-archive-title-row{display:block}.media-statline{margin-top:18px}}
+</style>
+<style>
   /* ========== 設計系統 ========== */
   :root{
     --font-ui: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
@@ -908,7 +977,7 @@
   }
   .wl-progress .lbl{font-weight:600;color:var(--ink-1)}
 
-  .wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .wl-grid{display:grid;grid-template-columns:1fr;gap:18px}
   .wl-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 
   .wl-checklist{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -1222,6 +1291,101 @@
   body.dark .travel-map-pin:not(.selected):not(.has-travelled):not(.has-lived):not(.has-business){background:transparent}
   @media(max-width:620px){.travel-map-canvas{min-height:300px}.travel-map-pin{font-size:10px;padding:3px 5px;gap:4px}.travel-map-dot{width:8px;height:8px;flex-basis:8px}}
 </style>
+<style>
+  /* 輸入 · 輸出：安靜的閱讀與思考檔案，不做成資訊流或任務面板 */
+  .deep-archive{max-width:1120px;margin:0 auto}
+  .deep-intro{padding:6px 0 24px;border-bottom:1px solid var(--line-soft)}
+  .deep-intro h1{margin:8px 0 6px;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:34px;font-weight:500;letter-spacing:.03em}
+  .deep-intro p{margin:0;color:var(--ink-3);font-size:14px;line-height:1.8}
+  .deep-modebar{display:flex;gap:5px;margin:18px 0 20px;border-bottom:1px solid var(--line-soft)}
+  .deep-modebar button{padding:9px 13px;border-bottom:2px solid transparent;color:var(--ink-3);font-size:12px}
+  .deep-modebar button:hover,.deep-modebar button.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .deep-main-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
+  .deep-section-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 13px}
+  .deep-section-heading h2{margin:0;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:23px;font-weight:500}
+  .deep-section-heading span{color:var(--ink-3);font-size:11px}
+  .deep-recommendations{display:flex;flex-direction:column;gap:9px}
+  .deep-recommendation{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:13px;align-items:start;padding:15px 0;border-top:1px solid var(--line-soft);cursor:pointer}
+  .deep-recommendation:last-child{border-bottom:1px solid var(--line-soft)}
+  .deep-recommendation:hover .deep-recommendation-title{color:var(--accent)}
+  .deep-recommendation-index{color:var(--accent);font-family:Georgia,serif;font-size:14px;padding-top:2px}
+  .deep-recommendation-title{font-size:15px;line-height:1.5;transition:color .15s}
+  .deep-recommendation-meta{margin-top:5px;color:var(--ink-3);font-size:11px}
+  .deep-recommendation-desc{margin-top:5px;color:var(--ink-2);font-size:12px;line-height:1.65}
+  .deep-recommendation-action{align-self:center;color:var(--accent);font-size:11px;white-space:nowrap}.deep-recommendation-actions{display:flex;align-items:center;gap:9px}.deep-recommendation-read{color:var(--ink-2);font-size:11px;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}.deep-recommendation-read:hover{color:var(--accent)}
+  .deep-empty{padding:22px 0;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .deep-side-note{padding:17px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .deep-side-note h3{margin:0 0 6px;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:17px;font-weight:500}
+  .deep-side-note p{margin:0;color:var(--ink-3);font-size:12px;line-height:1.8}
+  .deep-prompt-box{margin-top:17px;padding:16px;background:var(--surface-mint);border-left:2px solid var(--accent)}
+  .deep-prompt-box .label{color:var(--accent);font-size:10px;letter-spacing:1.4px}
+  .deep-prompt-box blockquote{margin:9px 0 13px;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:16px;line-height:1.7}
+  .deep-prompt-box button{color:var(--accent);font-size:12px}
+  .deep-session{margin-top:31px;padding-top:23px;border-top:1px solid var(--line-soft)}
+  .deep-session[hidden]{display:none}
+  .deep-session-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:17px}
+  .deep-session-head h2{margin:5px 0 4px;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:25px;font-weight:500}
+  .deep-session-head p{margin:0;color:var(--ink-3);font-size:11px}
+  .deep-session-meta{color:var(--accent);font-size:11px;text-align:right;white-space:nowrap}
+  .deep-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
+  .deep-step{padding:10px 11px;border-top:2px solid var(--line);color:var(--ink-3);font-size:11px}
+  .deep-step.active{border-color:var(--accent);color:var(--accent)}
+  .deep-step small{display:block;margin-top:2px;font-size:10px;color:var(--ink-3)}
+  .deep-step-panel{display:none}
+  .deep-step-panel.active{display:block}
+  .deep-step-panel textarea{width:100%;min-height:125px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;outline:0;padding:12px 0;font-size:14px;line-height:1.8;resize:vertical}
+  .deep-step-panel textarea:focus{border-color:var(--accent)}
+  .deep-step-prompt{margin:0 0 7px;color:var(--ink-2);font-size:12px;line-height:1.7}
+  .deep-session-actions{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+  .deep-self-assessment{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+  .deep-self-assessment button{padding:6px 9px;border:1px solid var(--line);border-radius:99px;color:var(--ink-2);font-size:11px}
+  .deep-self-assessment button.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+  .deep-output-type{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:4px;color:var(--ink-3);font-size:11px}
+  .deep-output-type label{display:flex;align-items:center;gap:5px}.deep-output-type input{width:70px;min-width:0;padding:5px 7px;font-size:11px}
+  .deep-output-type select{max-width:190px}
+  .deep-queue{margin-top:31px;padding-top:23px;border-top:1px solid var(--line-soft)}
+  .deep-queue details{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .deep-queue summary{padding:13px 0;color:var(--accent);font-size:12px;cursor:pointer}
+  .deep-queue-form{display:grid;grid-template-columns:1.3fr .8fr 1fr 1fr;gap:8px;padding:2px 0 14px}
+  .deep-queue-form .wide{grid-column:span 2}
+  .deep-queue-form button{grid-column:4}
+  .deep-queue-list{display:flex;flex-direction:column;margin-top:9px}
+  .deep-queue-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
+  .deep-queue-row small{display:block;color:var(--ink-3);margin-top:3px}
+  .deep-queue-row .deep-queue-actions{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .deep-queue-row button{color:var(--accent);font-size:11px}.deep-queue-row button:last-child{color:var(--ink-3)}
+  .deep-history{margin-top:31px;padding-top:23px;border-top:1px solid var(--line-soft)}
+  .deep-history-month{margin:20px 0 7px;color:var(--accent);font-family:Georgia,serif;font-size:13px;letter-spacing:.08em}
+  .deep-history-item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;padding:13px 0;border-top:1px solid var(--line-soft);cursor:pointer}
+  .deep-history-item:hover .deep-history-title{color:var(--accent)}
+  .deep-history-date{color:var(--ink-3);font-size:11px}.deep-history-title{font-size:13px}.deep-history-summary{margin-top:4px;color:var(--ink-2);font-size:11px;line-height:1.6}.deep-history-output{color:var(--accent);font-size:11px;white-space:nowrap}
+  .deep-today-teaser{margin-top:24px;padding:17px 19px;border-left:2px solid var(--accent);background:var(--surface-mint)}
+  .deep-today-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.deep-today-head strong{font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:17px;font-weight:500}.deep-today-head span{color:var(--accent);font-size:11px}
+  .deep-today-idea{margin:8px 0;color:var(--ink-2);font-size:12px;line-height:1.7}.deep-today-actions{display:flex;align-items:center;gap:12px}.deep-today-actions small{color:var(--ink-3);font-size:11px}
+  .deep-weekly{margin-top:24px}.deep-weekly-metrics{display:flex;gap:20px;padding:12px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}.deep-weekly-metrics div{display:flex;flex-direction:column;gap:3px}.deep-weekly-metrics span{color:var(--ink-3);font-size:10px}.deep-weekly-metrics strong{font-size:17px;font-weight:500;color:var(--accent)}.deep-weekly textarea{width:100%;min-height:54px;margin-top:12px;padding:7px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;resize:vertical;outline:0;font-size:12px;line-height:1.7}.deep-weekly textarea:focus{border-color:var(--accent)}
+  @media(max-width:850px){.deep-main-grid{grid-template-columns:1fr}.deep-side-note{margin-top:10px}.deep-queue-form{grid-template-columns:1fr 1fr}.deep-queue-form .wide,.deep-queue-form button{grid-column:auto}}
+  @media(max-width:600px){.deep-intro h1{font-size:29px}.deep-recommendation{grid-template-columns:27px minmax(0,1fr)}.deep-recommendation-action{grid-column:2;justify-self:start}.deep-steps{grid-template-columns:1fr 1fr}.deep-history-item{grid-template-columns:58px 1fr}.deep-history-output{grid-column:2}.deep-queue-form{grid-template-columns:1fr}.deep-queue-form .wide,.deep-queue-form button{grid-column:auto}.deep-weekly-metrics{gap:12px;justify-content:space-between}}
+  /* 統一所有表單外觀，避免未指定 type 的 input 退回瀏覽器原生灰色樣式 */
+  input:not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]),textarea,select{color:var(--ink-1);background:var(--surface);border-color:var(--line);border-radius:9px}
+  input:not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="range"])::placeholder,textarea::placeholder{color:var(--ink-3);opacity:1}
+  .deep-queue details summary{list-style:none}.deep-queue details summary::-webkit-details-marker{display:none}.deep-queue details summary:before{content:'＋';display:inline-block;width:18px;color:var(--accent);font-size:15px}.deep-queue details[open] summary:before{content:'−'}
+  .deep-queue-form{font-size:13px}.deep-queue-form input,.deep-queue-form select{min-height:42px;font-size:13px}.deep-queue-form .btn{min-height:42px;justify-content:center;font-size:13px}
+  body.dark input:not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]),body.dark textarea,body.dark select{background:var(--surface);color:var(--ink-1);border-color:var(--line)}
+  .fitness-plan-panel{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--line-soft)}
+  .fitness-plan-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.fitness-plan-head strong{font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:18px;font-weight:500}.fitness-plan-head span{color:var(--ink-3);font-size:11px}
+  .fitness-plan-create{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:12px}.fitness-plan-create input{min-width:0}.fitness-plan-list{display:flex;flex-direction:column;gap:9px}
+  .fitness-plan{padding:12px 13px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}.fitness-plan-title{display:flex;justify-content:space-between;align-items:center;gap:10px}.fitness-plan-title strong{font-size:14px;font-weight:600}.fitness-plan-actions{display:flex;gap:8px}.fitness-plan-actions button{font-size:11px;color:var(--accent)}.fitness-plan-actions button:last-child{color:var(--ink-3)}
+  .fitness-plan-exercises{display:flex;flex-direction:column;gap:5px;margin:9px 0}.fitness-plan-exercise{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line-soft);font-size:12px}.fitness-plan-exercise span{flex:1;min-width:0}.fitness-plan-exercise small{color:var(--ink-3);white-space:nowrap}.fitness-plan-exercise button{color:var(--ink-3);font-size:11px}
+  .fitness-calendar-panel{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line-soft)}.fitness-calendar-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.fitness-calendar-head strong{display:block;font-family:"Apple Color Emoji","KaiTi","STKaiti","DFKai-SB",serif;font-size:19px;font-weight:500}.fitness-calendar-head span{display:block;margin-top:3px;color:var(--ink-3);font-size:11px}.fitness-calendar-nav{display:flex;align-items:center;gap:8px}.fitness-calendar-nav button{width:27px;height:27px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink-2);font-size:18px;line-height:1}.fitness-calendar-nav button:hover{border-color:var(--accent);color:var(--accent)}.fitness-calendar-nav b{min-width:84px;text-align:center;font-size:12px;font-weight:500;color:var(--ink-1)}.fitness-today-plan{min-height:44px;margin-bottom:13px;padding:10px 13px;border-left:2px solid var(--accent);background:var(--surface-mint);font-size:12px}.fitness-today-plan strong{color:var(--accent);font-weight:600}.fitness-today-plan span{display:block;margin-top:4px;color:var(--ink-2);line-height:1.6}.fitness-today-plan.is-rest{border-left-color:var(--line);background:transparent;color:var(--ink-3)}.fitness-calendar-weekdays,.fitness-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.fitness-calendar-weekdays{margin-bottom:5px;color:var(--ink-3);font-size:10px;text-align:center}.fitness-calendar-day{min-height:70px;padding:7px;border:1px solid var(--line-soft);border-radius:8px;background:var(--surface-2);overflow:hidden;cursor:pointer;transition:border-color .15s,background .15s}.fitness-calendar-day:hover{border-color:var(--accent)}.fitness-calendar-day.is-empty{border-color:transparent;background:transparent}.fitness-calendar-day.is-outside{opacity:.45}.fitness-calendar-day.is-today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.fitness-calendar-day.is-selected{border-color:var(--accent-2);background:var(--accent-bg);box-shadow:inset 0 0 0 1px var(--accent-2)}.fitness-calendar-day b{font-size:11px;font-weight:600}.fitness-calendar-day.is-today b,.fitness-calendar-day.is-selected b{color:var(--accent)}.fitness-calendar-plans{display:flex;flex-direction:column;gap:3px;margin-top:7px}.fitness-calendar-plan{padding:3px 5px;border-left:3px solid var(--accent);border-radius:3px;background:var(--surface-mint);color:var(--ink-2);font-size:10px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fitness-plan-days{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px;color:var(--ink-3);font-size:10px}.fitness-plan-days-label{margin-right:2px}.fitness-plan-day{width:25px;height:25px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink-2);font-size:10px}.fitness-plan-day.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:600}
+  .fitness-plan-specific-date{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.fitness-plan-specific-date input{max-width:155px;padding:7px 9px;font-size:11px}.fitness-plan-specific-date button{color:var(--accent);font-size:11px}.fitness-plan-date-list{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.fitness-plan-date{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid var(--line-soft);border-radius:99px;color:var(--ink-2);font-size:10px}.fitness-plan-date button{color:var(--ink-3);font-size:10px}
+  .fitness-calendar-assign{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding:11px 13px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}.fitness-calendar-assign strong{display:block;color:var(--ink-1);font-size:12px;font-weight:600}.fitness-calendar-assign span{display:block;margin-top:3px;color:var(--ink-3);font-size:10px}.fitness-calendar-assign-form{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}.fitness-calendar-assign-form input,.fitness-calendar-assign-form select{min-height:34px;padding:7px 9px;font-size:11px}.fitness-calendar-assign-form input{width:145px}.fitness-calendar-assign-form select{min-width:145px}
+  .fitness-plan-add{display:grid;grid-template-columns:minmax(0,1.5fr) .7fr .7fr .8fr auto;gap:6px;align-items:center;margin-top:10px}.fitness-plan-add input,.fitness-plan-add select{min-width:0;font-size:11px;padding:8px 9px}.fitness-plan-add button{white-space:nowrap}.fitness-plan-empty{padding:8px 0;color:var(--ink-3);font-size:11px}.fitness-plan-list-empty{padding:13px 0;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line-soft)}
+  .workout-form{grid-template-columns:minmax(150px,1.35fr) minmax(125px,1fr) repeat(4,minmax(80px,.8fr)) auto;align-items:center}.workout-form input,.workout-form select{min-width:0}
+  .exercise-library-scenes{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 2px}.exercise-library-scenes button{padding:6px 10px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--ink-2);font-size:11px}.exercise-library-scenes button:hover,.exercise-library-scenes button.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+  @media(max-width:1050px){.workout-form{grid-template-columns:1fr 1fr 1fr 1fr}.workout-form .btn{grid-column:1/-1;justify-self:start}}
+  @media(max-width:680px){.fitness-plan-add{grid-template-columns:1fr 1fr}.fitness-plan-add select:first-child{grid-column:1/-1}.fitness-plan-add button{grid-column:1/-1;justify-self:start}}
+  @media(max-width:600px){.fitness-calendar-head{align-items:flex-start}.fitness-calendar-head span{max-width:180px}.fitness-calendar-day{min-height:62px;padding:6px}.fitness-calendar-plan{font-size:9px;padding:3px}.fitness-calendar-nav b{min-width:72px}.fitness-calendar-assign{display:block}.fitness-calendar-assign-form{justify-content:flex-start;margin-top:9px}.fitness-calendar-assign-form input,.fitness-calendar-assign-form select{flex:1;min-width:0;width:auto}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1242,10 +1406,13 @@
       <div class="nav-title nav-group-title">財務</div>
       <div class="nav-item active" data-go="finance"><span class="nav-ico">💰</span>財務<span class="nav-key">1</span></div>
       <div class="nav-title nav-group-title">健康</div>
-      <div class="nav-item" data-go="weightloss"><span class="nav-ico">🌿</span>健康<span class="nav-key">2</span></div>
+      <div class="nav-item" data-go="weightloss"><span class="nav-ico">⚖️</span>體重與飲食<span class="nav-key">2</span></div>
+      <div class="nav-item" data-go="fitness"><span class="nav-ico">🏃</span>健身動作<span class="nav-key">3</span></div>
+      <div class="nav-title nav-group-title">深度</div>
+      <div class="nav-item" data-go="deep"><span class="nav-ico">✦</span>輸入 · 輸出<span class="nav-key">5</span></div>
       <div class="nav-title nav-group-title">娛樂</div>
-      <div class="nav-item" data-go="media"><span class="nav-ico">📚</span>書影音<span class="nav-key">3</span></div>
-      <div class="nav-item" data-go="news"><span class="nav-ico">📰</span>新聞<span class="nav-key">4</span></div>
+      <div class="nav-item" data-go="media"><span class="nav-ico">📚</span>書影音<span class="nav-key">6</span></div>
+      <div class="nav-item" data-go="news"><span class="nav-ico">📰</span>新聞<span class="nav-key">7</span></div>
     </nav>
 
     <div class="space-card" id="spaceCard">
@@ -1308,6 +1475,46 @@
           <button class="btn btn-mini" id="momentAddBtn">記下</button>
         </div>
         <div class="moments-list" id="momentsList"></div>
+      </div>
+      <div class="deep-today-teaser">
+        <div class="deep-today-head"><strong>✦ 今日 · 輸入輸出</strong><span id="todayDeepMinutes">還沒有留下記錄</span></div>
+        <div class="deep-today-idea" id="todayDeepIdea">今天還沒有留時間給自己的腦袋。</div>
+        <div class="deep-today-actions"><button class="btn btn-mini" id="todayDeepStart">開始 20 分鐘</button><small id="todayDeepOutput">慢慢讀，想一想，再用自己的話說出來。</small></div>
+      </div>
+    </section>
+
+    <!-- ===== 輸入 · 輸出：深度閱讀與思考檔案 ===== -->
+    <section class="section" id="sec-deep" aria-hidden="true">
+      <div class="deep-archive">
+        <div class="deep-intro"><div class="eyebrow">INPUT · RECALL · THINK · OUTPUT</div><h1>輸入 · 輸出</h1><p>每天留一點時間，好好讀、好好想、好好說。</p></div>
+        <div class="deep-modebar" id="deepModebar"><button class="active" data-deep-mode="explore">探索</button><button data-deep-mode="queue">我的收藏</button><button data-deep-mode="random">隨機</button></div>
+        <div class="deep-main-grid">
+          <div>
+            <div class="deep-section-heading"><h2>今日輸入</h2><span>每日輪換不同主題</span></div>
+            <div class="deep-recommendations" id="deepRecommendations"></div>
+            <div class="deep-prompt-box" id="deepPromptBox"><div class="label">GIVE ME SOMETHING TO THINK ABOUT</div><blockquote id="deepPromptText">今天想點什麼？</blockquote><button id="deepPromptButton" type="button">給我一個值得想的問題 →</button></div>
+            <div class="deep-session" id="deepSession" hidden>
+              <div class="deep-session-head"><div><div class="eyebrow">FOCUS SESSION</div><h2 id="deepSessionTitle">—</h2><p id="deepSessionSource">—</p></div><div class="deep-session-meta" id="deepSessionMeta">—</div></div>
+              <div class="deep-steps" id="deepSteps"><div class="deep-step active" data-deep-step="recall">01 · Recall<small>我記得什麼？</small></div><div class="deep-step" data-deep-step="think">02 · Think<small>我怎麼看？</small></div><div class="deep-step" data-deep-step="output">03 · Output<small>說清楚它</small></div><div class="deep-step" data-deep-step="done">04 · 留下<small>保存這次思考</small></div></div>
+              <div class="deep-step-panel active" data-deep-panel="recall"><p class="deep-step-prompt">先不要重新打開材料。你還記得什麼？可以寫下三件事，或自由記錄。</p><textarea id="deepRecall" placeholder="我記住的三件事……"></textarea></div>
+              <div class="deep-step-panel" data-deep-panel="think"><p class="deep-step-prompt">哪一點最有意思？你同意或不同意什麼？它讓你想到什麼？</p><textarea id="deepThoughts" placeholder="我怎麼看……"></textarea></div>
+              <div class="deep-step-panel" data-deep-panel="output"><div class="deep-output-type"><span>今天想怎樣輸出？</span><select id="deepOutputType"><option>150–300 字短寫作</option><option>Summary</option><option>Opinion</option><option>Explain it simply</option><option>2 分鐘口頭表達</option><option>自由輸出</option></select><label>實際分鐘 <input id="deepActualMinutes" type="number" min="1" placeholder="可選" /></label></div><textarea id="deepOutput" placeholder="不用看材料，用自己的話說清楚……"></textarea><div class="deep-self-assessment" id="deepSelfAssessment"><button type="button" data-assessment="clear">🟢 我能清楚解釋</button><button type="button" data-assessment="messy">🟡 我理解，但表達還有點亂</button><button type="button" data-assessment="unclear">🔴 我還沒有完全理解</button></div></div>
+              <div class="deep-step-panel" data-deep-panel="done"><p class="deep-step-prompt">這次輸入會留下在你的思考檔案裡。之後可以回來看，不需要打卡或追趕。</p><div class="deep-session-actions"><button class="btn btn-ghost" id="deepSessionBack">回到上一步</button><button class="btn" id="deepSessionSave">保存這次思考</button></div></div>
+              <div class="deep-session-actions" id="deepStepActions"><button class="btn btn-ghost" id="deepSessionCancel">先放著</button><button class="btn btn-mini" id="deepSessionNext">下一步 →</button></div>
+            </div>
+            <div class="deep-queue">
+              <div class="deep-section-heading"><h2>Personal Queue</h2><span id="deepQueueCount">0</span></div>
+              <details><summary>加入一篇文章、一本書、影片或一個問題</summary><div class="deep-queue-form"><input id="deepQueueTitle" class="wide" placeholder="標題" /><select id="deepQueueType"><option>Article</option><option>Book</option><option>Video</option><option>Podcast</option><option>Question</option></select><input id="deepQueueTopic" placeholder="Topic，例如 Psychology" /><input id="deepQueueUrl" class="wide" placeholder="URL（可選）" /><input id="deepQueueMinutes" type="number" min="1" placeholder="預計分鐘" /><input id="deepQueueNote" placeholder="備註（可選）" /><button class="btn btn-mini" id="deepQueueAdd">保存到收藏</button></div></details>
+              <details class="deep-remote-details"><summary>載入外部 JSON（可選）</summary><div class="deep-queue-form"><input id="deepRemoteUrl" class="wide" placeholder="GitHub raw JSON URL" /><button class="btn btn-mini" id="deepRemoteLoad">載入推薦</button></div></details>
+              <div class="deep-queue-list" id="deepQueueList"></div>
+            </div>
+          </div>
+          <aside>
+            <div class="deep-side-note"><h3>慢一點。</h3><p>這裡每天只放少量內容。不追趕、不刷下一批，也不需要把每件事都完成。</p></div>
+            <div class="deep-side-note"><h3>我的方式</h3><p>Input → Recall → Think → Output<br />把看過的東西，慢慢變成自己的話。</p></div>
+          </aside>
+        </div>
+        <div class="deep-history"><div class="deep-section-heading"><h2>思考檔案</h2><span>過去留下的輸入與輸出</span></div><div id="deepHistoryList"></div></div>
       </div>
     </section>
 
@@ -1374,8 +1581,8 @@
       </div>
 
       <div class="finance-summary">
-        <div class="finance-total income"><div class="label">本頁收入</div><div class="value" id="finTotalIncome">0</div></div>
-        <div class="finance-total expense"><div class="label">本頁支出</div><div class="value" id="finTotalExpense">0</div></div>
+        <div class="finance-total income"><div class="label">本月收入</div><div class="value" id="finTotalIncome">0</div></div>
+        <div class="finance-total expense"><div class="label">本月支出</div><div class="value" id="finTotalExpense">0</div></div>
           <div class="finance-total asset"><div class="label">資產總額（已計入收入／支出）</div><div class="value" id="finTotalAssets">0</div></div>
       </div>
 
@@ -1538,7 +1745,6 @@
     <section class="section" id="sec-media">
       <div class="media-archive">
         <aside class="card media-sidebar">
-          <div class="media-side-brand"><strong>Private Media<br>Archive</strong><span>我的私人書影音檔案</span></div>
           <button class="media-side-item active" data-media-view="all">▦ 全部記錄 <span id="mediaSideAll">0</span></button>
           <button class="media-side-item" data-media-view="calendar">▣ 觀看日曆</button>
           <button class="media-side-item" data-media-view="stats">↗ 統計圖</button>
@@ -1554,7 +1760,7 @@
             <select id="mediaSort" aria-label="排序"><option value="newest">最近新增</option><option value="title">名稱</option><option value="rating">評分</option><option value="progress">進度</option></select>
             <button class="btn media-add-btn" id="mediaOpenAdd">＋ 新增觀看</button>
           </div>
-          <div class="media-archive-title-row"><div><div class="media-archive-kicker">PRIVATE MEDIA ARCHIVE</div><div class="media-archive-title">書影音</div><div class="media-archive-sub" id="mediaArchiveSub">共 0 筆記錄 · 保存在此裝置</div></div><div class="media-statline"><span><strong id="mediaStatProgress">0</strong>進行中</span><span><strong id="mediaStatDone">0</strong>已完成</span><span><strong id="mediaStatWant">0</strong>想看</span></div></div>
+          <div class="media-archive-title-row"><div><div class="media-archive-kicker">我的收藏</div><div class="media-archive-title">書影音</div><div class="media-archive-sub" id="mediaArchiveSub">共 0 筆記錄 · 保存在此裝置</div></div><div class="media-statline"><span><strong id="mediaStatProgress">0</strong>進行中</span><span><strong id="mediaStatDone">0</strong>已完成</span><span><strong id="mediaStatWant">0</strong>想看</span></div></div>
           <div class="media-filter-tabs" id="mediaTypeTabs">
             <button class="media-filter-tab active" data-media-type="全部">▦ 全部</button><button class="media-filter-tab" data-media-type="書籍">▦ 書籍</button><button class="media-filter-tab" data-media-type="電影">▦ 電影</button><button class="media-filter-tab" data-media-type="影集">▦ 劇集</button><button class="media-filter-tab" data-media-type="播客">▦ 播客</button>
           </div>
@@ -1756,35 +1962,45 @@
         <div class="meal-log-history" id="wlMealHistory"></div>
       </div>
 
-      <!-- 飲食框架 + 一週訓練 -->
-      <div class="wl-grid" style="margin-top:18px">
-        <div class="card">
-          <div class="card-title">
-            <span><span class="badge">🍱 DIET</span> 飲食框架（愛吃星人友好版）</span>
-          </div>
-          <div class="wl-meal-table" id="wlMealTable"></div>
-        </div>
+    </section>
 
-        <div class="card">
-          <div class="card-title"><span><span class="badge">🏃 TRAINING</span> 運動記錄</span></div>
-          <div class="workout-form">
-            <select id="wlExerciseType"><option>步行</option><option>跑步</option><option>瑜伽</option><option>力量訓練</option><option>游泳</option><option>騎單車</option><option>跳舞</option><option>伸展</option><option>其他</option></select>
-            <input type="date" id="wlExerciseDate" />
-            <input type="number" min="1" id="wlExerciseMinutes" placeholder="運動分鐘" />
-            <button class="btn btn-mini" id="wlAddExercise">＋ 記錄運動</button>
-          </div>
-          <div class="exercise-records" id="wlExerciseRecords"></div>
-        </div>
+    <!-- ===== 健身動作 ===== -->
+    <section class="section" id="sec-fitness">
+      <div class="page-header">
+        <div><h1>健身動作</h1><div class="sub">找動作、照著做，再記下今天動了多久。</div></div>
       </div>
-
-      <!-- 飲食小貼士 -->
-      <div class="card" style="margin-top:18px">
-        <div class="card-title">
-          <span><span class="badge">💡 TIPS</span> 飲食小貼士</span>
+      <div class="card fitness-page-card">
+        <div class="card-title"><span><span class="badge">🏃 TRAINING</span> 運動記錄</span></div>
+        <div class="fitness-calendar-panel">
+          <div class="fitness-calendar-head"><div><strong>訓練月曆</strong><span>看看今天練什麼，也安排接下來的節奏。</span></div><div class="fitness-calendar-nav"><button type="button" id="wlPlanCalendarPrev" aria-label="上個月">‹</button><b id="wlPlanCalendarLabel">—</b><button type="button" id="wlPlanCalendarNext" aria-label="下個月">›</button></div></div>
+          <div class="fitness-today-plan" id="wlTodayPlan"></div>
+          <div class="fitness-calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+          <div class="fitness-calendar-grid" id="wlPlanCalendar"></div>
+          <div class="fitness-calendar-assign"><div><strong id="wlPlanSelectedDateLabel">選擇一個日期</strong><span>點擊月曆上的日期，再把訓練計劃放進那一天。</span></div><div class="fitness-calendar-assign-form"><input type="date" id="wlPlanAssignDate" /><select id="wlPlanAssignSelect"><option value="">選擇訓練計劃</option></select><button class="btn btn-mini" id="wlPlanAssign">＋ 加入這天</button></div></div>
         </div>
-        <div class="wl-tips" id="wlTips"></div>
+        <div class="fitness-plan-panel">
+          <div class="fitness-plan-head"><strong>我的訓練計劃</strong><span id="wlPlanCount">0 個計劃</span></div>
+          <div class="fitness-plan-create"><input id="wlPlanName" placeholder="例如：下肢日、上肢日、全身訓練…" /><button class="btn btn-mini" id="wlPlanAdd">＋ 建立計劃</button></div>
+          <div class="fitness-plan-list" id="wlTrainingPlans"></div>
+        </div>
+        <div class="workout-form">
+          <select id="wlExerciseType"><option>步行</option><option>跑步</option><option>瑜伽</option><option>力量訓練</option><option>游泳</option><option>騎單車</option><option>跳舞</option><option>伸展</option><option>其他</option></select>
+          <input type="date" id="wlExerciseDate" />
+          <input type="number" min="1" id="wlExerciseSets" placeholder="組數（可選）" />
+          <input type="number" min="1" id="wlExerciseReps" placeholder="次數（可選）" />
+          <input type="number" min="0" step="0.5" id="wlExerciseWeight" placeholder="重量 kg（可選）" />
+          <input type="number" min="1" id="wlExerciseMinutes" placeholder="運動分鐘" />
+          <button class="btn btn-mini" id="wlAddExercise">＋ 記錄這次訓練</button>
+        </div>
+        <div class="exercise-records" id="wlExerciseRecords"></div>
+        <details class="exercise-library" id="wlExerciseLibraryDetails">
+          <summary>查看動作庫 <span>搜尋動作、肌群和器材</span></summary>
+          <div class="exercise-library-tools"><input type="search" id="wlExerciseSearch" placeholder="搜尋動作、肌群或器材…" /><select id="wlExerciseCategory"><option value="all">全部肌群</option><option>下肢</option><option>核心</option><option>上肢</option><option>有氧</option><option>伸展</option></select><select id="wlExerciseEquipment"><option value="all">全部器材</option><option>徒手</option><option>瑜伽墊</option><option>啞鈴</option><option>槓鈴</option><option>滑輪機</option><option>器械</option></select></div>
+          <div class="exercise-library-scenes" id="wlExerciseScenes"><button type="button" class="active" data-exercise-scene="all">全部</button><button type="button" data-exercise-scene="favorites">我的收藏</button><button type="button" data-exercise-scene="home">居家徒手</button><button type="button" data-exercise-scene="gym">健身房</button></div>
+          <div class="exercise-library-note">動作資料整理自公開運動資料庫的常見欄位；如動作引起疼痛，請停止並按自己的狀態調整。</div>
+          <div class="exercise-library-list" id="wlExerciseLibrary"></div>
+        </details>
       </div>
-
     </section>
 
     <!-- ===== 7. 復盤 ===== -->
@@ -1825,6 +2041,15 @@
       <div class="card mood-chart" style="margin-top:24px">
         <div class="card-title"><span class="badge">TREND</span> 近 14 日情緒趨勢</div>
         <div class="mood-chart-bar" id="moodChartBar"></div>
+      </div>
+
+      <div class="card deep-weekly">
+        <div class="card-title"><span class="badge">THE WEEK IN MIND</span> 本週的腦袋 <span id="deepWeekLabel" style="float:right;color:var(--ink-3);font-size:11px;font-weight:400"></span></div>
+        <div class="deep-weekly-metrics"><div><span>深度輸入</span><strong id="deepWeekMinutes">0 分鐘</strong></div><div><span>完成輸出</span><strong id="deepWeekOutputs">0 次</strong></div><div><span>留下內容</span><strong id="deepWeekItems">0 項</strong></div></div>
+        <textarea id="deepWeekThought" placeholder="本週最重要的一個想法……"></textarea>
+        <textarea id="deepWeekClear" placeholder="我現在可以講清楚的一件事……"></textarea>
+        <textarea id="deepWeekUnclear" placeholder="還沒有想清楚的一件事……"></textarea>
+        <button class="btn btn-mini" id="deepWeeklySave">保存本週思考</button>
       </div>
 
       <div class="card" style="margin-top:24px">
@@ -1874,6 +2099,60 @@
   body.dark .travel-map-mode button:hover{color:var(--bg)}
 </style>
 
+<style>
+  /* 健康／運動動作庫 */
+  .exercise-library{margin-top:18px;border-top:1px solid var(--line-soft);padding-top:14px}
+  .exercise-library summary{cursor:pointer;color:var(--accent);font-size:13px;list-style:none;display:flex;align-items:center;gap:8px}
+  .exercise-library summary::-webkit-details-marker{display:none}.exercise-library summary:before{content:'＋';font-size:16px}.exercise-library[open] summary:before{content:'−'}
+  .exercise-library summary span{color:var(--ink-3);font-size:11px}
+  .exercise-library-tools{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px;margin-top:14px}
+  .exercise-library-tools input,.exercise-library-tools select{min-width:0}
+  .exercise-library-note{color:var(--ink-3);font-size:10px;line-height:1.6;margin:10px 0}
+  .exercise-library-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .exercise-library-item{padding:11px 12px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}
+  .exercise-library-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.exercise-library-item strong{font-size:13px;font-weight:600}
+  .exercise-library-item small{display:block;color:var(--ink-3);font-size:10px;line-height:1.5;margin-top:3px}
+  .exercise-library-item p{color:var(--ink-2);font-size:11px;line-height:1.6;margin:8px 0}
+  .exercise-library-use{color:var(--accent);font-size:11px;white-space:nowrap}.exercise-library-empty{color:var(--ink-3);font-size:11px;padding:14px 0}
+  @media(max-width:600px){.exercise-library-tools,.exercise-library-list{grid-template-columns:1fr}.exercise-library-tools select{width:100%}}
+</style>
+
+<style>
+  /* 書影音：收藏檔案頁，不再使用獨立的品牌面板 */
+  .media-archive{max-width:1120px;margin:0 auto}
+  .media-sidebar{display:flex;align-items:center;gap:6px;margin:0 0 34px;padding:0 0 13px;border:0;border-bottom:1px solid var(--line-soft);border-radius:0;background:transparent;overflow-x:auto}
+  .media-side-brand{display:none}
+  .media-side-item{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--ink-2);font-size:12px;white-space:nowrap}
+  .media-side-item:hover{background:var(--surface-2);color:var(--ink-1)}
+  .media-side-item.active{background:var(--accent-bg);border-color:var(--accent-2);color:var(--accent);font-weight:600}
+  .media-side-item span{font-size:10px;color:var(--ink-3)}
+  .media-side-heading{margin-left:auto;padding-left:14px;border-left:1px solid var(--line-soft);color:var(--ink-3);font-size:10px;white-space:nowrap}
+  .media-archive-main{padding:0 2px}
+  .media-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:10px;margin-bottom:30px}
+  .media-toolbar select,.media-toolbar .media-add-btn{min-height:40px}
+  .media-search input{height:40px;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding-left:13px}
+  .media-archive-title-row{align-items:flex-end;margin-top:0;padding-bottom:22px;border-bottom:1px solid var(--line-soft)}
+  .media-archive-kicker{font-size:11px;letter-spacing:1.8px;color:var(--accent);font-weight:600}
+  .media-archive-title{margin-top:7px;font-family:var(--font-serif);font-size:clamp(32px,4vw,44px);font-weight:500;letter-spacing:.02em}
+  .media-archive-sub{margin-top:8px;font-size:12px;color:var(--ink-3)}
+  .media-statline{gap:20px;padding-bottom:4px;color:var(--ink-3);font-size:11px}
+  .media-statline strong{color:var(--ink-1);font-family:var(--font-ui);font-size:17px;font-weight:600}
+  .media-filter-tabs{margin-top:20px;padding-bottom:10px;border-bottom:0;gap:7px}
+  .media-filter-tab{border:1px solid transparent;border-radius:999px;padding:7px 12px;color:var(--ink-2)}
+  .media-filter-tab:hover,.media-filter-tab.active{background:var(--surface-2);color:var(--accent);font-weight:600}
+  .media-status-tabs{gap:16px;padding:0 0 13px;border-bottom:1px solid var(--line-soft);color:var(--ink-3)}
+  .media-status-tab.active{color:var(--ink-1)}
+  .media-table{margin-top:0;border-top:0}
+  .media-table-header{background:transparent;color:var(--ink-3);border-bottom:1px solid var(--line)}
+  .media-table-row{min-height:86px;background:var(--surface);border-bottom:1px solid var(--line-soft)}
+  .media-table-row:hover{background:var(--surface-2)}
+  .media-primary-title{font-family:var(--font-serif);font-size:16px;font-weight:500}
+  .media-rating-cell{color:var(--warm)}
+  .media-editor{border-radius:14px;box-shadow:0 18px 60px rgba(35,66,96,.18),0 0 0 100vmax rgba(22,32,42,.24)}
+  @media(max-width:900px){.media-toolbar{grid-template-columns:minmax(0,1fr) auto}.media-toolbar select{grid-column:1}.media-toolbar .media-add-btn{grid-column:2;grid-row:1}.media-side-heading{display:none}.media-archive-title-row{display:flex}}
+  @media(max-width:600px){.media-toolbar{display:flex;flex-wrap:wrap}.media-search{flex-basis:100%}.media-toolbar select{flex:1}.media-toolbar .media-add-btn{flex:1}.media-archive-title-row{display:block}.media-statline{margin-top:18px}}
+</style>
+
 <button class="fab" id="fab" title="快速新增待辦 (N)">＋</button>
 <div class="toast" id="toast"></div>
 
@@ -1889,6 +2168,15 @@ const defaultState = () => ({
   focus: { text: '', progress: 0 },
   todayLife: { weight: '', water: '', exercise: '' },
   todayMood: null,
+  deepInput: {
+    queue: [],
+    history: [],
+    preferences: [],
+    dailyRecommendations: {},
+    articleRotationVersion: 2,
+    weeklyReflections: {},
+    settings: { remoteJsonUrl: '' }
+  },
   dailyRecords: {},
   moments: [],
   highlights: { life: '', review: '' },
@@ -1960,6 +2248,8 @@ const defaultState = () => ({
       { name: '嬰兒式 + 眼鏡蛇', sets: '1 分鐘', tip: '放鬆收尾' }
     ],
     exerciseRecords: [],
+    trainingPlans: [],
+    exerciseFavorites: [],
     defaultChecks: [
       { key: 'water', txt: '喝夠 2L 水（約 8 杯）', tip: '飯前一杯，會少吃' },
       { key: 'walk',  txt: '步數 6000+',                tip: '午休散步 10 分鐘就能攢' },
@@ -2066,6 +2356,7 @@ function loadState(){
         if(next.wl.records && typeof next.wl.records === 'object') Object.keys(next.wl.records).forEach(k => { next.wl.records[k]=toKg(next.wl.records[k]); });
         next.wl.unit='kg';
       }
+      ensureDeepInput(next);
       return next;
     }
   }catch(e){}
@@ -2123,6 +2414,160 @@ function safeHttpUrl(value){
     const url = new URL(String(value||'').trim());
     return ['http:','https:'].includes(url.protocol) ? url.href : '';
   }catch(e){ return ''; }
+}
+
+/* ========== 輸入 · 輸出：本地題庫與思考檔案 ========== */
+const DEEP_TOPIC_LIBRARY = [
+  {title:'法律的目的應該是追求正義，還是維持社會秩序？',topic:'法律',estimatedMinutes:10,description:'不急著找標準答案，試著想想兩者衝突時你會如何判斷。'},
+  {title:'公司存在的目的只是為股東創造價值嗎？',topic:'商業',estimatedMinutes:10,description:'從不同的利益關係人出發，寫下你真正同意的部分。'},
+  {title:'AI 會讓人變得更聰明，還是更依賴工具？',topic:'科技',estimatedMinutes:12,description:'想一個它幫助你思考的例子，也想一個它替你思考的例子。'},
+  {title:'一個社會應該在多大程度上限制言論？',topic:'社會',estimatedMinutes:12,description:'如果自由和傷害發生衝突，你會把界線放在哪裡？'},
+  {title:'城市設計會如何改變人的行為？',topic:'城市',estimatedMinutes:10,description:'回想一個讓你更願意停留、行走或與人相遇的地方。'},
+  {title:'我們為什麼越來越難感到無聊？',topic:'心理',estimatedMinutes:8,description:'把注意力放回自己的生活，看看無聊出現時你會做什麼。'},
+  {title:'高效率是否一定意味著更好的生活？',topic:'人生',estimatedMinutes:10,description:'分辨「完成更多」和「活得更像自己」是否是同一件事。'},
+  {title:'歷史是由重要人物推動，還是由普通人的選擇累積而成？',topic:'歷史',estimatedMinutes:12,description:'試著用一個你熟悉的歷史片段支持或反駁它。'},
+  {title:'教育應該教人記住答案，還是提出更好的問題？',topic:'教育',estimatedMinutes:9,description:'回想一次真正改變你看法的學習經驗。'},
+  {title:'我們如何知道自己真的理解了一件事？',topic:'思考',estimatedMinutes:8,description:'試著不用術語，把一個熟悉的概念解釋給完全不了解的人。'},
+  {title:'媒體是在反映我們的注意力，還是在塑造它？',topic:'媒體',estimatedMinutes:11,description:'觀察一個你最近反覆看到的內容，想想它如何進入你的生活。'},
+  {title:'經濟成長和生活品質之間，是否一定存在交換？',topic:'經濟',estimatedMinutes:12,description:'從個人、城市和社會三個尺度各想一個例子。'},
+  {title:'什麼時候，妥協是一種成熟而不是退讓？',topic:'人際關係',estimatedMinutes:8,description:'想想一段關係裡，你願意保留什麼、又不願放棄什麼。'},
+  {title:'文化是我們選擇的生活方式，還是我們繼承的習慣？',topic:'文化',estimatedMinutes:10,description:'找一個你習以為常的生活細節，問問它從哪裡來。'},
+  {title:'專業判斷應該依靠規則，還是依靠經驗？',topic:'法律',estimatedMinutes:11,description:'想想規則留下的空間，以及經驗可能帶來的盲點。'},
+  {title:'我們想保存記憶，是因為害怕遺忘，還是想重新理解自己？',topic:'人生',estimatedMinutes:8,description:'回看一件舊物或一張照片，寫下它現在和過去有什麼不同。'}
+];
+const DEEP_ARTICLE_LIBRARY = [
+  {title:'I attend, therefore I am',topic:'注意力 · 自我',estimatedMinutes:15,description:'一篇關於注意力如何形塑自我感，以及我們如何把注意力帶回真正重要之處的長文。',url:'https://aeon.co/essays/what-is-the-self-if-not-that-which-pays-attention',source:'Aeon Essays'},
+  {title:'We live inside minds always planning, scanning and narrating',topic:'心理 · 思考',estimatedMinutes:14,description:'從日常經驗出發，觀察腦內不斷運轉的敘事，以及把注意力帶回當下的方法。',url:'https://aeon.co/essays/we-live-inside-minds-always-planning-scanning-and-narrating',source:'Aeon Essays'},
+  {title:'What we think is a decline in literacy is a design problem',topic:'閱讀 · 教育',estimatedMinutes:16,description:'重新思考閱讀、專注和理解之間的關係：問題也許不在人的能力，而在閱讀環境的設計。',url:'https://aeon.co/essays/what-we-think-is-a-decline-in-literacy-is-a-design-problem',source:'Aeon Essays'},
+  {title:'How social and physical technologies collaborate to create',topic:'科技 · 社會',estimatedMinutes:15,description:'看科技、文化和制度如何一起改變我們的生活方式，以及我們如何被自己創造的工具反過來塑造。',url:'https://aeon.co/essays/how-social-and-physical-technologies-collaborate-to-create',source:'Aeon Essays'},
+  {title:'To survive the Chaoscene, we will need resilient communities',topic:'社會 · 環境',estimatedMinutes:13,description:'從社群和共同生活出發，思考面對不確定世界時，什麼才是真正有韌性的關係。',url:'https://aeon.co/essays/to-survive-the-chaoscene-we-will-need-resilient-communities',source:'Aeon Essays'},
+  {title:'Jack London, Martin Eden and the liberal education in US life',topic:'文學 · 教育',estimatedMinutes:17,description:'透過 Martin Eden 的閱讀經驗，思考教育、階級流動，以及知識本身為何值得追求。',url:'https://aeon.co/essays/jack-london-martin-eden-and-the-liberal-education-in-us-life',source:'Aeon Essays'},
+  {title:'Are book collectors real readers, or just cultural snobs?',topic:'書籍 · 文化',estimatedMinutes:12,description:'從藏書與閱讀的差別出發，想想我們保存書本時，究竟是在保存知識、身份，還是生活的想像。',url:'https://aeon.co/essays/are-book-collectors-real-readers-or-just-cultural-snobs',source:'Aeon Essays'},
+  {title:'Judgment is an exercise in discretion: circumstances are everything',topic:'法律 · 判斷',estimatedMinutes:14,description:'一篇關於規則、情境和判斷的文章，適合慢慢想想抽象原則如何落到真實生活。',url:'https://aeon.co/essays/judgment-is-an-exercise-in-discretion-circumstances-are-everything',source:'Aeon Essays'}
+];
+let deepCurrentSession = null;
+let deepCurrentMode = 'explore';
+let deepCurrentRecommendations = [];
+
+function ensureDeepInput(target=state){
+  if(!target.deepInput || typeof target.deepInput!=='object') target.deepInput={};
+  const base=defaultState().deepInput;
+  target.deepInput=Object.assign(base,target.deepInput);
+  if(target.deepInput.articleRotationVersion!==2){target.deepInput.articleRotationVersion=2;target.deepInput.dailyRecommendations={};}
+  target.deepInput.settings=Object.assign({},base.settings,target.deepInput.settings||{});
+  target.deepInput.queue=Array.isArray(target.deepInput.queue)?target.deepInput.queue.map(x=>Object.assign({id:uid(),title:'',type:'Article',url:'',source:'Personal Queue',estimatedMinutes:'',topic:'',note:'',status:'Saved'},x)).filter(x=>x.title):[];
+  target.deepInput.history=Array.isArray(target.deepInput.history)?target.deepInput.history.map(x=>Object.assign({id:uid(),date:today(),title:'',type:'',source:'',url:'',topic:'',estimatedMinutes:'',actualMinutes:'',recall:'',thoughts:'',outputType:'',output:'',selfAssessment:''},x)).filter(x=>x.title):[];
+  target.deepInput.preferences=Array.isArray(target.deepInput.preferences)?target.deepInput.preferences:[];
+  target.deepInput.dailyRecommendations=target.deepInput.dailyRecommendations&&typeof target.deepInput.dailyRecommendations==='object'?target.deepInput.dailyRecommendations:{};
+  target.deepInput.weeklyReflections=target.deepInput.weeklyReflections&&typeof target.deepInput.weeklyReflections==='object'?target.deepInput.weeklyReflections:{};
+  return target.deepInput;
+}
+
+function deepHash(value){return [...String(value||'')].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,7);}
+function deepTopicItems(date){
+  const d=ensureDeepInput(), prefs=d.preferences;
+  return DEEP_TOPIC_LIBRARY.slice().sort((a,b)=>{
+    const ap=prefs.includes(a.topic)?0:1,bp=prefs.includes(b.topic)?0:1;
+    return ap-bp || deepHash(`${date}:${a.title}`)-deepHash(`${date}:${b.title}`);
+  });
+}
+function deepArticleItems(date){
+  return DEEP_ARTICLE_LIBRARY.slice().sort((a,b)=>deepHash(`${date}:${a.title}`)-deepHash(`${date}:${b.title}`));
+}
+function deepRecommendationItem(x,kind='topic'){
+  const item=Object.assign({id:uid(),kind,source:'Curated Topic Library',type:'Question',url:'',estimatedMinutes:8,topic:'',description:'',prompt:''},x);
+  if(kind==='queue') item.queueId=x.queueId||x.id;
+  return item;
+}
+function deepRecommendations(mode='explore',date=today()){
+  const d=ensureDeepInput();
+  if(mode==='queue') return d.queue.filter(x=>x.status!=='Completed').slice(0,3).map(x=>deepRecommendationItem(Object.assign({},x,{source:x.source||'Personal Queue'}),'queue'));
+  if(mode==='random'){
+    const topic=deepTopicItems(date)[deepHash(`${date}:random`)%DEEP_TOPIC_LIBRARY.length];
+    return [deepRecommendationItem(Object.assign({},topic,{prompt:topic.title}),'topic')];
+  }
+  if(Array.isArray(d.dailyRecommendations[date])&&d.dailyRecommendations[date].length&&d.dailyRecommendations[date].some(x=>x.type==='Article')) return d.dailyRecommendations[date];
+  const queue=d.queue.filter(x=>x.status!=='Completed').slice(0,1).map(x=>deepRecommendationItem(Object.assign({},x,{source:x.source||'Personal Queue'}),'queue'));
+  const articles=deepArticleItems(date).slice(0,2).map(x=>deepRecommendationItem(Object.assign({},x,{prompt:x.title,type:'Article'}),'article'));
+  const topics=deepTopicItems(date).slice(0,3-queue.length-articles.length).map(x=>deepRecommendationItem(Object.assign({},x,{prompt:x.title}),'topic'));
+  d.dailyRecommendations[date]=queue.concat(articles).concat(topics).slice(0,3);
+  saveState();
+  return d.dailyRecommendations[date];
+}
+function deepDisplayType(item){return item.type==='Question'?'今日問題':item.type||'Article';}
+function deepReadSessionFields(){
+  if(!deepCurrentSession)return;
+  deepCurrentSession.recall=$('#deepRecall')?.value||deepCurrentSession.recall||'';
+  deepCurrentSession.thoughts=$('#deepThoughts')?.value||deepCurrentSession.thoughts||'';
+  deepCurrentSession.output=$('#deepOutput')?.value||deepCurrentSession.output||'';
+  deepCurrentSession.outputType=$('#deepOutputType')?.value||deepCurrentSession.outputType||'150–300 字短寫作';
+  deepCurrentSession.actualMinutes=$('#deepActualMinutes')?.value||deepCurrentSession.actualMinutes||'';
+}
+function renderDeepSession(){
+  const wrap=$('#deepSession');
+  if(!wrap)return;
+  if(!deepCurrentSession){wrap.hidden=true;return;}
+  wrap.hidden=false;
+  const s=deepCurrentSession,item=s.item;
+  $('#deepSessionTitle').textContent=item.title||'今日輸入';
+  $('#deepSessionSource').textContent=[deepDisplayType(item),item.source,item.topic].filter(Boolean).join(' · ');
+  $('#deepSessionMeta').textContent=item.estimatedMinutes?`約 ${item.estimatedMinutes} 分鐘`:'慢慢來';
+  $('#deepRecall').value=s.recall||'';$('#deepThoughts').value=s.thoughts||'';$('#deepOutput').value=s.output||'';$('#deepActualMinutes').value=s.actualMinutes||'';$('#deepOutputType').value=s.outputType||'150–300 字短寫作';
+  $$('.deep-step').forEach(el=>el.classList.toggle('active',el.dataset.deepStep===s.step));
+  $$('.deep-step-panel').forEach(el=>el.classList.toggle('active',el.dataset.deepPanel===s.step));
+  $('#deepStepActions').hidden=s.step==='done';
+  const assessment=s.selfAssessment||'';
+  $$('#deepSelfAssessment button').forEach(b=>b.classList.toggle('active',b.dataset.assessment===assessment));
+  ['deepRecall','deepThoughts','deepOutput','deepActualMinutes','deepOutputType'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=()=>deepReadSessionFields();});
+}
+function startDeepSession(item){
+  deepCurrentSession={item:Object.assign({},item),step:'recall',startedAt:Date.now(),recall:'',thoughts:'',output:'',outputType:'150–300 字短寫作',actualMinutes:'',selfAssessment:''};
+  renderDeepSession();
+  $('#deepSession')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderDeepQueue(){
+  const d=ensureDeepInput(), list=$('#deepQueueList'), count=$('#deepQueueCount');
+  if(!list||!count)return;
+  count.textContent=`${d.queue.length} 項`;
+  list.innerHTML=d.queue.length?d.queue.map(x=>`<div class="deep-queue-row" data-deep-queue-id="${esc(x.id)}"><div><span>${esc(x.title)}</span><small>${esc([x.type,x.topic,x.estimatedMinutes?`${x.estimatedMinutes} 分鐘`:'' ].filter(Boolean).join(' · '))}</small></div><div class="deep-queue-actions"><span style="color:var(--ink-3);font-size:10px">${esc(x.status||'Saved')}</span><button type="button" data-deep-queue-start="${esc(x.id)}">開始</button><button type="button" data-deep-queue-delete="${esc(x.id)}">刪除</button></div></div>`).join(''):'<div class="deep-empty">還沒有收藏。把想讀、想看或想研究的東西先放在這裡。</div>';
+  $$('[data-deep-queue-start]').forEach(b=>b.onclick=()=>{const x=d.queue.find(q=>q.id===b.dataset.deepQueueStart);if(x)startDeepSession(deepRecommendationItem(Object.assign({},x,{source:x.source||'Personal Queue'}),'queue'));});
+  $$('[data-deep-queue-delete]').forEach(b=>b.onclick=()=>{d.queue=d.queue.filter(x=>x.id!==b.dataset.deepQueueDelete);saveState();renderDeepInput();showToast('已從收藏移除');});
+}
+function renderDeepHistory(){
+  const list=$('#deepHistoryList');if(!list)return;
+  const history=ensureDeepInput().history.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.id).localeCompare(String(a.id)));
+  if(!history.length){list.innerHTML='<div class="deep-empty">完成一次輸入、回想和輸出後，這裡會留下你的思考。</div>';return;}
+  const groups={};history.forEach(x=>{const key=String(x.date||'').slice(0,7)||'未分類';(groups[key]||(groups[key]=[])).push(x);});
+  list.innerHTML=Object.entries(groups).map(([month,items])=>`<div class="deep-history-month">${esc(month)}</div>${items.map(x=>`<article class="deep-history-item" data-deep-history-id="${esc(x.id)}"><div class="deep-history-date">${esc(x.date)}</div><div><div class="deep-history-title">${esc(x.title)}</div><div class="deep-history-summary">${esc(x.output||x.thoughts||x.recall||'這次留下了一點思考。').replace(/\n/g,' ').slice(0,150)}</div></div><div class="deep-history-output">${esc(x.outputType||'輸出')}</div></article>`).join('')}`).join('');
+  $$('[data-deep-history-id]').forEach(el=>el.onclick=()=>{const x=history.find(h=>h.id===el.dataset.deepHistoryId);if(x)startDeepSession(Object.assign({},x,{historyId:x.id,source:x.source||'思考檔案'}));});
+}
+function renderDeepTodaySummary(){
+  const d=ensureDeepInput(), date=today(), entries=d.history.filter(x=>String(x.date).slice(0,10)===date), minutes=entries.reduce((n,x)=>n+(Number(x.actualMinutes)||Number(x.estimatedMinutes)||0),0), latest=entries[0];
+  const minuteEl=$('#todayDeepMinutes'),ideaEl=$('#todayDeepIdea'),outputEl=$('#todayDeepOutput');
+  if(!minuteEl||!ideaEl||!outputEl)return;
+  minuteEl.textContent=entries.length?`${minutes} 分鐘 · ${entries.length} 次輸出`:'還沒有留下記錄';
+  ideaEl.textContent=latest?(latest.output||latest.thoughts||latest.recall||'今天完成了一次輸入。'):'今天還沒有留時間給自己的腦袋。';
+  outputEl.textContent=latest?`最近：${latest.title}`:'慢慢讀，想一想，再用自己的話說出來。';
+}
+function renderDeepInput(){
+  ensureDeepInput();
+  $$('#deepModebar button').forEach(b=>b.classList.toggle('active',b.dataset.deepMode===deepCurrentMode));
+  deepCurrentRecommendations=deepRecommendations(deepCurrentMode);
+  const list=$('#deepRecommendations');
+  if(list)list.innerHTML=deepCurrentRecommendations.length?deepCurrentRecommendations.map((x,i)=>`<article class="deep-recommendation" data-deep-recommendation-index="${i}"><div class="deep-recommendation-index">0${i+1}</div><div><div class="deep-recommendation-title">${esc(x.title)}</div><div class="deep-recommendation-meta">${esc([deepDisplayType(x),x.source,x.estimatedMinutes?`${x.estimatedMinutes} 分鐘`:'' ,x.topic].filter(Boolean).join(' · '))}</div>${x.description?`<div class="deep-recommendation-desc">${esc(x.description)}</div>`:''}</div><div class="deep-recommendation-actions">${x.url?`<a class="deep-recommendation-read" href="${esc(x.url)}" target="_blank" rel="noreferrer" data-deep-read>閱讀文章 ↗</a>`:''}<span class="deep-recommendation-action">開始思考 →</span></div></article>`).join(''):'<div class="deep-empty">目前還沒有可以開始的內容。可以先閱讀上面的文章，或加入自己的收藏。</div>';
+  $$('.deep-recommendation').forEach(el=>el.onclick=()=>startDeepSession(deepCurrentRecommendations[+el.dataset.deepRecommendationIndex]));
+  $$('[data-deep-read]').forEach(link=>link.onclick=e=>e.stopPropagation());
+  const random=deepRecommendations('random')[0];
+  if($('#deepPromptText'))$('#deepPromptText').textContent=deepCurrentMode==='random'?random.title:'今天不確定要讀什麼？可以從一個問題開始。';
+  renderDeepSession();renderDeepQueue();renderDeepHistory();
+}
+function renderDeepWeeklyReflection(){
+  const d=ensureDeepInput(), week=sundayDate(today()), entries=d.history.filter(x=>weekStartSunday(x.date).getTime()===weekStartSunday(week).getTime()), saved=d.weeklyReflections[week]||{};
+  $('#deepWeekLabel').textContent=`${week} 起的一週`;
+  $('#deepWeekMinutes').textContent=`${entries.reduce((n,x)=>n+(Number(x.actualMinutes)||Number(x.estimatedMinutes)||0),0)} 分鐘`;
+  $('#deepWeekOutputs').textContent=`${entries.length} 次`;
+  $('#deepWeekItems').textContent=`${new Set(entries.map(x=>x.title)).size} 項`;
+  $('#deepWeekThought').value=saved.thought||'';$('#deepWeekClear').value=saved.clear||'';$('#deepWeekUnclear').value=saved.unclear||'';
 }
 
 /* ========== Toast ========== */
@@ -2254,7 +2699,7 @@ $('#themeToggle').onclick = () => {
 function go(name){
   if(name==='shopping') name='finance';
   if(name==='overview') name='today';
-  if(!['finance','weightloss','media','news'].includes(name)) name='finance';
+  if(!['finance','weightloss','fitness','media','news','deep'].includes(name)) name='finance';
   if(!$('#sec-' + name)) name='today';
   $$('.section').forEach(s => s.classList.remove('active'));
   $('#sec-' + name).classList.add('active');
@@ -2290,6 +2735,7 @@ function renderToday(){
   const dates=Object.keys(state.dailyRecords||{}).filter(k=>k!==d).sort().reverse().filter(k=>state.dailyRecords[k]?.entry||state.dailyRecords[k]?.focus||state.dailyRecords[k]?.mood).slice(0,3);
   history.innerHTML=dates.length?`<div class="today-history-label">最近留下的片段</div>${dates.map(k=>`<div class="today-history-item"><span class="today-history-date">${esc(k)}</span><span class="today-history-text">${esc(state.dailyRecords[k].entry||state.dailyRecords[k].focus||'已記下今天的心情')}</span></div>`).join('')}`:`<div class="today-history-label">最近留下的片段</div><div class="empty">這裡會保存你寫下的生活。</div>`;
   renderMoments();
+  renderDeepTodaySummary();
 }
 
 /* ========== 私人日記 ========== */
@@ -2819,9 +3265,11 @@ function renderFinanceChart(f){
 
 function renderFinance(){
   const f = financeData();
-  const todayExpenses = f.expenses.filter(x => String(x.date||'').slice(0,10) === today());
-  $('#finTotalIncome').textContent = currencySummary(f.incomes);
-  $('#finTotalExpense').textContent = currencySummary(todayExpenses);
+  const currentMonth = today().slice(0,7);
+  const monthIncomes = f.incomes.filter(x => String(x.date||'').slice(0,7) === currentMonth);
+  const monthExpenses = f.expenses.filter(x => String(x.date||'').slice(0,7) === currentMonth);
+  $('#finTotalIncome').textContent = currencySummary(monthIncomes);
+  $('#finTotalExpense').textContent = currencySummary(monthExpenses);
   const netAssets = financeNetAssetTotals(f);
   $('#finTotalAssets').textContent = currencyTotalsSummary(netAssets);
   if(!$('#finExpenseDate').value) $('#finExpenseDate').value=today();
@@ -3763,6 +4211,7 @@ function renderReview(){
     </div>`;
   }).join('');
   $$('.review-history-item', h).forEach(item => item.onclick = () => { reviewSelectedDate=item.dataset.reviewDate; renderReview(); });
+  renderDeepWeeklyReflection();
 }
 
 /* ========== 搜尋 ========== */
@@ -3801,9 +4250,10 @@ function doSearch(q){
   (state.wl?.mealPlan || []).forEach(m => { if(m.meal.toLowerCase().includes(ql) || m.desc.toLowerCase().includes(ql)) results.push({tag:'飲食', text:`${m.meal}：${m.desc.replace(/<[^>]*>/g,'')}`, go:'weightloss'}); });
   (state.wl?.tips || []).forEach(t => { if(t.tag.toLowerCase().includes(ql) || t.text.toLowerCase().includes(ql)) results.push({tag:'貼士', text:`${t.tag}：${t.text}`, go:'weightloss'}); });
   (state.newsItems || []).forEach(n => { const text=[n.title,n.summary,n.note,n.topic].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'新聞', text, go:'news'}); });
+  ensureDeepInput().queue.concat(ensureDeepInput().history).forEach(x => { const text=[x.title,x.topic,x.source,x.note,x.recall,x.thoughts,x.output].filter(Boolean).join(' · '); if(text.toLowerCase().includes(ql)) results.push({tag:'輸入輸出', text, go:'deep'}); });
 
   const el = $('#searchResults');
-  const visibleResults=results.filter(r=>['理財','購物預算','健康','飲食','貼士','書影音','新聞'].includes(r.tag));
+  const visibleResults=results.filter(r=>['理財','購物預算','健康','飲食','貼士','書影音','新聞','輸入輸出'].includes(r.tag));
   if(!visibleResults.length){ el.innerHTML = '<div class="sr-item" style="color:var(--ink-3)">沒有找到結果</div>'; }
   else el.innerHTML = visibleResults.slice(0,12).map(r => `<div class="sr-item" data-go="${r.go}"${r.date?` data-date="${esc(r.date)}"`:''}><span class="sr-tag">${r.tag}</span><span class="sr-text">${esc(r.text)}</span></div>`).join('');
   el.classList.add('show');
@@ -3841,6 +4291,53 @@ function bindAll(){
     if(file){const reader=new FileReader();reader.onload=()=>add(reader.result);reader.readAsDataURL(file);}else add('');
   };
   $('#momentText').onkeydown=e=>{if(e.key==='Enter')$('#momentAddBtn').click();};
+
+  // 輸入 · 輸出：探索、收藏與三步輸出流程
+  $$('#deepModebar button').forEach(btn=>btn.onclick=()=>{deepCurrentMode=btn.dataset.deepMode||'explore';renderDeepInput();});
+  $('#deepPromptButton').onclick=()=>{const item=deepRecommendations('random')[0];startDeepSession(item);};
+  $('#todayDeepStart').onclick=()=>{go('deep');setTimeout(()=>{const item=deepRecommendations('explore')[0];if(item)startDeepSession(item);},60);};
+  $('#deepSessionNext').onclick=()=>{
+    deepReadSessionFields();
+    const steps=['recall','think','output','done'], i=steps.indexOf(deepCurrentSession?.step||'recall');
+    if(deepCurrentSession&&i<steps.length-1){deepCurrentSession.step=steps[i+1];renderDeepSession();}
+  };
+  $('#deepSessionBack').onclick=()=>{
+    deepReadSessionFields();
+    const steps=['recall','think','output','done'], i=steps.indexOf(deepCurrentSession?.step||'recall');
+    if(deepCurrentSession&&i>0){deepCurrentSession.step=steps[i-1];renderDeepSession();}
+  };
+  $('#deepSessionCancel').onclick=()=>{deepCurrentSession=null;renderDeepInput();};
+  $$('#deepSelfAssessment button').forEach(btn=>btn.onclick=()=>{if(deepCurrentSession){deepCurrentSession.selfAssessment=btn.dataset.assessment;renderDeepSession();}});
+  $('#deepSessionSave').onclick=()=>{
+    deepReadSessionFields();
+    const s=deepCurrentSession;
+    if(!s)return;
+    if(!s.recall&&!s.thoughts&&!s.output&&!s.actualMinutes){showToast('先留下幾句回想，或記下實際分鐘吧');return;}
+    const item=s.item||{}, entry={id:item.historyId||uid(),date:item.historyId?(item.date||today()):today(),title:item.title||'未命名輸入',type:item.type||'Article',source:item.source||'Curated Topic Library',url:item.url||'',topic:item.topic||'',estimatedMinutes:item.estimatedMinutes||'',actualMinutes:s.actualMinutes||'',recall:s.recall||'',thoughts:s.thoughts||'',outputType:s.outputType||'',output:s.output||'',selfAssessment:s.selfAssessment||''};
+    const d=ensureDeepInput();
+    if(item.historyId){const existing=d.history.find(x=>x.id===item.historyId);if(existing)Object.assign(existing,entry);else d.history.unshift(entry);}else d.history.unshift(entry);
+    if(item.queueId){const queued=d.queue.find(x=>x.id===item.queueId);if(queued)queued.status='Completed';}
+    saveState();deepCurrentSession=null;renderDeepInput();renderDeepTodaySummary();showToast('這次思考已保存 ✓');
+  };
+  $('#deepQueueAdd').onclick=()=>{
+    const title=$('#deepQueueTitle').value.trim();if(!title){showToast('請先寫下標題');return;}
+    const d=ensureDeepInput();d.queue.unshift({id:uid(),title,type:$('#deepQueueType').value,url:safeHttpUrl($('#deepQueueUrl').value),source:'Personal Queue',estimatedMinutes:$('#deepQueueMinutes').value||'',topic:$('#deepQueueTopic').value.trim(),note:$('#deepQueueNote').value.trim(),status:'Saved'});
+    ['deepQueueTitle','deepQueueUrl','deepQueueMinutes','deepQueueTopic','deepQueueNote'].forEach(id=>$('#'+id).value='');saveState();renderDeepInput();showToast('已加入你的收藏 ✓');
+  };
+  $('#deepRemoteUrl').value=ensureDeepInput().settings.remoteJsonUrl||'';
+  $('#deepRemoteLoad').onclick=async()=>{
+    const url=safeHttpUrl($('#deepRemoteUrl').value);if(!url){showToast('請輸入有效的 http / https JSON 網址');return;}
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+    try{
+      const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw new Error('HTTP '+response.status);
+      const raw=await response.json(),items=Array.isArray(raw)?raw:(raw.items||raw.topics||[]);if(!Array.isArray(items))throw new Error('格式不正確');
+      const d=ensureDeepInput();d.settings.remoteJsonUrl=url;let added=0;
+      items.forEach(x=>{const title=String(x?.title||'').trim();if(!title)return;d.queue.push({id:uid(),title,type:String(x.type||'Article'),url:safeHttpUrl(x.url),source:'Remote JSON',estimatedMinutes:x.estimatedMinutes||x.minutes||'',topic:String(x.topic||''),note:String(x.prompt||x.description||''),status:'Saved'});added++;});
+      saveState();renderDeepInput();showToast(added?`已載入 ${added} 項內容 ✓`:'遠端資料裡沒有可用內容');
+    }catch(err){showToast('外部來源暫時無法載入，仍可使用本地收藏與題庫');}
+    finally{clearTimeout(timer);}
+  };
+  $('#deepWeeklySave').onclick=()=>{const d=ensureDeepInput(),week=sundayDate(today());d.weeklyReflections[week]={thought:$('#deepWeekThought').value.trim(),clear:$('#deepWeekClear').value.trim(),unclear:$('#deepWeekUnclear').value.trim()};saveState();showToast('本週思考已保存 ✓');};
 
   // 復盤
   $('#journalDate').onchange = () => { if(!journalEditingId) renderJournal(); };
@@ -3918,12 +4415,34 @@ function bindAll(){
   $('#wlDate').onkeydown = e => { if(e.key==='Enter') $('#wlWeight').focus(); };
 
   $('#wlAddWeightBtn').onclick = () => { go('weightloss'); setTimeout(()=>$('#wlWeight').focus(), 100); };
+  $('#wlPlanAdd').onclick = () => {
+    const name=$('#wlPlanName').value.trim();if(!name){showToast('請先輸入計劃名稱');return;}
+    if(!Array.isArray(state.wl.trainingPlans))state.wl.trainingPlans=[];
+    state.wl.trainingPlans.unshift({id:uid(),name,exercises:[],days:[],dates:[]});$('#wlPlanName').value='';saveState();renderFitness();showToast('訓練計劃已建立 ✓');
+  };
+  $('#wlPlanName').onkeydown=e=>{if(e.key==='Enter')$('#wlPlanAdd').click();};
+  $('#wlPlanCalendarPrev').onclick=()=>{wlPlanCalendarRef=new Date(wlPlanCalendarRef.getFullYear(),wlPlanCalendarRef.getMonth()-1,1);renderFitnessCalendar();};
+  $('#wlPlanCalendarNext').onclick=()=>{wlPlanCalendarRef=new Date(wlPlanCalendarRef.getFullYear(),wlPlanCalendarRef.getMonth()+1,1);renderFitnessCalendar();};
+  $('#wlPlanAssignDate').onchange=e=>{
+    wlPlanSelectedDate=e.target.value||today();
+    const chosen=new Date(`${wlPlanSelectedDate}T00:00:00`);
+    wlPlanCalendarRef=new Date(chosen.getFullYear(),chosen.getMonth(),1);
+    renderFitnessCalendar();
+  };
+  $('#wlPlanAssign').onclick=()=>{
+    const date=$('#wlPlanAssignDate').value||wlPlanSelectedDate||today(),planId=$('#wlPlanAssignSelect').value,plan=state.wl.trainingPlans.find(x=>x.id===planId);
+    if(!plan){showToast('請先選擇訓練計劃');return;}
+    if(!Array.isArray(plan.dates))plan.dates=[];
+    if(!plan.dates.includes(date))plan.dates.push(date);
+    plan.dates.sort();wlPlanSelectedDate=date;saveState();renderFitnessPlans();showToast(`已將「${plan.name}」安排在 ${date}`);
+  };
   $('#wlAddExercise').onclick = () => {
     const minutes=+$('#wlExerciseMinutes').value;
-    if(!minutes || minutes<1){showToast('請輸入運動分鐘');return;}
+    const sets=+$('#wlExerciseSets').value, reps=+$('#wlExerciseReps').value, weight=+$('#wlExerciseWeight').value;
+    if((!minutes || minutes<1) && (!sets || sets<1 || !reps || reps<1)){showToast('請填寫運動分鐘，或填寫組數與次數');return;}
     if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
-    state.wl.exerciseRecords.push({id:uid(),type:$('#wlExerciseType').value,date:$('#wlExerciseDate').value||today(),minutes});
-    $('#wlExerciseMinutes').value=''; saveState(); renderWeightLoss(); showToast('運動已記錄 ✓');
+    state.wl.exerciseRecords.push({id:uid(),type:$('#wlExerciseType').value,date:$('#wlExerciseDate').value||today(),minutes:minutes||'',sets:sets||'',reps:reps||'',weight:weight||''});
+    ['wlExerciseMinutes','wlExerciseSets','wlExerciseReps','wlExerciseWeight'].forEach(id=>$('#'+id).value=''); saveState(); renderFitness(); showToast('這次訓練已記錄 ✓');
   };
   const mealFieldIds = ['wlMealBreakfast','wlMealLunch','wlMealDinner','wlMealBreakfastCalories','wlMealLunchCalories','wlMealDinnerCalories'];
   $('#wlMealDate').onchange = () => renderWeightLossMeals();
@@ -4045,6 +4564,7 @@ function bindAll(){
         const pack = readDataPackage(JSON.parse(r.result));
         if(!confirm('匯入後會取代這台裝置目前的 daylight 資料，確定繼續嗎？')) return;
         state = Object.assign(defaultState(), pack.data);
+        ensureDeepInput();
         if(!Array.isArray(state.moments)) state.moments=[];
         state.moments = state.moments.map(x => Object.assign({id:uid(),date:today(),text:'',photo:''},x)).filter(x => x.text || x.photo);
         if(!Array.isArray(state.journal)) state.journal=[];
@@ -4079,7 +4599,7 @@ function bindAll(){
   // 鍵盤快捷鍵
   document.addEventListener('keydown', e => {
     if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-    const navMap = {'1':'finance','2':'weightloss','3':'media','4':'travel','5':'news','6':'review'};
+    const navMap = {'1':'finance','2':'weightloss','3':'fitness','5':'deep','6':'media','7':'news','8':'travel','9':'review'};
     if(navMap[e.key]){ go(navMap[e.key]); }
     if(e.key === 'n' || e.key === 'N'){ go('finance'); }
     if(e.key === '/'){ e.preventDefault(); $('#searchInput').focus(); }
@@ -4128,6 +4648,196 @@ function wlBmiLabel(bmi){
   if(bmi < 24)   return '正常';
   if(bmi < 28)   return '偏胖';
   return '肥胖';
+}
+
+const WL_EXERCISE_LIBRARY = [
+  {name:'深蹲',category:'下肢',muscles:'大腿、臀部',equipment:'徒手',level:'初級',tip:'雙腳與髖同寬，臀部向後坐，膝蓋對準腳尖。'},
+  {name:'反向弓步',category:'下肢',muscles:'臀部、大腿',equipment:'徒手',level:'初級',tip:'一步向後，前腳踩穩，身體保持直立再推回。'},
+  {name:'臀橋',category:'下肢',muscles:'臀部、腿後側',equipment:'徒手',level:'初級',tip:'肩胛貼地，抬起髖部時收緊臀部，不要用腰頂。'},
+  {name:'小腿提踵',category:'下肢',muscles:'小腿',equipment:'徒手',level:'初級',tip:'扶穩支撐物，慢慢踮起和放下腳跟。'},
+  {name:'平板支撐',category:'核心',muscles:'腹部、肩膀',equipment:'徒手',level:'初級',tip:'頭、背、髖保持一直線，先以短時間維持穩定。'},
+  {name:'死蟲式',category:'核心',muscles:'腹部、髖屈肌',equipment:'瑜伽墊',level:'初級',tip:'腰背貼地，對側手腳慢慢伸展，保持呼吸。'},
+  {name:'鳥狗式',category:'核心',muscles:'核心、背部',equipment:'瑜伽墊',level:'初級',tip:'四足跪姿，伸出對側手腳，避免身體左右晃動。'},
+  {name:'登山者',category:'核心',muscles:'核心、肩膀',equipment:'瑜伽墊',level:'中級',tip:'保持肩膀在手腕上方，膝蓋交替向胸口靠近。'},
+  {name:'俯臥撐',category:'上肢',muscles:'胸部、手臂',equipment:'徒手',level:'初級',tip:'可先用膝蓋支撐，身體保持一直線，手肘斜向後。'},
+  {name:'啞鈴划船',category:'上肢',muscles:'背部、手臂',equipment:'啞鈴',level:'初級',tip:'背部保持平直，手肘向後拉，肩膀不要聳起。'},
+  {name:'啞鈴肩推',category:'上肢',muscles:'肩膀、手臂',equipment:'啞鈴',level:'初級',tip:'坐姿或站姿皆可，推起時不要聳肩或拱腰。'},
+  {name:'側平舉',category:'上肢',muscles:'肩膀',equipment:'啞鈴',level:'初級',tip:'用輕重量控制動作，手臂抬至肩膀高度即可。'},
+  {name:'開合跳',category:'有氧',muscles:'全身、心肺',equipment:'徒手',level:'初級',tip:'落地時膝蓋微彎，按自己的節奏完成。'},
+  {name:'高抬腿',category:'有氧',muscles:'腿部、心肺',equipment:'徒手',level:'初級',tip:'軀幹保持穩定，左右腿交替抬起，不必追求速度。'},
+  {name:'跳繩',category:'有氧',muscles:'小腿、心肺',equipment:'跳繩',level:'初級',tip:'用腳踝彈跳，保持小幅度落地，留意腳下空間。'},
+  {name:'貓牛式',category:'伸展',muscles:'脊椎、肩背',equipment:'瑜伽墊',level:'初級',tip:'配合呼吸慢慢拱背和延展胸口，不要勉強幅度。'},
+  {name:'胸椎旋轉',category:'伸展',muscles:'上背、肩膀',equipment:'瑜伽墊',level:'初級',tip:'側躺後打開上側手臂，讓胸口旋轉，骨盆保持穩定。'},
+  {name:'髖屈肌伸展',category:'伸展',muscles:'髖部、大腿前側',equipment:'徒手',level:'初級',tip:'弓步站穩，骨盆微微向前，保持自然呼吸。'}
+];
+
+const WL_GYM_EXERCISE_LIBRARY = [
+  {name:'槓鈴深蹲',category:'下肢',muscles:'大腿、臀部、核心',equipment:'槓鈴架',level:'初級',tip:'先用空槓熟悉深度，保持腳掌踩穩，膝蓋跟著腳尖方向。',scene:'gym',imageSlug:'Barbell_Squat'},
+  {name:'槓鈴臥推',category:'上肢',muscles:'胸部、肩膀、手臂',equipment:'臥推架',level:'初級',tip:'肩胛收緊，雙腳踩地，槓鈴下放到胸口中段再推起。',scene:'gym',imageSlug:'Barbell_Bench_Press_-_Medium_Grip'},
+  {name:'硬舉',category:'下肢',muscles:'臀部、腿後側、背部',equipment:'槓鈴',level:'中級',tip:'先把髖部向後推，讓槓鈴貼近身體，背部保持穩定。',scene:'gym',imageSlug:'Barbell_Deadlift'},
+  {name:'腿推',category:'下肢',muscles:'大腿、臀部',equipment:'腿推機',level:'初級',tip:'腰背貼住靠墊，膝蓋不要鎖死，先用舒適幅度控制下放。',scene:'gym',imageSlug:'Leg_Press'},
+  {name:'高位下拉',category:'上肢',muscles:'背部、手臂',equipment:'滑輪機',level:'初級',tip:'胸口微抬，將手肘向下拉，不要用身體大幅後仰借力。',scene:'gym',imageSlug:'Wide-Grip_Lat_Pulldown'},
+  {name:'坐姿划船',category:'上肢',muscles:'背部、手臂',equipment:'滑輪機',level:'初級',tip:'先伸展再收回，手肘沿著身體兩側向後，肩膀不要聳起。',scene:'gym',imageSlug:'Seated_Cable_Rows'},
+  {name:'啞鈴臥推',category:'上肢',muscles:'胸部、肩膀、手臂',equipment:'啞鈴、臥推椅',level:'初級',tip:'啞鈴下放時手肘略低於身體，推起時保持手腕穩定。',scene:'gym',imageSlug:'Dumbbell_Bench_Press'},
+  {name:'臀推',category:'下肢',muscles:'臀部、腿後側',equipment:'槓鈴、訓練椅',level:'初級',tip:'下巴微收，頂端收緊臀部，不要用腰部過度拱起。',scene:'gym',imageSlug:'Barbell_Hip_Thrust'},
+  {name:'腿屈伸',category:'下肢',muscles:'大腿前側',equipment:'腿屈伸機',level:'初級',tip:'調整座椅讓膝蓋對準器械轉軸，慢慢抬起和放下。',scene:'gym'},
+  {name:'腿彎舉',category:'下肢',muscles:'腿後側',equipment:'腿彎舉機',level:'初級',tip:'髖部保持貼穩，收縮腿後側時不要用甩動完成。',scene:'gym'},
+  {name:'纜繩面拉',category:'上肢',muscles:'後肩、上背',equipment:'滑輪機、繩索',level:'初級',tip:'將繩索拉向眉眼高度，手肘打開，感受上背和後肩發力。',scene:'gym'},
+  {name:'橢圓機',category:'有氧',muscles:'全身、心肺',equipment:'橢圓機',level:'初級',tip:'維持自然步幅和穩定呼吸，阻力與時間按自己的狀態調整。',scene:'gym',imageSlug:'Elliptical_Trainer'},
+  {name:'上斜啞鈴臥推',category:'上肢',muscles:'上胸、肩膀、手臂',equipment:'啞鈴、臥推椅',level:'初級',tip:'椅背調成輕微上斜，啞鈴沿胸口兩側下放，保持肩胛穩定。',scene:'gym'},
+  {name:'啞鈴飛鳥',category:'上肢',muscles:'胸部、肩膀',equipment:'啞鈴、臥推椅',level:'初級',tip:'手肘保持微彎，向兩側打開到舒服幅度，再用胸部收回。',scene:'gym'},
+  {name:'夾胸機',category:'上肢',muscles:'胸部',equipment:'器械',level:'初級',tip:'胸口保持打開，雙手在身體前方合攏，回程也要控制。',scene:'gym'},
+  {name:'引體向上',category:'上肢',muscles:'背部、手臂',equipment:'單槓',level:'中級',tip:'先收緊肩胛再拉起身體，無法完成時可使用輔助器械。',scene:'gym'},
+  {name:'輔助引體向上',category:'上肢',muscles:'背部、手臂',equipment:'輔助引體機',level:'初級',tip:'選擇可以穩定完成的輔助重量，胸口靠近握把再慢慢下降。',scene:'gym'},
+  {name:'槓鈴划船',category:'上肢',muscles:'背部、後肩、手臂',equipment:'槓鈴',level:'中級',tip:'髖部向後，背部保持平直，將槓鈴拉向肚臍附近。',scene:'gym'},
+  {name:'單臂啞鈴划船',category:'上肢',muscles:'背部、手臂',equipment:'啞鈴、訓練椅',level:'初級',tip:'一手一膝支撐，手肘沿身體向後拉，避免扭轉腰部。',scene:'gym'},
+  {name:'直臂下拉',category:'上肢',muscles:'背闊肌、核心',equipment:'滑輪機',level:'初級',tip:'手臂保持接近伸直，從肩膀帶動把手向大腿方向下壓。',scene:'gym'},
+  {name:'槓鈴肩推',category:'上肢',muscles:'肩膀、手臂',equipment:'槓鈴、肩推架',level:'中級',tip:'核心收緊，槓鈴沿身體中線向上推，不要用腰部後仰借力。',scene:'gym'},
+  {name:'反向飛鳥',category:'上肢',muscles:'後肩、上背',equipment:'啞鈴、器械',level:'初級',tip:'身體微微前傾，以後肩帶動手臂向兩側打開。',scene:'gym'},
+  {name:'二頭彎舉',category:'上肢',muscles:'二頭肌、前臂',equipment:'啞鈴',level:'初級',tip:'手肘固定在身體兩側，只用手臂彎曲，不要搖晃身體。',scene:'gym'},
+  {name:'槌式彎舉',category:'上肢',muscles:'二頭肌、前臂',equipment:'啞鈴',level:'初級',tip:'掌心相對維持中立握，慢慢彎舉並控制下放。',scene:'gym'},
+  {name:'繩索三頭下壓',category:'上肢',muscles:'三頭肌',equipment:'滑輪機、繩索',level:'初級',tip:'手肘固定，向下伸直手臂，肩膀保持放鬆。',scene:'gym'},
+  {name:'前蹲',category:'下肢',muscles:'大腿、臀部、核心',equipment:'槓鈴架',level:'中級',tip:'槓鈴放在肩膀前側，保持胸口抬起，再以舒適深度蹲下。',scene:'gym'},
+  {name:'保加利亞分腿蹲',category:'下肢',muscles:'臀部、大腿',equipment:'啞鈴、訓練椅',level:'中級',tip:'後腳放在椅上，前腳踩穩，身體垂直下沉再推回。',scene:'gym'},
+  {name:'哈克深蹲',category:'下肢',muscles:'大腿、臀部',equipment:'哈克深蹲機',level:'初級',tip:'背部貼穩靠墊，膝蓋跟著腳尖方向，避免鎖死膝關節。',scene:'gym'},
+  {name:'羅馬尼亞硬舉',category:'下肢',muscles:'臀部、腿後側、背部',equipment:'槓鈴、啞鈴',level:'中級',tip:'膝蓋微彎，髖部向後推，感受腿後側拉伸後站回。',scene:'gym'},
+  {name:'相撲硬舉',category:'下肢',muscles:'臀部、大腿內側、腿後側',equipment:'槓鈴',level:'中級',tip:'站距比髖寬，腳尖微向外，保持槓鈴貼近身體往上拉。',scene:'gym'},
+  {name:'臀外展',category:'下肢',muscles:'臀中肌、臀部',equipment:'臀外展機',level:'初級',tip:'坐穩後向外打開雙腿，頂端短暫停留再控制回位。',scene:'gym'},
+  {name:'站姿小腿提踵',category:'下肢',muscles:'小腿',equipment:'小腿機',level:'初級',tip:'腳掌踩穩，腳跟下放到舒服位置，再慢慢踮起。',scene:'gym'},
+  {name:'繩索卷腹',category:'核心',muscles:'腹部',equipment:'滑輪機、繩索',level:'初級',tip:'用腹部捲曲軀幹，骨盆保持穩定，不要只用手臂拉繩。',scene:'gym'},
+  {name:'懸垂抬膝',category:'核心',muscles:'腹部、髖屈肌',equipment:'單槓',level:'中級',tip:'先穩定肩胛，再用腹部將膝蓋抬向胸口，避免擺盪。',scene:'gym'},
+  {name:'腹肌滾輪',category:'核心',muscles:'腹部、肩膀、背部',equipment:'腹肌滾輪',level:'中級',tip:'從短距離開始，保持肋骨收緊，不要讓腰部塌下。',scene:'gym'},
+  {name:'跑步機快走',category:'有氧',muscles:'腿部、心肺',equipment:'跑步機',level:'初級',tip:'以可以說短句的強度開始，速度和坡度按當天狀態調整。',scene:'gym'},
+  {name:'固定單車',category:'有氧',muscles:'腿部、心肺',equipment:'固定單車',level:'初級',tip:'調整座椅高度，維持穩定踩踏和自然呼吸。',scene:'gym'},
+  {name:'划船機',category:'有氧',muscles:'全身、心肺',equipment:'划船機',level:'初級',tip:'順序是腿、身體、手臂；回程依序還原，保持節奏。',scene:'gym'},
+  {name:'登階機',category:'有氧',muscles:'腿部、臀部、心肺',equipment:'登階機',level:'初級',tip:'身體保持直立，腳掌踩穩踏板，不要過度依賴扶手。',scene:'gym'}
+];
+
+// 只使用公開動作資料庫中相對應的示意圖；沒有圖片的動作仍保留完整文字資料。
+const WL_EXERCISE_IMAGE_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const WL_EXERCISE_IMAGE_SLUGS = {
+  '深蹲':'Bodyweight_Squat',
+  '反向弓步':'Dumbbell_Rear_Lunge',
+  '臀橋':'Single_Leg_Glute_Bridge',
+  '小腿提踵':'Standing_Calf_Raise',
+  '平板支撐':'Plank',
+  '登山者':'Mountain_Climbers',
+  '俯臥撐':'Incline_Push-Up',
+  '啞鈴划船':'Dumbbell_Incline_Row',
+  '啞鈴肩推':'Dumbbell_Shoulder_Press',
+  '貓牛式':'Cat_Stretch',
+  '上斜啞鈴臥推':'Incline_Dumbbell_Press',
+  '引體向上':'Pullups',
+  '腹肌滾輪':'Ab_Roller',
+  '跑步機快走':'Walking_Treadmill',
+  ...Object.fromEntries(WL_GYM_EXERCISE_LIBRARY.filter(x=>x.imageSlug).map(x=>[x.name,x.imageSlug]))
+};
+let wlExerciseScene='all';
+let wlPlanCalendarRef=new Date();
+let wlPlanSelectedDate=today();
+
+function renderWlExerciseLibrary(){
+  if(!state.wl) state.wl=defaultState().wl;
+  if(!Array.isArray(state.wl.exerciseFavorites)) state.wl.exerciseFavorites=[];
+  const list=$('#wlExerciseLibrary'), search=$('#wlExerciseSearch'), category=$('#wlExerciseCategory'), equipment=$('#wlExerciseEquipment');
+  if(!list||!search||!category||!equipment)return;
+  const allExercises=[...WL_EXERCISE_LIBRARY.map(x=>Object.assign({scene:'home'},x)),...WL_GYM_EXERCISE_LIBRARY];
+  const draw=()=>{
+    const q=search.value.trim().toLowerCase(), cat=category.value, equip=equipment.value, favorites=new Set(state.wl.exerciseFavorites);
+    const rows=allExercises.filter(x=>(wlExerciseScene==='favorites'?favorites.has(x.name):(wlExerciseScene==='all'||x.scene===wlExerciseScene))&&(cat==='all'||x.category===cat)&&(equip==='all'||x.equipment===equip||((equip==='槓鈴'||equip==='啞鈴')&&x.equipment.includes(equip))||(equip==='器械'&&/機|架|椅/.test(x.equipment)))&&[x.name,x.category,x.muscles,x.equipment,x.tip].join(' ').toLowerCase().includes(q));
+    list.innerHTML=rows.length?rows.map(x=>{
+      const slug=WL_EXERCISE_IMAGE_SLUGS[x.name];
+      const favorite=favorites.has(x.name);
+      const media=slug
+        ? `<img src="${WL_EXERCISE_IMAGE_BASE}${slug}/0.jpg" loading="lazy" alt="${esc(x.name)}" onerror="this.parentElement.classList.add('no-image');this.remove()">`
+        : '<span aria-hidden="true">🏃</span>';
+      return `<article class="exercise-library-item"><div class="exercise-library-media">${media}</div><div class="exercise-library-copy"><div class="exercise-library-item-head"><div><strong>${esc(x.name)}</strong><small>${esc(x.category)} · ${esc(x.muscles)} · ${esc(x.equipment)} · ${esc(x.level)}</small></div><div class="exercise-library-actions"><button class="exercise-library-favorite${favorite?' active':''}" type="button" data-exercise-favorite="${esc(x.name)}" aria-label="${favorite?'取消收藏':'收藏'} ${esc(x.name)}" aria-pressed="${favorite}">${favorite?'★':'☆'}</button><button class="exercise-library-use" type="button" data-exercise-name="${esc(x.name)}">帶入記錄</button></div></div><p>${esc(x.tip)}</p></div></article>`;
+    }).join(''):'<div class="exercise-library-empty">沒有找到相符動作。</div>';
+    list.querySelectorAll('[data-exercise-favorite]').forEach(btn=>btn.onclick=()=>{
+      const name=btn.dataset.exerciseFavorite, favorites=new Set(state.wl.exerciseFavorites);
+      if(favorites.has(name))favorites.delete(name);else favorites.add(name);
+      state.wl.exerciseFavorites=[...favorites];saveState();draw();
+    });
+    list.querySelectorAll('[data-exercise-name]').forEach(btn=>btn.onclick=()=>{
+      const name=btn.dataset.exerciseName, select=$('#wlExerciseType');
+      if(select&&!Array.from(select.options).some(o=>o.value===name)){const option=document.createElement('option');option.value=name;option.textContent=name;select.appendChild(option);}
+      if(select)select.value=name;
+      $('#wlExerciseMinutes')?.focus();
+      showToast(`已選擇「${name}」，填寫分鐘後即可記錄`);
+    });
+  };
+  const note=document.querySelector('.exercise-library-note');
+  if(note) note.innerHTML='按肌群、器材或場景找動作，也可以收藏常用動作；圖片僅作為動作示意。如動作引起疼痛，請停止並按自己的狀態調整。<div class="exercise-library-source">示意圖來源：<a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noreferrer">Free Exercise DB</a></div>';
+  $$('#wlExerciseScenes button').forEach(btn=>{btn.classList.toggle('active',btn.dataset.exerciseScene===wlExerciseScene);btn.onclick=()=>{wlExerciseScene=btn.dataset.exerciseScene||'all';$$('#wlExerciseScenes button').forEach(x=>x.classList.toggle('active',x===btn));draw();};});
+  search.oninput=draw;category.onchange=draw;equipment.onchange=draw;draw();
+}
+
+function fitnessPlanExerciseOptions(){
+  const names=[...WL_EXERCISE_LIBRARY,...WL_GYM_EXERCISE_LIBRARY].map(x=>x.name);
+  return [...new Set(names)].sort((a,b)=>a.localeCompare(b,'zh-Hant')).map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');
+}
+function fitnessPlanDayMarkup(plan){
+  const days=Array.isArray(plan.days)?plan.days:[];
+  return `<div class="fitness-plan-days"><span class="fitness-plan-days-label">安排訓練日</span>${wdShort.map((day,i)=>`<button type="button" class="fitness-plan-day${days.includes(i)?' active':''}" data-plan-day="${i}" aria-pressed="${days.includes(i)}">${day}</button>`).join('')}</div>`;
+}
+function fitnessPlanDateMarkup(plan){
+  const dates=Array.isArray(plan.dates)?plan.dates.slice().sort():[];
+  return dates.length?`<div class="fitness-plan-date-list"><span class="fitness-plan-days-label">指定日期</span>${dates.map(date=>`<span class="fitness-plan-date">${esc(date)}<button type="button" data-plan-remove-date="${esc(date)}" title="移除指定日期">✕</button></span>`).join('')}</div>`:'';
+}
+function renderFitnessCalendar(){
+  const grid=$('#wlPlanCalendar'),label=$('#wlPlanCalendarLabel'),todayPanel=$('#wlTodayPlan');
+  if(!grid||!label||!todayPanel)return;
+  if(!state.wl)state.wl=defaultState().wl;
+  const plans=Array.isArray(state.wl.trainingPlans)?state.wl.trainingPlans:[],todayKey=today(),selectedKey=wlPlanSelectedDate||todayKey;
+  const y=wlPlanCalendarRef.getFullYear(),m=wlPlanCalendarRef.getMonth(),first=new Date(y,m,1),start=first.getDay();
+  label.textContent=`${y}年 ${m+1}月`;
+  const planForDate=(plan,key,d)=>Array.isArray(plan.dates)&&plan.dates.includes(key)||(d&&Array.isArray(plan.days)&&plan.days.includes(d.getDay()));
+  const cells=[];
+  for(let i=0;i<42;i++){
+    const d=new Date(y,m,1-start+i),key=fmtDate(d),dayPlans=plans.filter(plan=>planForDate(plan,key,d));
+    cells.push(`<div class="fitness-calendar-day${d.getMonth()!==m?' is-outside':''}${key===todayKey?' is-today':''}${key===selectedKey?' is-selected':''}" data-calendar-date="${key}" title="選擇 ${key}"><b>${d.getDate()}</b>${dayPlans.length?`<div class="fitness-calendar-plans">${dayPlans.map(plan=>`<div class="fitness-calendar-plan" title="${esc(plan.name)}">${esc(plan.name)}</div>`).join('')}</div>`:''}</div>`);
+  }
+  grid.innerHTML=cells.join('');
+  const assignDate=$('#wlPlanAssignDate'),assignSelect=$('#wlPlanAssignSelect'),selectedLabel=$('#wlPlanSelectedDateLabel');
+  if(assignDate)assignDate.value=selectedKey;
+  if(selectedLabel)selectedLabel.textContent=`已選日期：${selectedKey}`;
+  if(assignSelect){
+    const previous=assignSelect.value;
+    assignSelect.innerHTML='<option value="">選擇訓練計劃</option>'+plans.map(plan=>`<option value="${esc(plan.id)}">${esc(plan.name)}</option>`).join('');
+    if(plans.some(plan=>plan.id===previous))assignSelect.value=previous;
+  }
+  grid.querySelectorAll('[data-calendar-date]').forEach(cell=>cell.onclick=()=>{
+    wlPlanSelectedDate=cell.dataset.calendarDate||todayKey;
+    const chosen=new Date(`${wlPlanSelectedDate}T00:00:00`);
+    wlPlanCalendarRef=new Date(chosen.getFullYear(),chosen.getMonth(),1);
+    renderFitnessCalendar();
+  });
+  const todayDate=new Date(`${todayKey}T00:00:00`),todayPlans=plans.filter(plan=>planForDate(plan,todayKey,todayDate));
+  todayPanel.classList.toggle('is-rest',!todayPlans.length);
+  todayPanel.innerHTML=todayPlans.length?`<strong>今天要練：${todayPlans.map(plan=>esc(plan.name)).join('、')}</strong><span>${todayPlans.map(plan=>(plan.exercises||[]).slice(0,3).map(ex=>esc(ex.name)).join('、')).filter(Boolean).join('　·　')||'計劃裡還沒有加入動作'}</span>`:'<strong>今天沒有安排訓練</strong><span>可以在下面的訓練計劃裡選擇日子。</span>';
+}
+function renderFitnessPlans(){
+  if(!state.wl) state.wl=defaultState().wl;
+  if(!Array.isArray(state.wl.trainingPlans)) state.wl.trainingPlans=[];
+  state.wl.trainingPlans=state.wl.trainingPlans.map(x=>typeof x==='string'?{id:uid(),name:x,exercises:[],days:[],dates:[]}:Object.assign({id:uid(),name:'未命名計劃',exercises:[],days:[],dates:[]},x,{days:Array.isArray(x?.days)?x.days.map(Number).filter(day=>day>=0&&day<=6):[],dates:Array.isArray(x?.dates)?x.dates.map(String).filter(date=>/^\d{4}-\d{2}-\d{2}$/.test(date)):[ ],exercises:Array.isArray(x?.exercises)?x.exercises.map(ex=>Object.assign({id:uid(),name:'',sets:'',reps:'',weight:''},ex)).filter(ex=>ex.name):[]})).filter(x=>x.name);
+  const list=$('#wlTrainingPlans'),count=$('#wlPlanCount');
+  if(!list||!count)return;
+  count.textContent=`${state.wl.trainingPlans.length} 個計劃`;
+  const options=fitnessPlanExerciseOptions();
+  list.innerHTML=state.wl.trainingPlans.length?state.wl.trainingPlans.map(plan=>`<article class="fitness-plan" data-plan-id="${esc(plan.id)}"><div class="fitness-plan-title"><strong>${esc(plan.name)}</strong><div class="fitness-plan-actions"><button type="button" data-plan-start="${esc(plan.id)}">開始</button><button type="button" data-plan-delete="${esc(plan.id)}">刪除</button></div></div>${fitnessPlanDayMarkup(plan)}${fitnessPlanDateMarkup(plan)}<div class="fitness-plan-exercises">${Array.isArray(plan.exercises)&&plan.exercises.length?plan.exercises.map(ex=>`<div class="fitness-plan-exercise" data-plan-exercise-id="${esc(ex.id)}"><span>${esc(ex.name)}</span><small>${esc([ex.sets&&`${ex.sets} 組`,ex.reps&&`${ex.reps} 次`,ex.weight&&`${ex.weight} kg`].filter(Boolean).join(' · ')||'待設定')}</small><button type="button" data-plan-remove-exercise="${esc(ex.id)}" title="移除動作">✕</button></div>`).join(''):'<div class="fitness-plan-empty">還沒有加入動作。</div>'}</div><div class="fitness-plan-add"><select data-plan-exercise><option value="">選擇一個動作</option>${options}</select><input type="number" min="1" data-plan-sets placeholder="組數" /><input type="number" min="1" data-plan-reps placeholder="次數" /><input type="number" min="0" step="0.5" data-plan-weight placeholder="重量 kg" /><button class="btn btn-mini" type="button" data-plan-add-exercise="${esc(plan.id)}">＋ 加動作</button></div></article>`).join(''):'<div class="fitness-plan-list-empty">還沒有計劃。先建立一個你想重複的訓練日。</div>';
+  $$('[data-plan-day]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId),day=Number(btn.dataset.planDay);if(!plan)return;if(!Array.isArray(plan.days))plan.days=[];plan.days=plan.days.includes(day)?plan.days.filter(x=>x!==day):[...plan.days,day].sort((a,b)=>a-b);saveState();renderFitnessPlans();});
+  $$('[data-plan-add-exercise]').forEach(btn=>btn.onclick=()=>{
+    const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId),name=card.querySelector('[data-plan-exercise]').value;
+    if(!plan||!name){showToast('請先選擇一個動作');return;}
+    if(!Array.isArray(plan.exercises))plan.exercises=[];
+    plan.exercises.push({id:uid(),name,sets:+card.querySelector('[data-plan-sets]').value||'',reps:+card.querySelector('[data-plan-reps]').value||'',weight:+card.querySelector('[data-plan-weight]').value||''});
+    saveState();renderFitnessPlans();showToast('動作已加入計劃 ✓');
+  });
+  $$('[data-plan-remove-exercise]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId);if(plan)plan.exercises=(plan.exercises||[]).filter(x=>x.id!==btn.dataset.planRemoveExercise);saveState();renderFitnessPlans();});
+  $$('[data-plan-remove-date]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('[data-plan-id]'),plan=state.wl.trainingPlans.find(x=>x.id===card.dataset.planId);if(plan)plan.dates=(plan.dates||[]).filter(date=>date!==btn.dataset.planRemoveDate);saveState();renderFitnessPlans();});
+  $$('[data-plan-delete]').forEach(btn=>btn.onclick=()=>{if(!confirm('確定要刪除這個訓練計劃嗎？'))return;state.wl.trainingPlans=state.wl.trainingPlans.filter(x=>x.id!==btn.dataset.planDelete);saveState();renderFitnessPlans();showToast('訓練計劃已刪除');});
+  $$('[data-plan-start]').forEach(btn=>btn.onclick=()=>{const plan=state.wl.trainingPlans.find(x=>x.id===btn.dataset.planStart),ex=plan?.exercises?.[0];if(!ex){showToast('先在計劃中加入一個動作');return;}const select=$('#wlExerciseType');if(select&&!Array.from(select.options).some(o=>o.value===ex.name)){const option=document.createElement('option');option.value=ex.name;option.textContent=ex.name;select.appendChild(option);}if(select)select.value=ex.name;$('#wlExerciseSets').value=ex.sets||'';$('#wlExerciseReps').value=ex.reps||'';$('#wlExerciseWeight').value=ex.weight||'';$('#wlExerciseMinutes').focus();showToast(`已帶入「${plan.name}」的第一個動作`);});
+  renderFitnessCalendar();
 }
 
 function renderWeightLoss(){
@@ -4236,27 +4946,18 @@ function renderWeightLoss(){
     saveState(); renderWeightLoss(); showToast('行動已刪除');
   });
 
-  // 飲食框架
-  $('#wlMealTable').innerHTML = state.wl.mealPlan.map(m => `
-    <div class="wl-meal-row">
-      <div class="mtag">${esc(m.meal)}</div>
-      <div class="mdesc">${m.desc}</div>
-    </div>
-  `).join('');
-
   renderWeightLossMeals();
+}
 
-  // 運動記錄
+function renderFitness(){
+  if(!state.wl) state.wl=defaultState().wl;
   if(!Array.isArray(state.wl.exerciseRecords)) state.wl.exerciseRecords=[];
   if(!$('#wlExerciseDate').value) $('#wlExerciseDate').value=today();
   const exerciseList=$('#wlExerciseRecords');
-  exerciseList.innerHTML=state.wl.exerciseRecords.length ? state.wl.exerciseRecords.slice().reverse().map(r=>`<div class="exercise-row" data-id="${r.id}"><div class="exercise-main"><b>${esc(r.type)}</b><div class="exercise-meta">${esc(r.date)} · ${esc(r.minutes)} 分鐘</div></div><button class="del" title="刪除">✕</button></div>`).join('') : '<div class="empty">還沒有運動記錄</div>';
-  $$('#wlExerciseRecords .del').forEach(b=>b.onclick=()=>{state.wl.exerciseRecords=state.wl.exerciseRecords.filter(r=>r.id!==b.closest('.exercise-row').dataset.id);saveState();renderWeightLoss();});
-
-  // 貼士
-  $('#wlTips').innerHTML = state.wl.tips.map(t => `
-    <div class="wl-tip"><b>${esc(t.tag)}：</b>${esc(t.text)}</div>
-  `).join('');
+  exerciseList.innerHTML=state.wl.exerciseRecords.length ? state.wl.exerciseRecords.slice().reverse().map(r=>{const detail=[r.sets&&`${r.sets} 組`,r.reps&&`${r.reps} 次`,r.weight&&`${r.weight} kg`,r.minutes&&`${r.minutes} 分鐘`].filter(Boolean).join(' · ')||'已記錄';return `<div class="exercise-row" data-id="${r.id}"><div class="exercise-main"><b>${esc(r.type)}</b><div class="exercise-meta">${esc(r.date)} · ${esc(detail)}</div></div><button class="del" title="刪除">✕</button></div>`;}).join('') : '<div class="empty">還沒有運動記錄</div>';
+  $$('#wlExerciseRecords .del').forEach(b=>b.onclick=()=>{state.wl.exerciseRecords=state.wl.exerciseRecords.filter(r=>r.id!==b.closest('.exercise-row').dataset.id);saveState();renderFitness();});
+  renderFitnessPlans();
+  renderWlExerciseLibrary();
 }
 
 function renderWeightLossMeals(){
@@ -4330,12 +5031,15 @@ function render(name){
   else if(name === 'finance') renderFinance();
   else if(name === 'media') renderMedia();
   else if(name === 'weightloss') renderWeightLoss();
+  else if(name === 'fitness') renderFitness();
+  else if(name === 'deep') renderDeepInput();
   else if(name === 'review') renderReview();
 }
 
 initTheme();
 try{ localStorage.removeItem('daylight-desk-sync-config-v1'); localStorage.removeItem('daylight-desk-sync-meta-v1'); }catch(e){}
 state = loadState();
+ensureDeepInput();
 ensureDeskArchives();
 saveState();
 $('#userName').textContent = state.meta.userName;
